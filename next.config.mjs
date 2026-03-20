@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const config = {
-  // Optimized for Docker / Railway deployment
-  output: 'standalone',
-
   // Security headers for app-owned routes.
   // NOTE: The proxy route (/[slug]/[[...path]]) manages its own response
   // headers because it serves content from upstream services.
