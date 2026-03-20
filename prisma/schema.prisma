@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tool
+// Every internal tool registered on the platform.
+// ─────────────────────────────────────────────────────────────────────────────
+model Tool {
+  id          String      @id @default(cuid())
+
+  // Identity
+  name        String
+  slug        String      @unique  // URL key: tools.cleverprofits.com/[slug]
+  externalUrl String                // Actual upstream URL (e.g. Railway)
+  description String?
+  notes       String?
+
+  // Ownership & classification
+  team        String?
+  accessLevel AccessLevel @default(INTERNAL)
+  status      ToolStatus  @default(PENDING)
+
+  // Audit
+  createdByName  String
+  createdByEmail String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("tools")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────────────────────────────────────
+
+enum AccessLevel {
+  INTERNAL     // Visible to all authenticated CleverProfits users
+  RESTRICTED   // Specific teams only (enforced manually in V1; RBAC in V2)
+  LEADERSHIP   // Leadership team only
+}
+
+enum ToolStatus {
+  ACTIVE    // Proxy routing live
+  PENDING   // Registered but not yet approved / deployed
+  ARCHIVED  // Soft-deleted; proxy returns 503
+}
