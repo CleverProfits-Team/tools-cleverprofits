@@ -7,8 +7,9 @@ async function main() {
   const email = process.env.SEED_SUPER_ADMIN_EMAIL
 
   if (!email) {
-    console.error('Error: SEED_SUPER_ADMIN_EMAIL environment variable is required.')
-    process.exit(1)
+    // No seed email configured — skip silently (safe for prod deploys)
+    console.log('Skipping seed: SEED_SUPER_ADMIN_EMAIL not set.')
+    return
   }
 
   if (!email.endsWith('@cleverprofits.com')) {
