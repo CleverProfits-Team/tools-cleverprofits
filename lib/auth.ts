@@ -1,29 +1,32 @@
 import type { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import type { Role } from '@prisma/client'
+import { prisma } from '@/lib/db'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Type augmentation
 //
 // Extends NextAuth's default Session and JWT interfaces with our custom fields.
-// Without this, TypeScript would not know about `session.user.id` etc.
 // ─────────────────────────────────────────────────────────────────────────────
 
 declare module 'next-auth' {
   interface Session {
     user: {
-      /** Google subject ID (`sub`) — stable across sign-ins */
+      /** Database User.id (cuid) — replaces the previous Google sub ID */
       id: string
       name: string
       email: string
       image: string
+      /** RBAC role — read from DB at sign-in, valid for session lifetime */
+      role: Role
     }
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
-    /** Mirrors `Session.user.id` inside the token */
     id: string
+    role: Role
     picture?: string | null
   }
 }
@@ -46,10 +49,8 @@ export const authOptions: NextAuthOptions = {
       authorization: {
         params: {
           /**
-           * `hd` (hosted domain) hints to Google's OAuth consent screen to
-           * show only accounts from this domain. This is UX only — it does NOT
-           * enforce the domain. Actual enforcement happens in the signIn
-           * callback below where we hard-reject non-matching emails.
+           * `hd` hints Google to show only @cleverprofits.com accounts.
+           * UX only — actual enforcement is in the signIn callback below.
            */
           hd: ALLOWED_DOMAIN,
           prompt: 'select_account',
@@ -61,53 +62,74 @@ export const authOptions: NextAuthOptions = {
 
   session: {
     strategy: 'jwt',
-    /**
-     * 8-hour session lifetime — matches a typical workday.
-     * Users are prompted to re-authenticate when the token expires.
-     */
-    maxAge: 8 * 60 * 60,
+    maxAge: 8 * 60 * 60, // 8 hours — one workday
   },
 
   callbacks: {
     /**
-     * Domain enforcement gate.
+     * Step 1 — Domain enforcement + user persistence.
      *
-     * Called immediately after Google returns the user profile. Returning
-     * `false` aborts the sign-in and redirects the user to:
-     *   /login?error=AccessDenied
+     * Runs immediately after Google returns the profile. Returning false (or a
+     * redirect string) aborts the sign-in before a JWT is ever issued.
      *
-     * This is the authoritative security check — the `hd` param above is
-     * only a UX hint and must not be relied upon for access control.
+     * We upsert here so every sign-in keeps name and avatar current with the
+     * Google profile. Role is intentionally excluded from the update so it
+     * can only be changed via an explicit admin action.
      */
     async signIn({ user }) {
       const email = user.email ?? ''
-      if (!email.endsWith(`@${ALLOWED_DOMAIN}`)) {
-        return false
+
+      if (!email.endsWith(`@${ALLOWED_DOMAIN}`)) return false
+
+      const dbUser = await prisma.user.upsert({
+        where: { email },
+        update: {
+          name: user.name ?? undefined,
+          image: user.image ?? undefined,
+        },
+        create: {
+          email,
+          name: user.name,
+          image: user.image,
+          // role defaults to VIEWER (schema default)
+        },
+        select: { status: true },
+      })
+
+      if (dbUser.status === 'SUSPENDED') {
+        return '/login?error=Suspended'
       }
+
       return true
     },
 
     /**
-     * JWT population.
+     * Step 2 — JWT construction.
      *
-     * The `user` object is only present on the first sign-in request.
-     * On subsequent requests only `token` is available — do not re-fetch
-     * from a DB here; read from the existing token.
+     * `user` is only present on the initial sign-in. On subsequent JWT
+     * refreshes only `token` is available and we return it unchanged — no
+     * per-request DB calls. Role changes require a new sign-in (max 8 h).
      */
     async jwt({ token, user }) {
       if (user) {
-        // `user.id` is the Google account ID from the OAuth profile
-        token.id = user.id ?? token.sub ?? ''
+        // signIn callback guarantees the record exists
+        const dbUser = await prisma.user.findUniqueOrThrow({
+          where: { email: token.email! },
+          select: { id: true, role: true },
+        })
+        token.id = dbUser.id
+        token.role = dbUser.role
         token.picture = user.image ?? null
       }
       return token
     },
 
     /**
-     * Session shape exposed to the client.
+     * Step 3 — Session shape sent to the client.
      *
-     * Only include what the UI needs. Avoid putting sensitive data here —
-     * the session object is serialised and sent to the browser.
+     * role is included so client components can gate admin UI without an
+     * extra API call. Do not add sensitive data here — the session object
+     * is serialised and sent to the browser.
      */
     async session({ session, token }) {
       session.user = {
@@ -115,6 +137,7 @@ export const authOptions: NextAuthOptions = {
         name: token.name ?? '',
         email: token.email ?? '',
         image: token.picture ?? '',
+        role: token.role,
       }
       return session
     },
@@ -122,17 +145,9 @@ export const authOptions: NextAuthOptions = {
 
   pages: {
     signIn: '/login',
-    /**
-     * Redirect all OAuth errors to /login with ?error=<code>.
-     * The login page maps these codes to human-readable messages.
-     */
     error: '/login',
   },
 
-  // Explicit secret — prevents silent misconfiguration in environments where
-  // NEXTAUTH_SECRET is not set. next-auth will throw at startup if undefined.
   secret: process.env.NEXTAUTH_SECRET,
-
-  // Verbose logs in development only
   debug: process.env.NODE_ENV === 'development',
 }

@@ -27,6 +27,8 @@ import { Suspense } from 'react'
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
   AccessDenied:
     'Access denied. Only @cleverprofits.com accounts are allowed.',
+  Suspended:
+    'Your account has been suspended. Contact your administrator.',
   OAuthSignin:
     'Could not start the sign-in flow. Please try again.',
   OAuthCallback:

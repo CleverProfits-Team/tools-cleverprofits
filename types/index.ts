@@ -1,4 +1,4 @@
-import type { Tool } from '@prisma/client'
+import type { Tool, User } from '@prisma/client'
 
 /**
  * Serialized version of the Prisma Tool model.
@@ -16,6 +16,11 @@ import type { Tool } from '@prisma/client'
  *   }))
  */
 export type SerializedTool = Omit<Tool, 'createdAt' | 'updatedAt'> & {
+  createdAt: string
+  updatedAt: string
+}
+
+export type SerializedUser = Omit<User, 'createdAt' | 'updatedAt'> & {
   createdAt: string
   updatedAt: string
 }

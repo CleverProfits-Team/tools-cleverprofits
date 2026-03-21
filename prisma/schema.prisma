@@ -8,6 +8,24 @@ datasource db {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// User
+// Created on first sign-in (upsert in next-auth signIn callback).
+// Role defaults to VIEWER; elevated roles assigned by ADMIN / SUPER_ADMIN.
+// ─────────────────────────────────────────────────────────────────────────────
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  image     String?
+  role      Role       @default(VIEWER)
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Tool
 // Every internal tool registered on the platform.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,7 +44,7 @@ model Tool {
   accessLevel AccessLevel @default(INTERNAL)
   status      ToolStatus  @default(PENDING)
 
-  // Audit
+  // Audit (Phase 8 will migrate these columns to a User FK)
   createdByName  String
   createdByEmail String
   createdAt      DateTime @default(now())
@@ -38,6 +56,18 @@ model Tool {
 // ─────────────────────────────────────────────────────────────────────────────
 // Enums
 // ─────────────────────────────────────────────────────────────────────────────
+
+enum Role {
+  SUPER_ADMIN  // Full control + can assign/revoke ADMIN role
+  ADMIN        // Can approve tools and manage non-admin users
+  BUILDER      // Can register tools; cannot approve own submissions
+  VIEWER       // Read-only access to approved tools (default)
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
 
 enum AccessLevel {
   INTERNAL     // Visible to all authenticated CleverProfits users
