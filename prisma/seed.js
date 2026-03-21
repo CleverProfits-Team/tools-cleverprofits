@@ -1,4 +1,5 @@
-import { PrismaClient, Role } from '@prisma/client'
+// @ts-check
+const { PrismaClient, Role } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
