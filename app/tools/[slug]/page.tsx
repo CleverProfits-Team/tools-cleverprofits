@@ -102,13 +102,13 @@ export default async function ToolInfoPage({
         )}
 
         {/* Card */}
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-slate-200/80 bg-white shadow-card overflow-hidden">
           <div className="p-6 sm:p-8">
             {/* Header */}
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">{tool.name}</h1>
-                <p className="text-sm font-mono text-slate-400 mt-0.5">{tool.slug}</p>
+                <p className="text-sm font-mono text-slate-400 mt-0.5">/{tool.slug}</p>
               </div>
               <StatusBadge status={tool.status} />
             </div>

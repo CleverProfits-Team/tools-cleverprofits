@@ -7,6 +7,7 @@ import { prisma } from '@/lib/db'
 import { ToolsGrid } from '@/components/dashboard/tools-grid'
 import { Button } from '@/components/ui/button'
 import { PlusCircle } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
 
 export const metadata: Metadata = { title: 'Dashboard' }
@@ -44,15 +45,13 @@ export default async function DashboardPage() {
   return (
     <div>
       {/* ── Page header ─────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             Tools
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            {tools.length === 0
-              ? 'No tools registered yet'
-              : `${activeCount} active · ${pendingCount} pending · ${tools.length} total`}
+            Browse and launch your team&apos;s registered tools.
           </p>
         </div>
 
@@ -63,6 +62,33 @@ export default async function DashboardPage() {
           </Link>
         </Button>
       </div>
+
+      {/* ── Stat cards ──────────────────────────────────────────────── */}
+      {tools.length > 0 && (
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card px-5 py-4">
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Active</p>
+            <p className="text-2xl font-bold text-slate-900 tabular-nums">{activeCount}</p>
+          </div>
+          <div className={cn(
+            'rounded-2xl border shadow-card px-5 py-4',
+            pendingCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-slate-200/80',
+          )}>
+            <p className={cn(
+              'text-[11px] font-semibold uppercase tracking-widest mb-1.5',
+              pendingCount > 0 ? 'text-amber-500' : 'text-slate-400',
+            )}>Pending</p>
+            <p className={cn(
+              'text-2xl font-bold tabular-nums',
+              pendingCount > 0 ? 'text-amber-700' : 'text-slate-900',
+            )}>{pendingCount}</p>
+          </div>
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card px-5 py-4">
+            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Registered</p>
+            <p className="text-2xl font-bold text-slate-900 tabular-nums">{tools.length}</p>
+          </div>
+        </div>
+      )}
 
       {/* ── Tools grid (client component for search + filter) ────────── */}
       <Suspense>

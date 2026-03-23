@@ -42,11 +42,11 @@ export function MyToolsList({ tools }: Props) {
 
   if (tools.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-12 text-center shadow-card">
         <p className="text-slate-500 text-sm mb-3">You haven&apos;t registered any tools yet.</p>
         <Link
           href="/dashboard/register"
-          className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
         >
           Register your first tool
         </Link>
@@ -89,8 +89,8 @@ export function MyToolsList({ tools }: Props) {
           <div
             key={tool.id}
             className={cn(
-              'rounded-xl border bg-white p-5 transition-colors',
-              tool.status === 'REJECTED' ? 'border-red-200' : 'border-slate-200',
+              'rounded-2xl border bg-white p-5 shadow-card transition-colors',
+              tool.status === 'REJECTED' ? 'border-red-200' : 'border-slate-200/80',
             )}
           >
             <div className="flex items-start justify-between gap-4">
@@ -122,7 +122,7 @@ export function MyToolsList({ tools }: Props) {
                 )}
                 <Link
                   href={`/dashboard/tools/${tool.id}/edit`}
-                  className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 transition-colors"
+                  className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 transition-colors"
                 >
                   Fix &amp; resubmit
                 </Link>

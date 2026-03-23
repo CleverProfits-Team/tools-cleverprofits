@@ -90,9 +90,9 @@ export function AdminToolsList({ initialTools, teams }: Props) {
         <button
           onClick={() => { setPendingOnly((v) => !v); if (!pendingOnly) setStatusFilter('ALL') }}
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
+            'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
             pendingOnly
-              ? 'border-amber-400 bg-amber-50 text-amber-700'
+              ? 'border-amber-300 bg-amber-50 text-amber-700'
               : 'border-slate-200 text-slate-600 hover:bg-slate-50',
           )}
         >
@@ -114,13 +114,13 @@ export function AdminToolsList({ initialTools, teams }: Props) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-slate-200 bg-white py-16 text-center">
+        <div className="rounded-2xl border border-slate-200 bg-white py-16 text-center">
           <p className="text-sm text-slate-400">No tools match the current filters.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-card">
           <table className="w-full text-left">
-            <thead className="border-b border-slate-200 bg-slate-50/80">
+            <thead className="border-b border-slate-200 bg-slate-50/60">
               <tr>
                 <th className={thCls}>Tool</th>
                 <th className={thCls}>Owner</th>
@@ -138,10 +138,11 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                     key={tool.id}
                     className={cn(
                       'transition-colors',
-                      isPending ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50/60',
+                      isPending ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50/50',
                     )}
                   >
-                    <td className={tdCls}>
+                    {/* Left accent border via first cell */}
+                    <td className={cn(tdCls, isPending && 'border-l-2 border-amber-400')}>
                       {isPending && (
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <Clock className="h-3 w-3 text-amber-500" aria-hidden />
@@ -166,9 +167,9 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                       <Link
                         href={`/dashboard/admin/tools/${tool.id}`}
                         className={cn(
-                          'inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap',
+                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap',
                           isPending
-                            ? 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
+                            ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-xs'
                             : 'border border-slate-200 text-slate-600 hover:bg-slate-50',
                         )}
                       >
