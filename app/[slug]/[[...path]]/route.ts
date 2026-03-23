@@ -20,7 +20,7 @@
  * ── Runtime ──────────────────────────────────────────────────────────────────
  * Must use the Node.js runtime (not Edge) because:
  *  1. Prisma requires Node.js
- *  2. getServerSession (next-auth) requires Node.js
+ *  2. getToken (next-auth/jwt) requires Node.js
  *  3. fetch() with duplex: 'half' (for ReadableStream body) requires Node.js
  *  4. Edge runtime has a 4 MB response body limit; some tool responses exceed this
  *
@@ -30,8 +30,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { getToken } from 'next-auth/jwt'
 import { prisma } from '@/lib/db'
 import {
   STRIP_RESPONSE_HEADERS,
@@ -94,9 +93,9 @@ async function handleProxy(
   // matcher is ever misconfigured, the proxy will not silently serve tools to
   // unauthenticated users.
 
-  const session = await getServerSession(authOptions)
+  const token = await getToken({ req: request })
 
-  if (!session?.user?.email) {
+  if (!token?.email) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('callbackUrl', request.url)
     return NextResponse.redirect(loginUrl)
