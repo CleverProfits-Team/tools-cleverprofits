@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Admin</h1>
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Admin</h1>
         <p className="text-sm text-slate-500 mt-1">Manage tools, users, and invitations</p>
       </div>
       <AdminSubNav pendingCount={pendingCount} />

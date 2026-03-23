@@ -159,7 +159,7 @@ export default async function AnalyticsPage() {
               {toolStats.map((t) => (
                 <tr key={t.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-6 py-3">
-                    <Link href={`/tools/${t.slug}`} className="font-medium text-slate-900 hover:text-blue-600 transition-colors">
+                    <Link href={`/tools/${t.slug}`} className="font-medium text-slate-900 hover:text-[#2605EF] transition-colors">
                       {t.name}
                     </Link>
                     <span className="ml-2 text-xs font-mono text-slate-400">/{t.slug}</span>

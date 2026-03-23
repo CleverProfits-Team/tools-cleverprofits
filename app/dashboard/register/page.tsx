@@ -19,7 +19,7 @@ export default function RegisterPage() {
 
       {/* ── Page header ─────────────────────────────────────────────── */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Register Tool</h1>
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Register Tool</h1>
         <p className="text-sm text-slate-500 mt-1">
           Add an internal tool to the CleverProfits platform. New tools start as{' '}
           <span className="font-medium text-amber-600">Pending</span> and require admin approval

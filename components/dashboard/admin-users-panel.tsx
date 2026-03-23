@@ -170,7 +170,7 @@ export function AdminUsersPanel({ initialUsers, currentUserId, currentUserRole }
                       <div className="font-medium text-slate-900">{user.name ?? '—'}</div>
                       <div className="text-xs text-slate-400">{user.email}</div>
                       {user.id === currentUserId && (
-                        <span className="text-xs text-blue-500">(you)</span>
+                        <span className="text-xs text-[#2605EF]">(you)</span>
                       )}
                     </td>
                     <td className={tdCls}>
@@ -265,7 +265,7 @@ export function AdminUsersPanel({ initialUsers, currentUserId, currentUserRole }
                 setInviteResult(null)
               }}
               placeholder="user@cleverprofits.com"
-              className="w-full rounded-md border border-slate-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-slate-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2605EF]"
             />
           </div>
           <div>
@@ -280,7 +280,7 @@ export function AdminUsersPanel({ initialUsers, currentUserId, currentUserRole }
           <button
             type="submit"
             disabled={inviteLoading}
-            className="rounded-md bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            className="rounded-md bg-[#2605EF] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#1e04cc] disabled:opacity-50 transition-colors"
           >
             {inviteLoading ? 'Creating…' : 'Create invite'}
           </button>

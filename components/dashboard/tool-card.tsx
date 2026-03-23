@@ -74,7 +74,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           href={`/tools/${tool.slug}`}
           className={cn(
             'font-semibold text-slate-900 text-[15px] leading-snug',
-            'hover:text-blue-600 transition-colors focus-ring rounded',
+            'hover:text-[#2605EF] transition-colors focus-ring rounded',
           )}
         >
           {tool.name}
@@ -118,7 +118,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         {isActive ? (
           <a
             href={`/${tool.slug}`}
-            className="inline-flex items-center gap-1 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition-colors flex-shrink-0 shadow-xs focus-ring"
+            className="inline-flex items-center gap-1 rounded-lg bg-[#2605EF] px-2.5 py-1.5 text-xs font-medium text-white hover:bg-[#1e04cc] transition-colors flex-shrink-0 shadow-xs focus-ring"
             aria-label={`Open ${tool.name}`}
           >
             Open

@@ -120,7 +120,7 @@ export default async function ToolInfoPage({
             {/* Header */}
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-2xl font-bold text-slate-900">{tool.name}</h1>
+                <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">{tool.name}</h1>
                 <p className="text-sm font-mono text-slate-400 mt-0.5">/{tool.slug}</p>
               </div>
               <StatusBadge status={tool.status} />
@@ -173,7 +173,7 @@ export default async function ToolInfoPage({
             {tool.status === 'ACTIVE' && (
               <a
                 href={`/${tool.slug}`}
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center gap-2 rounded-lg bg-[#2605EF] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#1e04cc] transition-colors"
               >
                 Launch Tool
                 <ExternalLink className="h-4 w-4" aria-hidden />

@@ -48,7 +48,7 @@ export default async function DashboardPage() {
       {/* ── Page header ─────────────────────────────────────────────── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
             Tools
           </h1>
           <p className="text-sm text-slate-500 mt-1">

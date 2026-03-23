@@ -56,7 +56,7 @@ export default async function InvitePage({ params }: { params: { token: string }
             </p>
             <Link
               href="/dashboard"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-[#2605EF] hover:underline"
             >
               Go to dashboard →
             </Link>
@@ -94,7 +94,7 @@ export default async function InvitePage({ params }: { params: { token: string }
                 </p>
                 <Link
                   href={`/api/auth/signin/google?callbackUrl=/dashboard`}
-                  className="block w-full text-center rounded-md bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+                  className="block w-full text-center rounded-md bg-[#2605EF] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1e04cc] transition-colors"
                 >
                   Sign in with Google
                 </Link>

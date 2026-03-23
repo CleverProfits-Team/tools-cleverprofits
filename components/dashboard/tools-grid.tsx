@@ -192,7 +192,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
             onClick={() => setMineOnly((v) => !v)}
             className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
               mineOnly
-                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
                 : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
             }`}
             aria-pressed={mineOnly}
@@ -250,7 +250,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           <p className="text-sm text-slate-500 mb-2">No tools match your filters.</p>
           <button
             onClick={clearFilters}
-            className="text-sm text-blue-600 hover:text-blue-700 underline underline-offset-2"
+            className="text-sm text-[#2605EF] hover:text-[#1e04cc] underline underline-offset-2"
           >
             Clear all filters
           </button>

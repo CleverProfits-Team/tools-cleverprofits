@@ -60,31 +60,31 @@ function LoginContent() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-white border border-slate-200 rounded-xl shadow-card px-8 py-10">
+      <div className="bg-white rounded-2xl shadow-elevated px-8 py-10">
 
         {/* ── Logotype ─────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-3 mb-10">
-          <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-base tracking-tight select-none">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="h-10 w-10 rounded-xl bg-[#040B4D] flex items-center justify-center flex-shrink-0 shadow-sm">
+            <span className="text-white font-display font-bold text-base tracking-tight select-none">
               CP
             </span>
           </div>
           <div className="leading-none">
-            <p className="font-semibold text-slate-900 text-sm">CleverProfits</p>
-            <p className="text-[11px] text-slate-400 mt-0.5 tracking-wide uppercase">
+            <p className="font-display font-bold text-[#040B4D] text-sm tracking-tight">CleverProfits</p>
+            <p className="text-[11px] text-slate-400 mt-0.5 tracking-widest uppercase">
               Tools Platform
             </p>
           </div>
         </div>
 
         {/* ── Heading ──────────────────────────────────────────────────── */}
-        <h1 className="text-xl font-semibold text-slate-900 mb-1">
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] mb-1.5 tracking-tight">
           Sign in to continue
         </h1>
-        <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+        <p className="text-sm text-slate-500 mb-7 leading-relaxed">
           Use your{' '}
-          <span className="font-medium text-slate-700">@cleverprofits.com</span>{' '}
-          Google account to access the tools platform.
+          <span className="font-medium text-[#040B4D]">@cleverprofits.com</span>{' '}
+          Google Workspace account to access the tools platform.
         </p>
 
         {/* ── Error banner ─────────────────────────────────────────────── */}
@@ -115,21 +115,34 @@ function LoginContent() {
           type="button"
           className="
             w-full flex items-center justify-center gap-3
-            rounded-lg border border-slate-200 bg-white
-            px-4 py-2.5
-            text-sm font-medium text-slate-700
-            hover:bg-slate-50 active:bg-slate-100
-            transition-colors duration-150
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+            rounded-xl border border-slate-200 bg-white
+            px-4 py-3
+            text-sm font-semibold text-slate-700
+            hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100
+            transition-all duration-150 shadow-xs
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2
           "
         >
           <GoogleLogo />
-          Sign in with Google
+          Continue with Google
         </button>
 
+        {/* ── Divider ──────────────────────────────────────────────────── */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-100" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-white px-3 text-[11px] text-slate-400 tracking-wide uppercase">
+              Secured by Google Workspace
+            </span>
+          </div>
+        </div>
+
         {/* ── Fine print ───────────────────────────────────────────────── */}
-        <p className="mt-8 text-center text-[11px] text-slate-400">
-          Internal use only &mdash; CleverProfits
+        <p className="text-center text-[11px] text-slate-400 leading-relaxed">
+          Internal use only &mdash; CleverProfits.<br />
+          Access restricted to @cleverprofits.com accounts.
         </p>
       </div>
     </div>
@@ -196,7 +209,7 @@ function GoogleLogo() {
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-[#0F0038] px-4">
       <Suspense fallback={<LoginSkeleton />}>
         <LoginContent />
       </Suspense>

@@ -30,7 +30,7 @@ export function AdminSubNav({ pendingCount }: Props) {
             className={cn(
               'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors',
               isActive
-                ? 'border-blue-600 text-blue-600'
+                ? 'border-[#2605EF] text-[#2605EF]'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300',
             )}
           >
@@ -38,7 +38,7 @@ export function AdminSubNav({ pendingCount }: Props) {
             {badge !== undefined && (
               <span className={cn(
                 'inline-flex items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-medium min-w-[1.25rem]',
-                isActive ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700',
+                isActive ? 'bg-[#eeeeff] text-[#2605EF]' : 'bg-amber-100 text-amber-700',
               )}>
                 {badge}
               </span>

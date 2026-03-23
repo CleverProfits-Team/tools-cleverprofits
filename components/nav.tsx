@@ -58,19 +58,19 @@ export function Nav({ pendingCount = 0 }: NavProps) {
     .split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 bg-[#040B4D] border-b border-[#18197D]/60 shadow-md">
       <div className="page-container">
         <div className="flex h-14 items-center justify-between gap-4">
 
           {/* ── Brand + nav ──────────────────────────────────────────── */}
           <div className="flex items-center gap-6 min-w-0">
-            <Link href="/dashboard" className="flex items-center gap-2.5 flex-shrink-0">
-              <div className="h-7 w-7 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm">
+            <Link href="/dashboard" className="flex items-center gap-2.5 flex-shrink-0 group">
+              <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors">
                 <Wrench className="h-3.5 w-3.5 text-white" aria-hidden />
               </div>
-              <span className="font-semibold text-sm tracking-tight hidden sm:block text-slate-900">
+              <span className="font-display font-bold text-sm tracking-tight hidden sm:block text-white">
                 CleverProfits{' '}
-                <span className="text-slate-400 font-normal">Tools</span>
+                <span className="text-white/50 font-normal">Tools</span>
               </span>
             </Link>
 
@@ -84,8 +84,8 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                     className={cn(
                       'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors',
                       isActive
-                        ? 'bg-slate-100 text-slate-900 font-medium'
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50',
+                        ? 'bg-white/15 text-white font-medium'
+                        : 'text-white/60 hover:text-white hover:bg-white/10',
                     )}
                   >
                     <Icon className="h-3.5 w-3.5" aria-hidden />
@@ -100,14 +100,14 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors',
                     pathname.startsWith('/dashboard/admin')
-                      ? 'bg-slate-100 text-slate-900 font-medium'
-                      : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50',
+                      ? 'bg-white/15 text-white font-medium'
+                      : 'text-white/60 hover:text-white hover:bg-white/10',
                   )}
                 >
                   <ShieldAlert className="h-3.5 w-3.5" aria-hidden />
                   Admin
                   {pendingCount > 0 && (
-                    <span className="inline-flex items-center justify-center rounded-full bg-amber-500 text-white text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
+                    <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#040B4D] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
                       {pendingCount}
                     </span>
                   )}
@@ -121,7 +121,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
             <div className="relative flex-shrink-0" ref={dropdownRef}>
               <button
                 onClick={() => setOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-50 transition-colors focus-ring"
+                className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/10 transition-colors focus-ring"
                 aria-expanded={open}
                 aria-haspopup="true"
               >
@@ -131,19 +131,19 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                   <img
                     src={session.user.image}
                     alt={session.user.name ?? 'User'}
-                    className="h-7 w-7 rounded-full object-cover ring-1 ring-slate-200 flex-shrink-0"
+                    className="h-7 w-7 rounded-full object-cover ring-1 ring-white/20 flex-shrink-0"
                   />
                 ) : (
-                  <div className="h-7 w-7 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                  <div className="h-7 w-7 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0">
                     <span className="text-xs font-semibold text-white select-none">{initials}</span>
                   </div>
                 )}
-                <span className="hidden md:block text-sm font-medium text-slate-700 max-w-[100px] truncate">
+                <span className="hidden md:block text-sm font-medium text-white/80 max-w-[100px] truncate">
                   {session.user.name?.split(' ')[0]}
                 </span>
                 <ChevronDown
                   className={cn(
-                    'h-3.5 w-3.5 text-slate-400 transition-transform duration-150 hidden md:block',
+                    'h-3.5 w-3.5 text-white/40 transition-transform duration-150 hidden md:block',
                     open && 'rotate-180',
                   )}
                   aria-hidden
@@ -152,25 +152,25 @@ export function Nav({ pendingCount = 0 }: NavProps) {
 
               {/* Dropdown panel */}
               {open && (
-                <div className="absolute right-0 top-full mt-1.5 w-60 rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-200/60 overflow-hidden z-50">
+                <div className="absolute right-0 top-full mt-1.5 w-64 rounded-xl border border-slate-200 bg-white shadow-elevated overflow-hidden z-50">
                   {/* User info header */}
-                  <div className="px-4 py-3.5 border-b border-slate-100 bg-slate-50/50">
+                  <div className="px-4 py-4 border-b border-slate-100 bg-gradient-to-br from-[#040B4D] to-[#18197D]">
                     <div className="flex items-center gap-3">
                       {session.user.image ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={session.user.image}
                           alt={session.user.name ?? 'User'}
-                          className="h-10 w-10 rounded-full object-cover ring-1 ring-slate-200 flex-shrink-0"
+                          className="h-10 w-10 rounded-full object-cover ring-2 ring-white/20 flex-shrink-0"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                        <div className="h-10 w-10 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0">
                           <span className="text-sm font-semibold text-white select-none">{initials}</span>
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-slate-900 truncate">{session.user.name}</p>
-                        <p className="text-xs text-slate-400 truncate">{session.user.email}</p>
+                        <p className="text-sm font-semibold text-white truncate">{session.user.name}</p>
+                        <p className="text-xs text-white/60 truncate">{session.user.email}</p>
                       </div>
                     </div>
                     {role && (

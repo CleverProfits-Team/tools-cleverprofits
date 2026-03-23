@@ -128,7 +128,7 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
               href={tool.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-1 inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 hover:underline break-all"
+              className="mt-1 inline-flex items-center gap-1 text-sm text-[#2605EF] hover:text-[#1803b3] hover:underline break-all"
             >
               {tool.externalUrl}
               <ExternalLink className="h-3 w-3 flex-shrink-0" aria-hidden />
@@ -235,7 +235,7 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
               <button
                 onClick={() => mutate('ACTIVE')}
                 disabled={loading !== null}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#2605EF] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1e04cc] disabled:opacity-50 transition-colors shadow-sm"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden />
                 {loading === 'ACTIVE' ? 'Restoring…' : 'Restore to Active'}
@@ -269,7 +269,7 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               placeholder="Describe why this tool is being rejected… (min 10 characters)"
-              className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2605EF]"
             />
             <p className="text-xs text-slate-400 mt-1">{rejectReason.trim().length} / 1000</p>
             <div className="flex justify-end gap-2 mt-4">

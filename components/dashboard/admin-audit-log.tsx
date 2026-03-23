@@ -99,7 +99,7 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
               className={cn(
                 'px-3 py-1.5 text-xs font-medium transition-colors',
                 category === value
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#2605EF] text-white'
                   : 'bg-white text-slate-600 hover:bg-slate-50',
               )}
             >
@@ -112,7 +112,7 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search actor, tool, user…"
-          className="rounded-md border border-slate-200 px-3 py-1.5 text-sm flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="rounded-md border border-slate-200 px-3 py-1.5 text-sm flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-[#2605EF]"
         />
         <span className="self-center text-xs text-slate-400">
           {filtered.length} event{filtered.length !== 1 ? 's' : ''}

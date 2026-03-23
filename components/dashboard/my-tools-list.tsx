@@ -46,7 +46,7 @@ export function MyToolsList({ tools }: Props) {
         <p className="text-slate-500 text-sm mb-3">You haven&apos;t registered any tools yet.</p>
         <Link
           href="/dashboard/register"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2605EF] px-4 py-2 text-sm font-medium text-white hover:bg-[#1e04cc] transition-colors"
         >
           Register your first tool
         </Link>
@@ -65,14 +65,14 @@ export function MyToolsList({ tools }: Props) {
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors',
               filter === value
-                ? 'bg-blue-600 text-white'
+                ? 'bg-[#2605EF] text-white'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
             )}
           >
             {label}
             <span className={cn(
               'inline-flex items-center justify-center rounded-full min-w-[1.1rem] h-4 px-1 text-xs',
-              filter === value ? 'bg-blue-500 text-white' : 'bg-slate-200 text-slate-600',
+              filter === value ? 'bg-[#1e04cc] text-white' : 'bg-slate-200 text-slate-600',
             )}>
               {counts[value] ?? 0}
             </span>
@@ -133,7 +133,7 @@ export function MyToolsList({ tools }: Props) {
             <div className="mt-3 flex items-center gap-3">
               <Link
                 href={`/tools/${tool.slug}`}
-                className="text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                className="text-xs font-medium text-[#2605EF] hover:text-[#1803b3] hover:underline"
               >
                 View details →
               </Link>

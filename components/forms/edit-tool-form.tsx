@@ -273,7 +273,7 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
       <Label>Tags</Label>
       <div className={cn(
         'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5',
-        'focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-colors',
+        'focus-within:ring-2 focus-within:ring-[#d5d4ff] focus-within:border-[#2605EF] transition-colors',
       )}>
         {tags.map((tag) => (
           <span

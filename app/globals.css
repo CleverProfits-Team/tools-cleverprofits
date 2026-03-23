@@ -23,13 +23,13 @@
 
   /* Smooth focus outlines everywhere */
   :focus-visible {
-    @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+    @apply outline-none ring-2 ring-[#2605EF] ring-offset-2;
   }
 
   /* Better text selection */
   ::selection {
-    background: #bfdbfe;
-    color: #1e40af;
+    background: #d5d4ff;
+    color: #040B4D;
   }
 
   /* Slim custom scrollbar */
@@ -42,7 +42,7 @@
 @layer components {
   /* Reusable focus ring utility */
   .focus-ring {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2;
   }
 
   /* Page container */

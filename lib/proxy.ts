@@ -373,23 +373,6 @@ export function rewriteSetCookie(raw: string, slug: string): string {
 }
 
 /**
- * Returns true if a Set-Cookie header string is setting a cookie whose name
- * belongs to NextAuth. These must never be forwarded from an upstream service
- * to the browser, because they would conflict with the platform's own NextAuth
- * session cookie (same name, different encryption secret) and break auth.
- *
- * A Set-Cookie header looks like:
- *   "next-auth.session-token=abc; Path=/; HttpOnly; Secure"
- * The cookie name is everything before the first "=".
- */
-export function isNextAuthSetCookie(setCookieHeader: string): boolean {
-  const name = setCookieHeader.split('=')[0].trim().toLowerCase()
-  return NEXTAUTH_COOKIE_PREFIXES.some((prefix) =>
-    name.startsWith(prefix.toLowerCase()),
-  )
-}
-
-/**
  * Copies all Set-Cookie headers from srcHeaders to dstHeaders, rewriting
  * each one via rewriteSetCookie(). NextAuth-named cookies are silently
  * dropped to prevent name collisions with the platform's own session cookie.

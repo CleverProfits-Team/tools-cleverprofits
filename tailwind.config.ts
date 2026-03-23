@@ -9,21 +9,33 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans:    ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-space-grotesk)', 'var(--font-inter)', 'ui-sans-serif', 'sans-serif'],
       },
       colors: {
+        // CleverProfits brand palette (from brand guidelines)
+        cp: {
+          'royal-blue':    '#040B4D',
+          'electric-blue': '#2605EF',
+          'dark-navy':     '#18197D',
+          'navy':          '#1508AC',
+          'navy-black':    '#0F0038',
+          'grey':          '#D6D6D6',
+          'light-grey':    '#E7E7E7',
+        },
+        // Keep brand scale for backwards compat (now maps to CP electric blue)
         brand: {
-          50:  '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50:  '#eeeeff',
+          100: '#d5d4ff',
+          200: '#b0adff',
+          300: '#8a85ff',
+          400: '#6560f5',
+          500: '#2605EF',
+          600: '#2605EF',
+          700: '#1e04cc',
+          800: '#1803b3',
+          900: '#12028a',
+          950: '#0a0155',
         },
       },
       boxShadow: {
