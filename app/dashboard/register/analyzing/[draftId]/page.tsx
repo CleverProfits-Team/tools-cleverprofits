@@ -82,7 +82,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
         if (data.analysisStatus === 'ANALYSIS_COMPLETE') {
           cancelAll()
           setStatuses(['done', 'done', 'done', 'done'])
-          setTimeout(() => { if (alive) router.push(`/dashboard/register/review/${draftId}`) }, 700)
+          setTimeout(() => router.push(`/dashboard/register/review/${draftId}`), 700)
         } else if (data.analysisStatus === 'ANALYSIS_FAILED') {
           cancelAll()
           setStatuses((prev) => {
