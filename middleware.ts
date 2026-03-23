@@ -14,7 +14,8 @@ export default withAuth(
     // Without this, a logged-in user visiting /login would see the sign-in
     // screen, which is confusing.
     if (pathname === '/login' && token) {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
+      const callbackUrl = req.nextUrl.searchParams.get('callbackUrl') ?? '/dashboard'
+      return NextResponse.redirect(new URL(callbackUrl, req.url))
     }
 
     return NextResponse.next()
