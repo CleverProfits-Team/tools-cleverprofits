@@ -393,6 +393,31 @@ export function rewriteHtml(
     )
   }
 
+  // Pass 3: Rewrite root-relative absolute paths in HTML attributes.
+  //
+  // Frameworks like Next.js emit asset paths as root-relative URLs, e.g.:
+  //   <link href="/_next/static/css/app.css" ...>
+  //   <script src="/_next/static/js/main.js" ...>
+  //
+  // These start with "/" so the <base> tag (which only affects relative paths)
+  // does not help. The browser requests tools.cleverprofits.com/_next/... and
+  // gets a 404 instead of tools.cleverprofits.com/kpis-dashboard/_next/...
+  //
+  // We prepend /slug to any root-relative path in href/src/action attributes,
+  // UNLESS the path:
+  //   - already starts with /slug (already rewritten by Pass 1)
+  //   - starts with // (protocol-relative, handled by Pass 1)
+  const escapedSlug = escapeRegExp(slug)
+  result = result.replace(
+    new RegExp(
+      `((?:href|src|action)\\s*=\\s*["'])(\\/)`
+      + `(?!\\/)` // skip protocol-relative //...
+      + `(?!${escapedSlug}(?:\\/|['"]))`, // skip already-prefixed /slug/...
+      'gi',
+    ),
+    `$1/${slug}/`,
+  )
+
   return result
 }
 
