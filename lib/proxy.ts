@@ -159,10 +159,26 @@ export function buildForwardHeaders(
   //      - virtual hosting
   out.set('host', new URL(upstreamBase).host)
 
-  // 4. Standard reverse-proxy identification headers
+  // 4. Standard reverse-proxy identification headers.
+  //
+  // NOTE: x-forwarded-host is intentionally NOT set here.
+  //
+  // Setting x-forwarded-host to tools.cleverprofits.com causes upstream
+  // apps (e.g. NextAuth-based tools) to construct their redirect URLs
+  // using our platform domain instead of their own — e.g.:
+  //   https://tools.cleverprofits.com/login
+  // rather than:
+  //   https://growth-system.up.railway.app/api/auth/signin
+  //
+  // rewriteLocation() can only rewrite redirects that point at the upstream
+  // host, so a redirect to tools.cleverprofits.com bypasses rewriting and
+  // sends the user to the platform's own /login page.
+  //
+  // Without x-forwarded-host, the upstream app uses its own Host header
+  // (set above) when constructing absolute URLs, so its redirects point at
+  // the upstream domain and are correctly rewritten by rewriteLocation().
   out.set('x-forwarded-for',   clientIp)
   out.set('x-forwarded-proto', 'https')
-  out.set('x-forwarded-host',  originalHost)
   out.set('x-real-ip',         clientIp)
 
   return out
