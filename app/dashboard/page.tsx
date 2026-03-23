@@ -52,7 +52,7 @@ export default async function DashboardPage() {
             Your tools
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Manage and launch internal tools across CleverProfits.
+            Launch, manage, and scale internal tools across CleverProfits teams.
           </p>
         </div>
 

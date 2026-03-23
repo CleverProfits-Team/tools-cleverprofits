@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -41,6 +42,7 @@ interface Props {
 type StatusFilter = 'ALL' | ToolStatus
 
 export function AdminToolsList({ initialTools, teams }: Props) {
+  const router = useRouter()
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
   const [teamFilter,   setTeamFilter]   = useState<string>('ALL')
   const [pendingOnly,  setPendingOnly]  = useState(false)
@@ -136,6 +138,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                 return (
                   <tr
                     key={tool.id}
+                    onClick={() => router.push(`/dashboard/admin/tools/${tool.id}`)}
                     className={cn(
                       'transition-colors cursor-pointer',
                       isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-slate-50',

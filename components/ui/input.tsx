@@ -13,8 +13,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       className={cn(
         'flex h-9 w-full rounded-lg border border-slate-200 bg-white px-3 py-1',
         'text-sm text-slate-900 placeholder:text-slate-400',
-        'transition-colors',
-        'focus:outline-none focus:ring-2 focus:ring-[#2605EF] focus:border-transparent',
+        'transition-all duration-150',
+        'hover:border-slate-300',
+        'focus:outline-none focus:ring-2 focus:ring-[#2605EF]/25 focus:border-[#2605EF]/60 focus:shadow-[0_0_0_3px_rgba(38,5,239,0.08)]',
         'disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500',
         error && 'border-red-400 focus:ring-red-400',
         className,
