@@ -411,6 +411,15 @@ export function rewriteHtml(
     `$1/${slug}/`,
   )
 
+  // Pass 4: patch assetPrefix in inline __NEXT_DATA__ JSON (Pages Router).
+  // Next.js injects <script id="__NEXT_DATA__" type="application/json">{"assetPrefix":"", ...}
+  // Setting assetPrefix to /<slug> makes the client load all /_next/ chunks
+  // via the proxy path instead of the platform's own /_next/ directory.
+  result = result.replace(
+    /"assetPrefix"\s*:\s*""/g,
+    `"assetPrefix":"/${slug}"`,
+  )
+
   return result
 }
 
@@ -449,21 +458,61 @@ export function rewriteCss(css: string, upstreamBase: string, slug: string): str
 }
 
 /**
- * Rewrites a JS bundle so that hardcoded upstream origin strings are replaced
- * with proxy-relative equivalents.
+ * Rewrites a JS bundle so that upstream-origin strings and root-relative
+ * asset paths are replaced with proxy-relative equivalents.
  *
- * Pass 1 only: Replace https://host, http://host, //host → /slug
- * Runtime-constructed URLs (string concatenation, template literals with
- * variables) cannot be reached by static replacement — known limitation.
+ * Pass 1: Replace https://host, http://host, //host → /slug
+ *
+ * Pass 2: Rewrite the webpack public path and any quoted "/_next/" string
+ *   literals so that dynamically-loaded chunks (lazy routes, code-split
+ *   bundles) are fetched through the proxy instead of hitting the platform's
+ *   own /_next/ directory and returning 404.
+ *
+ *   Next.js sets the webpack public path as a string constant in the webpack
+ *   runtime bundle, e.g.:
+ *     __webpack_require__.p = "/_next/"
+ *   After rewriting:
+ *     __webpack_require__.p = "/growth-system/_next/"
+ *
+ *   This covers both App Router and Pages Router Next.js builds. Non-Next.js
+ *   apps with root-relative asset paths also benefit.
+ *
+ * Pass 3: Rewrite assetPrefix in __NEXT_DATA__ JSON embedded in JS payloads
+ *   (Pages Router RSC / inline data).
+ *
+ * Runtime-constructed URLs (e.g. variable + "/_next/") are not reachable —
+ * known limitation for dynamically assembled paths.
  */
 export function rewriteJs(js: string, upstreamBase: string, slug: string): string {
   const host = new URL(upstreamBase).host
   const internalBase = `/${slug}`
 
-  return js
+  // Pass 1: upstream origin replacement
+  let result = js
     .replace(new RegExp(`https://${escapeRegExp(host)}`, 'gi'), internalBase)
     .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
     .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
+
+  // Pass 2: rewrite quoted "/_next/" string literals → "/<slug>/_next/"
+  // Matches single-quoted, double-quoted, and template-literal occurrences.
+  // Skips occurrences already prefixed with the slug (idempotent).
+  const escapedSlug = escapeRegExp(slug)
+  result = result.replace(
+    new RegExp(
+      `(["'\`])\\/_next\\/(?!${escapedSlug}(?:\\/|["'\`]))`,
+      'g',
+    ),
+    `$1/${slug}/_next/`,
+  )
+
+  // Pass 3: patch assetPrefix in any embedded __NEXT_DATA__ JSON
+  // so Next.js Pages Router uses the proxy-relative prefix.
+  result = result.replace(
+    /"assetPrefix"\s*:\s*""/g,
+    `"assetPrefix":"/${slug}"`,
+  )
+
+  return result
 }
 
 /**
