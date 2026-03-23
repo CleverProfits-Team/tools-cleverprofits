@@ -38,7 +38,8 @@ export async function GET() {
 
   // All tools (for the table)
   const tools = await prisma.tool.findMany({
-    select: { id: true, name: true, slug: true, status: true },
+    where:   { status: { not: 'DRAFT' } },
+    select:  { id: true, name: true, slug: true, status: true },
     orderBy: { name: 'asc' },
   })
 
