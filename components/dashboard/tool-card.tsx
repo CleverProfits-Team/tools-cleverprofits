@@ -116,14 +116,14 @@ export function ToolCard({ tool }: ToolCardProps) {
         </div>
 
         {isActive ? (
-          <Link
+          <a
             href={`/${tool.slug}`}
             className="inline-flex items-center gap-1 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition-colors flex-shrink-0 shadow-xs focus-ring"
             aria-label={`Open ${tool.name}`}
           >
             Open
             <ArrowUpRight className="h-3 w-3" aria-hidden />
-          </Link>
+          </a>
         ) : (
           <Link
             href={`/tools/${tool.slug}`}
