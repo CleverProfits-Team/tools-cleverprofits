@@ -125,6 +125,14 @@ export function MyToolsList({ tools }: Props) {
               >
                 View details →
               </Link>
+              {(tool.status === 'PENDING' || tool.status === 'REJECTED') && (
+                <Link
+                  href={`/dashboard/tools/${tool.id}/edit`}
+                  className="text-xs font-medium text-slate-600 hover:text-slate-900 hover:underline"
+                >
+                  Edit →
+                </Link>
+              )}
               {tool.status === 'ACTIVE' && (
                 <a
                   href={`/${tool.slug}`}

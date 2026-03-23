@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { StatusBadge, AccessBadge } from '@/components/ui/badge'
-import { ExternalLink, ArrowLeft, Clock, Users } from 'lucide-react'
+import { ExternalLink, ArrowLeft, Clock, Users, Pencil } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +16,13 @@ export async function generateMetadata(
   return { title: tool?.name ?? 'Tool' }
 }
 
-export default async function ToolInfoPage({ params }: { params: { slug: string } }) {
+export default async function ToolInfoPage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
   const session = await getServerSession(authOptions)
   const isAdmin = session?.user?.role === 'ADMIN' || session?.user?.role === 'SUPER_ADMIN'
   const userEmail = session?.user?.email ?? ''
@@ -36,18 +42,39 @@ export default async function ToolInfoPage({ params }: { params: { slug: string 
     month: 'long', day: 'numeric', year: 'numeric',
   })
 
+  const showEdit = isAdmin || (isOwner && (tool.status === 'PENDING' || tool.status === 'REJECTED'))
+  const updated  = searchParams.updated === '1'
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="max-w-2xl mx-auto px-4 py-12">
 
         {/* Back */}
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-8"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
-          Back to Dashboard
-        </Link>
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+            Back to Dashboard
+          </Link>
+          {showEdit && (
+            <Link
+              href={`/dashboard/tools/${tool.id}/edit`}
+              className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              <Pencil className="h-3.5 w-3.5" aria-hidden />
+              Edit
+            </Link>
+          )}
+        </div>
+
+        {/* Success banner */}
+        {updated && (
+          <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3">
+            <p className="text-sm text-emerald-800">Tool updated successfully.</p>
+          </div>
+        )}
 
         {/* Status banners */}
         {tool.status === 'PENDING' && (

@@ -177,6 +177,12 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
         <div className="rounded-lg border border-slate-200 bg-white p-6">
           <h3 className="text-sm font-semibold text-slate-900 mb-4">Actions</h3>
           <div className="space-y-2">
+            <Link
+              href={`/dashboard/tools/${tool.id}/edit`}
+              className="block w-full rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 text-center hover:bg-slate-50 transition-colors"
+            >
+              Edit tool
+            </Link>
             {tool.status === 'PENDING' && (
               <>
                 {isOwnTool ? (

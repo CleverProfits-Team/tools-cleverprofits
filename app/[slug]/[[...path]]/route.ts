@@ -41,6 +41,8 @@ import {
   rewriteSetCookie,
   forwardSetCookies,
   rewriteHtml,
+  rewriteCss,
+  rewriteJs,
   generateErrorPage,
 } from '@/lib/proxy'
 
@@ -307,16 +309,58 @@ async function handleProxy(
     })
   }
 
+  // ── CSS: buffer and rewrite ────────────────────────────────────────────────
+  //
+  // CSS files may contain url('/path') values that reference the upstream host
+  // or root-relative paths. We buffer and rewrite them the same way we handle
+  // HTML.
+
+  if (contentType.includes('text/css')) {
+    let css: string
+    try {
+      css = await upstream.text()
+    } catch (err) {
+      console.error(`[Proxy] Failed to read CSS body from ${upstreamUrl}:`, err)
+      return errPage(502, 'Tool Error', 'The tool returned a response that could not be read.')
+    }
+
+    const rewritten = rewriteCss(css, upstreamBase, params.slug)
+    resHeaders.delete('content-length')
+
+    return new Response(rewritten, {
+      status:  upstream.status,
+      headers: resHeaders,
+    })
+  }
+
+  // ── JavaScript: buffer and rewrite ────────────────────────────────────────
+  //
+  // JS bundles may contain hardcoded upstream origin strings (e.g. fetch base
+  // URLs). We do a best-effort string replacement. Runtime-constructed URLs
+  // remain a known limitation.
+
+  if (contentType.includes('text/javascript') || contentType.includes('application/javascript')) {
+    let js: string
+    try {
+      js = await upstream.text()
+    } catch (err) {
+      console.error(`[Proxy] Failed to read JS body from ${upstreamUrl}:`, err)
+      return errPage(502, 'Tool Error', 'The tool returned a response that could not be read.')
+    }
+
+    const rewritten = rewriteJs(js, upstreamBase, params.slug)
+    resHeaders.delete('content-length')
+
+    return new Response(rewritten, {
+      status:  upstream.status,
+      headers: resHeaders,
+    })
+  }
+
   // ── All other content types: stream directly ───────────────────────────────
   //
-  // CSS, JavaScript, images, fonts, JSON API responses, binary downloads —
-  // these are piped from the upstream ReadableStream to the browser without
-  // buffering. This keeps memory usage flat regardless of file size.
-  //
-  // Trade-off: CSS files with absolute upstream URLs (e.g. url('https://abc.
-  // up.railway.app/img/logo.png')) will break because we do not rewrite them.
-  // Modern bundlers (Vite, webpack, Next.js) emit relative URLs, so this is
-  // rarely encountered in practice. See proxy.ts known limitations §2.
+  // Images, fonts, JSON API responses, binary downloads — piped from the
+  // upstream ReadableStream to the browser without buffering.
 
   return new Response(upstream.body, {
     status:  upstream.status,

@@ -1,0 +1,43 @@
+import { redirect, notFound } from 'next/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+import { EditToolForm } from '@/components/forms/edit-tool-form'
+import type { SerializedTool } from '@/types'
+
+export const dynamic = 'force-dynamic'
+
+export default async function EditToolPage({ params }: { params: { id: string } }) {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.email) redirect('/login')
+
+  const tool = await prisma.tool.findUnique({ where: { id: params.id } })
+  if (!tool) notFound()
+
+  const role     = session.user.role as string
+  const isAdmin  = role === 'ADMIN' || role === 'SUPER_ADMIN'
+  const isOwner  = tool.createdByEmail === session.user.email
+
+  if (!isAdmin && !isOwner) redirect('/dashboard')
+
+  if (!isAdmin && tool.status !== 'PENDING' && tool.status !== 'REJECTED') {
+    redirect(`/tools/${tool.slug}`)
+  }
+
+  const serialized: SerializedTool = {
+    ...tool,
+    createdAt: tool.createdAt.toISOString(),
+    updatedAt: tool.updatedAt.toISOString(),
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <h1 className="text-2xl font-bold text-slate-900 mb-8">Edit Tool</h1>
+        <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
+          <EditToolForm tool={serialized} isAdmin={isAdmin} />
+        </div>
+      </div>
+    </div>
+  )
+}

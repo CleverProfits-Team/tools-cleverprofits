@@ -11,18 +11,11 @@
  *    that rely on WebSocket connections will not work through this proxy.
  *    Workaround: deploy a standalone Node/Express sidecar as a WS gateway.
  *
- * 2. External CSS stylesheets
- *    CSS files are streamed directly without URL rewriting. If a stylesheet
- *    contains absolute URLs pointing at the upstream host (e.g. url(...)),
- *    those assets will fail to load. Most modern bundlers emit relative URLs,
- *    so this is rarely a problem in practice. A V2 improvement would buffer
- *    and rewrite CSS responses the same way we handle HTML.
- *
- * 3. JavaScript that constructs absolute URLs at runtime
+ * 2. JavaScript that constructs absolute URLs at runtime
  *    URLs that are assembled inside JS (e.g. `const url = BACKEND_URL + path`)
  *    are not reachable by string-replacement passes. Those requests will bypass
- *    the proxy and hit the upstream domain directly. Tools that hard-code
- *    their own origin in JS will exhibit partial breakage.
+ *    the proxy and hit the upstream domain directly. Hardcoded string constants
+ *    ARE rewritten by rewriteJs(); only runtime-constructed values are missed.
  *
  * 4. Streaming body size
  *    Request bodies are streamed through without buffering. The default Node.js
@@ -419,6 +412,58 @@ export function rewriteHtml(
   )
 
   return result
+}
+
+/**
+ * Rewrites a CSS document so that upstream-origin URLs and root-relative
+ * paths inside url(...) expressions resolve through the proxy.
+ *
+ * Pass 1: Replace upstream origin (https://host, http://host, //host) → /slug
+ * Pass 2: Rewrite root-relative url('/path') → url('/slug/path')
+ *         - Skips protocol-relative //...
+ *         - Skips paths already prefixed with /slug
+ */
+export function rewriteCss(css: string, upstreamBase: string, slug: string): string {
+  const host = new URL(upstreamBase).host
+  const internalBase = `/${slug}`
+
+  // Pass 1: upstream origin replacement (same as HTML Pass 1)
+  let result = css
+    .replace(new RegExp(`https://${escapeRegExp(host)}`, 'gi'), internalBase)
+    .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
+    .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
+
+  // Pass 2: root-relative paths inside url(...)
+  const escapedSlug = escapeRegExp(slug)
+  result = result.replace(
+    new RegExp(
+      `(url\\s*\\(\\s*['"]?)(\\/)` +
+      `(?!\\/)` +                              // skip protocol-relative //...
+      `(?!${escapedSlug}(?:\\/|['")]))`,       // skip already-prefixed /slug/...
+      'gi',
+    ),
+    `$1/${slug}/`,
+  )
+
+  return result
+}
+
+/**
+ * Rewrites a JS bundle so that hardcoded upstream origin strings are replaced
+ * with proxy-relative equivalents.
+ *
+ * Pass 1 only: Replace https://host, http://host, //host → /slug
+ * Runtime-constructed URLs (string concatenation, template literals with
+ * variables) cannot be reached by static replacement — known limitation.
+ */
+export function rewriteJs(js: string, upstreamBase: string, slug: string): string {
+  const host = new URL(upstreamBase).host
+  const internalBase = `/${slug}`
+
+  return js
+    .replace(new RegExp(`https://${escapeRegExp(host)}`, 'gi'), internalBase)
+    .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
+    .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
 }
 
 /**

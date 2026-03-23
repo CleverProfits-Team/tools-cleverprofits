@@ -62,7 +62,7 @@ export async function PUT(
   // Verify the tool exists before parsing the body — avoids wasted work
   const existing = await prisma.tool.findUnique({
     where: { id: params.id },
-    select: { id: true, slug: true, name: true, status: true },
+    select: { id: true, slug: true, name: true, status: true, createdByEmail: true },
   })
 
   if (!existing) {
@@ -75,6 +75,20 @@ export async function PUT(
     body = await request.json()
   } catch {
     return NextResponse.json({ error: 'Request body must be valid JSON' }, { status: 400 })
+  }
+
+  // Non-admins can only edit their own PENDING or REJECTED tools
+  const role = session.user.role
+  if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
+    if (existing.createdByEmail !== session.user.email) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+    if (existing.status !== 'PENDING' && existing.status !== 'REJECTED') {
+      return NextResponse.json(
+        { error: 'Active tools can only be edited by admins' },
+        { status: 403 },
+      )
+    }
   }
 
   // Validate with partial schema (all fields optional, slug excluded)
@@ -92,7 +106,6 @@ export async function PUT(
   const data = parsed.data
 
   if (data.status !== undefined) {
-    const role = session.user.role
     if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
       return NextResponse.json(
         { error: 'Forbidden: only admins can change tool status' },
