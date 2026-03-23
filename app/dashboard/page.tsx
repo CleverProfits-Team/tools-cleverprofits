@@ -23,7 +23,8 @@ export default async function DashboardPage() {
   // Querying directly from Prisma (not via the API route) avoids a round-trip
   // HTTP call and is faster for server-rendered pages.
   const rawTools = await prisma.tool.findMany({
-    include:  { tags: { select: { id: true, name: true } } },
+    where:   { status: { not: 'DRAFT' } },
+    include: { tags: { select: { id: true, name: true } } },
     orderBy: { createdAt: 'desc' },
   })
 

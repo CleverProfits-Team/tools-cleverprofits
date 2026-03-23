@@ -158,6 +158,79 @@ export const updateToolSchema = createToolSchema
 export type CreateToolInput = z.infer<typeof createToolSchema>
 export type UpdateToolInput = z.infer<typeof updateToolSchema>
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Smart Registration schemas
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Step 1 — Identify: minimum data to create a DRAFT tool record.
+ * Name is optional (auto-derived from URL hostname if not provided).
+ */
+export const createDraftSchema = z.object({
+  externalUrl: z
+    .string()
+    .min(1, 'Tool URL is required')
+    .url('Must be a valid URL (include https://)')
+    .refine(
+      (url) => url.startsWith('http://') || url.startsWith('https://'),
+      'URL must start with http:// or https://',
+    )
+    .refine(
+      (url) => !isBlockedUrl(url),
+      'URL must not point to a private, loopback, or internal network address',
+    ),
+
+  name: z
+    .string()
+    .max(100, 'Name must be 100 characters or fewer')
+    .optional()
+    .or(z.literal('')),
+
+  githubRepoUrl: z
+    .string()
+    .url('Must be a valid URL')
+    .refine((url) => url.includes('github.com'), 'Must be a GitHub URL')
+    .optional()
+    .or(z.literal('')),
+})
+
+/**
+ * Step 2 + review step — update a DRAFT tool's governance and AI fields.
+ * All fields optional; only provided fields are written.
+ */
+export const updateDraftSchema = z.object({
+  // Step 2: ownership & governance
+  name:           z.string().min(1).max(100).optional(),
+  team:           z.string().max(100).optional().or(z.literal('')),
+  accessLevel:    z.enum(['INTERNAL', 'RESTRICTED', 'LEADERSHIP']).optional(),
+  isExperimental: z.boolean().optional(),
+  githubRepoUrl:  z.string().url().optional().or(z.literal('')),
+
+  // Review step: human-edited copy
+  description: z.string().max(500).optional().or(z.literal('')),
+  notes:       z.string().max(1000).optional().or(z.literal('')),
+  tags:        z
+    .array(
+      z.string().min(1).max(50)
+        .regex(/^[a-zA-Z0-9 _-]+$/, 'Tags may only contain letters, numbers, spaces, hyphens, and underscores'),
+    )
+    .max(10)
+    .optional(),
+
+  // Review step: AI field overrides (user accepts/edits generated values)
+  aiTitle:          z.string().max(100).optional().or(z.literal('')),
+  aiSummary:        z.string().max(500).optional().or(z.literal('')),
+  aiDescription:    z.string().max(2000).optional().or(z.literal('')),
+  aiObjective:      z.string().max(500).optional().or(z.literal('')),
+  aiSuggestedUsers: z.string().max(500).optional().or(z.literal('')),
+  aiCategory:       z.string().max(50).optional().or(z.literal('')),
+  aiTechStack:      z.string().max(200).optional().or(z.literal('')),
+  aiFrameworkGuess: z.string().max(100).optional().or(z.literal('')),
+})
+
+export type CreateDraftInput = z.infer<typeof createDraftSchema>
+export type UpdateDraftInput = z.infer<typeof updateDraftSchema>
+
 export const updateUserSchema = z.object({
   role:   z.enum(['SUPER_ADMIN', 'ADMIN', 'BUILDER', 'VIEWER']).optional(),
   status: z.enum(['ACTIVE', 'SUSPENDED']).optional(),

@@ -53,6 +53,30 @@ model Tool {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  // ── Smart Registration ────────────────────────────────────────────────────
+  githubRepoUrl  String?
+  isExperimental Boolean @default(false)
+
+  // ── AI Analysis pipeline ──────────────────────────────────────────────────
+  // Tracks the state of the async analysis job independently of governance status.
+  analysisStatus   AnalysisStatus @default(PENDING_ANALYSIS)
+  analysisError    String?
+  lastAnalyzedAt   DateTime?
+  analysisSnapshot String?        @db.Text // truncated raw content fed to the AI
+
+  // ── AI-generated profile ──────────────────────────────────────────────────
+  // All fields are nullable and always editable — they are suggestions, not locks.
+  aiTitle          String?
+  aiSummary        String?        // one sentence
+  aiDescription    String?        @db.Text
+  aiObjective      String?
+  aiSuggestedUsers String?
+  aiCategory       String?
+  aiTechStack      String?
+  aiFrameworkGuess String?
+  aiConfidence     Float?         // 0.0 – 1.0
+  aiOverlapWarnings Json?         // String[] of tool names flagged as overlapping
+
   // Relations
   tags     Tag[]         @relation("ToolTags")
   hits     ProxyHit[]
@@ -106,10 +130,18 @@ enum AccessLevel {
 }
 
 enum ToolStatus {
+  DRAFT     // Being registered via Smart Registration; not yet submitted
   ACTIVE    // Proxy routing live
   PENDING   // Registered but not yet approved / deployed
   ARCHIVED  // Soft-deleted; proxy returns 503
   REJECTED  // Rejected by admin with a reason
+}
+
+enum AnalysisStatus {
+  PENDING_ANALYSIS   // Tool created, analysis not yet started
+  ANALYZING          // Analysis pipeline is running
+  ANALYSIS_COMPLETE  // AI results ready; tool awaiting user review
+  ANALYSIS_FAILED    // Error occurred; user can retry or fill in manually
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

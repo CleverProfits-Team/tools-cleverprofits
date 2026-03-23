@@ -94,6 +94,9 @@ export async function GET(request: NextRequest) {
   try {
     const tools = await prisma.tool.findMany({
       where: {
+        // DRAFT tools are never exposed via the general list — they are only
+        // accessible through the smart registration flow via their draft ID.
+        status: { not: 'DRAFT' },
         ...searchFilter,
         ...teamFilter,
         ...statusFilter,

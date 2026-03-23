@@ -12,6 +12,7 @@ export default async function AdminToolsPage() {
   const session = await getServerSession(authOptions)
 
   const rawTools = await prisma.tool.findMany({
+    where:   { status: { not: 'DRAFT' } },
     include: { tags: { select: { id: true, name: true } } },
     orderBy: { createdAt: 'desc' },
   })
