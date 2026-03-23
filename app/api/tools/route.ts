@@ -22,6 +22,7 @@ const RESERVED_SLUGS = new Set([
   'settings',
   'health',
   'invite',
+  'tools',
 ])
 
 // ─────────────────────────────────────────────────────────────────────────────

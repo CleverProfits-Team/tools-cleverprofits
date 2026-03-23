@@ -30,9 +30,11 @@ export function ToolCard({ tool }: ToolCardProps) {
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-slate-900 text-[15px] leading-snug truncate">
-            {tool.name}
-          </h3>
+          <Link href={`/tools/${tool.slug}`} className="hover:underline focus-ring rounded">
+            <h3 className="font-semibold text-slate-900 text-[15px] leading-snug truncate">
+              {tool.name}
+            </h3>
+          </Link>
           <p className="text-xs text-slate-400 font-mono mt-0.5 truncate">
             /{tool.slug}
           </p>

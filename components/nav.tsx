@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
-import { Wrench, LogOut, PlusCircle, LayoutDashboard, ShieldAlert } from 'lucide-react'
+import { Wrench, LogOut, PlusCircle, LayoutDashboard, ShieldAlert, ClipboardList } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '/dashboard',          label: 'Dashboard',     icon: LayoutDashboard },
-  { href: '/dashboard/register', label: 'Register Tool',  icon: PlusCircle },
+  { href: '/dashboard',           label: 'Dashboard',    icon: LayoutDashboard },
+  { href: '/dashboard/my-tools',  label: 'My Tools',     icon: ClipboardList },
+  { href: '/dashboard/register',  label: 'Register Tool', icon: PlusCircle },
 ]
 
 export function Nav() {
