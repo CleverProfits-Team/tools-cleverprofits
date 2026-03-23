@@ -30,7 +30,6 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 import { prisma } from '@/lib/db'
 import {
   STRIP_RESPONSE_HEADERS,
@@ -86,22 +85,10 @@ async function handleProxy(
   params: { slug: string; path?: string[] },
 ): Promise<Response> {
 
-  // ── Step 1: Authentication ─────────────────────────────────────────────────
+  // ── Step 1: Tool lookup ────────────────────────────────────────────────────
   //
-  // The middleware already rejects unauthenticated requests before they reach
-  // this handler. This second check is defense-in-depth: if the middleware
-  // matcher is ever misconfigured, the proxy will not silently serve tools to
-  // unauthenticated users.
-
-  const token = await getToken({ req: request })
-
-  if (!token?.email) {
-    const loginUrl = new URL('/login', request.url)
-    loginUrl.searchParams.set('callbackUrl', request.url)
-    return NextResponse.redirect(loginUrl)
-  }
-
-  // ── Step 2: Tool lookup ────────────────────────────────────────────────────
+  // Auth is enforced by middleware (withAuth) before this handler runs.
+  // Any request that reaches here has a valid JWT — no secondary check needed.
   //
   // We only select the four fields the proxy needs. Keeping the SELECT narrow
   // avoids pulling notes/description/etc. on every proxied request.
