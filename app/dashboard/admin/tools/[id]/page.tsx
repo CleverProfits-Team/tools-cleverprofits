@@ -25,6 +25,7 @@ export default async function AdminToolDetailPage({ params }: { params: { id: st
     <AdminToolDetail
       tool={tool}
       currentUserEmail={session!.user.email}
+      currentUserRole={session!.user.role}
     />
   )
 }

@@ -43,9 +43,10 @@ function ToolStatusBadge({ status }: { status: ToolStatus }) {
 interface Props {
   tool: SerializedTool
   currentUserEmail: string
+  currentUserRole: string
 }
 
-export function AdminToolDetail({ tool: initialTool, currentUserEmail }: Props) {
+export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUserRole }: Props) {
   const router = useRouter()
   const [tool, setTool]                 = useState(initialTool)
   const [showRejectModal, setShowRejectModal] = useState(false)
@@ -53,7 +54,8 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail }: Props) 
   const [loading, setLoading]           = useState<string | null>(null)
   const [error, setError]               = useState<string | null>(null)
 
-  const isOwnTool = tool.createdByEmail === currentUserEmail
+  // SUPER_ADMIN can approve any tool, including their own
+  const isOwnTool = tool.createdByEmail === currentUserEmail && currentUserRole !== 'SUPER_ADMIN'
 
   async function mutate(status: ToolStatus, extra?: { rejectionReason: string }) {
     setLoading(status)
