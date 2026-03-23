@@ -24,6 +24,7 @@ function formatDate(iso: string) {
 
 function ToolStatusBadge({ status }: { status: ToolStatus }) {
   const styles: Record<ToolStatus, string> = {
+    DRAFT:    'bg-slate-100 text-slate-400',
     ACTIVE:   'bg-emerald-100 text-emerald-700',
     PENDING:  'bg-amber-100 text-amber-700',
     ARCHIVED: 'bg-slate-100 text-slate-500',

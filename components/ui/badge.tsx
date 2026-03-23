@@ -6,6 +6,7 @@ import type { AccessLevel, ToolStatus } from '@prisma/client'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const STATUS_STYLES: Record<ToolStatus, string> = {
+  DRAFT:    'bg-slate-100 text-slate-400  ring-1 ring-slate-400/20',
   ACTIVE:   'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600/20',
   PENDING:  'bg-amber-50  text-amber-700  ring-1 ring-amber-600/20',
   ARCHIVED: 'bg-slate-100 text-slate-500  ring-1 ring-slate-500/20',
@@ -13,6 +14,7 @@ const STATUS_STYLES: Record<ToolStatus, string> = {
 }
 
 const STATUS_LABELS: Record<ToolStatus, string> = {
+  DRAFT:    'Draft',
   ACTIVE:   'Active',
   PENDING:  'Pending',
   ARCHIVED: 'Archived',

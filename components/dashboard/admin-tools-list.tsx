@@ -18,6 +18,7 @@ function formatDate(iso: string) {
 }
 
 const STATUS_CONFIG: Record<ToolStatus, { label: string; dot: string; pill: string }> = {
+  DRAFT:    { label: 'Draft',    dot: 'bg-slate-300',   pill: 'bg-slate-100  text-slate-400   ring-1 ring-slate-400/20'   },
   ACTIVE:   { label: 'Active',   dot: 'bg-emerald-500', pill: 'bg-emerald-50  text-emerald-700 ring-1 ring-emerald-600/20' },
   PENDING:  { label: 'Pending',  dot: 'bg-amber-500',   pill: 'bg-amber-50   text-amber-700   ring-1 ring-amber-600/20'   },
   ARCHIVED: { label: 'Archived', dot: 'bg-slate-400',   pill: 'bg-slate-100  text-slate-500   ring-1 ring-slate-500/20'   },
