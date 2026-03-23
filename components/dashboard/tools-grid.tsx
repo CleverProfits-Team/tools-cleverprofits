@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { ToolCard } from '@/components/dashboard/tool-card'
 import { Input } from '@/components/ui/input'
@@ -32,11 +33,50 @@ const ACCESS_OPTIONS = [
 ]
 
 export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
-  const [query,       setQuery]       = useState('')
-  const [teamFilter,  setTeamFilter]  = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
-  const [accessFilter, setAccessFilter] = useState('')
-  const [mineOnly,    setMineOnly]    = useState(false)
+  const router      = useRouter()
+  const pathname    = usePathname()
+  const searchParams = useSearchParams()
+  const searchRef   = useRef<HTMLInputElement>(null)
+
+  // Initialise from URL params
+  const [query,        setQuery]        = useState(() => searchParams.get('q')      ?? '')
+  const [teamFilter,   setTeamFilter]   = useState(() => searchParams.get('team')   ?? '')
+  const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? '')
+  const [accessFilter, setAccessFilter] = useState(() => searchParams.get('access') ?? '')
+  const [mineOnly,     setMineOnly]     = useState(() => searchParams.get('mine') === 'true')
+
+  // Sync filters → URL (debounced 300 ms for the text query)
+  const syncUrl = useCallback((
+    q: string, team: string, status: string, access: string, mine: boolean
+  ) => {
+    const params = new URLSearchParams()
+    if (q)      params.set('q',      q)
+    if (team)   params.set('team',   team)
+    if (status) params.set('status', status)
+    if (access) params.set('access', access)
+    if (mine)   params.set('mine',   'true')
+    const qs = params.toString()
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+  }, [router, pathname])
+
+  // Debounce query changes
+  useEffect(() => {
+    const t = setTimeout(() => syncUrl(query, teamFilter, statusFilter, accessFilter, mineOnly), 300)
+    return () => clearTimeout(t)
+  }, [query, teamFilter, statusFilter, accessFilter, mineOnly, syncUrl])
+
+  // '/' key focuses the search input (skip if already in an input)
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== '/' ) return
+      const tag = (e.target as HTMLElement).tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+      e.preventDefault()
+      searchRef.current?.focus()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const teamOptions = useMemo(() => [
     { value: '', label: 'All teams' },
@@ -47,7 +87,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
     const q = query.trim().toLowerCase()
     return tools.filter((t) => {
       if (q) {
-        const haystack = [t.name, t.slug, t.description ?? '', t.team ?? '']
+        const haystack = [t.name, t.slug, t.description ?? '', t.team ?? '', t.notes ?? '', t.createdByName]
           .join(' ')
           .toLowerCase()
         if (!haystack.includes(q)) return false
@@ -81,8 +121,9 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
             aria-hidden
           />
           <Input
+            ref={searchRef}
             type="search"
-            placeholder="Search tools…"
+            placeholder="Search tools… (press / to focus)"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="pl-8"

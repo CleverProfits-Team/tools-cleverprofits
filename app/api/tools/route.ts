@@ -4,6 +4,7 @@ import { Prisma, ToolStatus, AccessLevel } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { createToolSchema } from '@/lib/validations'
+import { writeAuditLog } from '@/lib/audit'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Reserved slugs
@@ -198,11 +199,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create tool' }, { status: 500 })
   }
 
-  // TODO (Phase 5): fire-and-forget Slack notification
-  //   sendToolRegistrationNotification(tool).catch(console.error)
-
-  // TODO (Phase 5): fire-and-forget Notion record
-  //   createNotionRecord(tool).catch(console.error)
+  writeAuditLog({
+    action:     'TOOL_REGISTERED',
+    actorEmail: session.user.email,
+    actorName:  session.user.name,
+    toolId:     tool.id,
+    toolName:   tool.name,
+  })
 
   return NextResponse.json(tool, { status: 201 })
 }

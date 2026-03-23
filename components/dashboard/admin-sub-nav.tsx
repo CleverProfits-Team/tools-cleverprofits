@@ -15,6 +15,7 @@ export function AdminSubNav({ pendingCount }: Props) {
     { href: '/dashboard/admin/tools',       label: 'Tools',       badge: pendingCount > 0 ? pendingCount : undefined },
     { href: '/dashboard/admin/users',       label: 'Users' },
     { href: '/dashboard/admin/invitations', label: 'Invitations' },
+    { href: '/dashboard/admin/audit',       label: 'Audit Log' },
   ]
 
   return (

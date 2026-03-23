@@ -106,3 +106,22 @@ enum ToolStatus {
   ARCHIVED  // Soft-deleted; proxy returns 503
   REJECTED  // Rejected by admin with a reason
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AuditLog
+// Immutable record of every significant action on the platform.
+// ─────────────────────────────────────────────────────────────────────────────
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // TOOL_REGISTERED | TOOL_APPROVED | TOOL_REJECTED | TOOL_ARCHIVED | TOOL_RESTORED | ROLE_CHANGED | USER_SUSPENDED | USER_ACTIVATED
+  actorEmail  String
+  actorName   String
+  toolId      String?
+  toolName    String?
+  targetEmail String?  // for user-targeted actions
+  detail      String?  // e.g. rejection reason, "VIEWER → ADMIN"
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}

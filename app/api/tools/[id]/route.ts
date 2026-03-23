@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { updateToolSchema } from '@/lib/validations'
+import { writeAuditLog } from '@/lib/audit'
 
 type RouteContext = { params: { id: string } }
 
@@ -61,7 +62,7 @@ export async function PUT(
   // Verify the tool exists before parsing the body — avoids wasted work
   const existing = await prisma.tool.findUnique({
     where: { id: params.id },
-    select: { id: true, slug: true },
+    select: { id: true, slug: true, name: true, status: true },
   })
 
   if (!existing) {
@@ -134,6 +135,28 @@ export async function PUT(
         rejectionReason: data.status === 'REJECTED' ? (data.rejectionReason ?? null) : null,
       },
     })
+
+    // Audit status changes
+    if (data.status) {
+      const wasArchived = existing.status === 'ARCHIVED'
+      const wasRejected = existing.status === 'REJECTED'
+      const auditAction =
+        data.status === 'ACTIVE'    ? ((wasArchived || wasRejected) ? 'TOOL_RESTORED' : 'TOOL_APPROVED')
+        : data.status === 'REJECTED' ? 'TOOL_REJECTED'
+        : data.status === 'ARCHIVED' ? 'TOOL_ARCHIVED'
+        : null
+
+      if (auditAction) {
+        writeAuditLog({
+          action:     auditAction,
+          actorEmail: session.user.email,
+          actorName:  session.user.name,
+          toolId:     tool.id,
+          toolName:   tool.name,
+          detail:     data.status === 'REJECTED' ? data.rejectionReason : undefined,
+        })
+      }
+    }
 
     return NextResponse.json(tool)
   } catch (err) {

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { updateUserSchema } from '@/lib/validations'
+import { writeAuditLog } from '@/lib/audit'
 
 type RouteContext = { params: { id: string } }
 
@@ -92,6 +93,25 @@ export async function PATCH(
       where: { id: params.id },
       data,
     })
+
+    // Audit
+    if (data.role) {
+      writeAuditLog({
+        action:      'ROLE_CHANGED',
+        actorEmail:  session.user.email,
+        actorName:   session.user.name,
+        targetEmail: target.email,
+        detail:      `${target.role} → ${data.role}`,
+      })
+    }
+    if (data.status) {
+      writeAuditLog({
+        action:      data.status === 'SUSPENDED' ? 'USER_SUSPENDED' : 'USER_ACTIVATED',
+        actorEmail:  session.user.email,
+        actorName:   session.user.name,
+        targetEmail: target.email,
+      })
+    }
 
     return NextResponse.json({
       ...updated,

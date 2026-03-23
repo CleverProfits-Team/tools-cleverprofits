@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Suspense } from 'react'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
@@ -64,11 +65,13 @@ export default async function DashboardPage() {
       </div>
 
       {/* ── Tools grid (client component for search + filter) ────────── */}
-      <ToolsGrid
-        tools={tools}
-        teams={teams}
-        currentUserEmail={session?.user?.email ?? ''}
-      />
+      <Suspense>
+        <ToolsGrid
+          tools={tools}
+          teams={teams}
+          currentUserEmail={session?.user?.email ?? ''}
+        />
+      </Suspense>
     </div>
   )
 }
