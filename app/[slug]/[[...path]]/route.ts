@@ -30,6 +30,7 @@
  */
 
 import { type NextRequest, NextResponse } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 import { prisma } from '@/lib/db'
 import {
   STRIP_RESPONSE_HEADERS,
@@ -174,6 +175,17 @@ async function handleProxy(
     clientIp,
     originalHost,
   )
+
+  // Inject authenticated user identity so upstream tools can trust who the
+  // user is without running their own OAuth flow. The upstream app should
+  // verify the presence of X-CP-Proxy-Secret before trusting these headers.
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
+  if (token) {
+    fwdHeaders.set('x-cp-user-email', String(token.email ?? ''))
+    fwdHeaders.set('x-cp-user-name',  String(token.name  ?? ''))
+    fwdHeaders.set('x-cp-user-role',  String(token.role  ?? ''))
+    fwdHeaders.set('x-cp-proxy-secret', process.env.CP_PROXY_SECRET ?? '')
+  }
 
   // ── Step 6: Proxy the request ──────────────────────────────────────────────
   //
