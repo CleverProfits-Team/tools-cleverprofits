@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { ToolsGrid } from '@/components/dashboard/tools-grid'
 import { Button } from '@/components/ui/button'
-import { PlusCircle } from 'lucide-react'
+import { PlusCircle, CheckCircle2, Clock, Package } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
 
@@ -49,10 +49,10 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
           <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
-            Tools
+            Your tools
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Browse and launch your team&apos;s registered tools.
+            Manage and launch internal tools across CleverProfits.
           </p>
         </div>
 
@@ -67,26 +67,54 @@ export default async function DashboardPage() {
       {/* ── Stat cards ──────────────────────────────────────────────── */}
       {tools.length > 0 && (
         <div className="grid grid-cols-3 gap-3 mb-8">
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card px-5 py-4">
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Active</p>
-            <p className="text-2xl font-bold text-slate-900 tabular-nums">{activeCount}</p>
+          {/* Active */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active</p>
+              <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden />
+              </div>
+            </div>
+            <p className="text-3xl font-bold text-slate-900 tabular-nums">{activeCount}</p>
+            <p className="text-xs text-slate-400 mt-1">tools live</p>
           </div>
+
+          {/* Pending */}
           <div className={cn(
-            'rounded-2xl border shadow-card px-5 py-4',
+            'rounded-2xl border shadow-card p-5',
             pendingCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-slate-200/80',
           )}>
+            <div className="flex items-center justify-between mb-3">
+              <p className={cn(
+                'text-xs font-semibold uppercase tracking-widest',
+                pendingCount > 0 ? 'text-amber-500' : 'text-slate-400',
+              )}>Pending</p>
+              <div className={cn(
+                'h-8 w-8 rounded-lg flex items-center justify-center',
+                pendingCount > 0 ? 'bg-amber-100' : 'bg-slate-50',
+              )}>
+                <Clock className={cn('h-4 w-4', pendingCount > 0 ? 'text-amber-500' : 'text-slate-400')} aria-hidden />
+              </div>
+            </div>
             <p className={cn(
-              'text-[11px] font-semibold uppercase tracking-widest mb-1.5',
-              pendingCount > 0 ? 'text-amber-500' : 'text-slate-400',
-            )}>Pending</p>
-            <p className={cn(
-              'text-2xl font-bold tabular-nums',
+              'text-3xl font-bold tabular-nums',
               pendingCount > 0 ? 'text-amber-700' : 'text-slate-900',
             )}>{pendingCount}</p>
+            <p className={cn('text-xs mt-1', pendingCount > 0 ? 'text-amber-500' : 'text-slate-400')}>
+              awaiting review
+            </p>
           </div>
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card px-5 py-4">
-            <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Registered</p>
-            <p className="text-2xl font-bold text-slate-900 tabular-nums">{tools.length}</p>
+
+          {/* Total */}
+          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Total</p>
+              <div className="h-8 w-8 rounded-lg bg-[#040B4D]/5 flex items-center justify-center">
+                <Package className="h-4 w-4 text-[#040B4D]/60" aria-hidden />
+              </div>
+            </div>
+            <p className="text-3xl font-bold text-slate-900 tabular-nums">{tools.length}</p>
+            <p className="text-xs text-slate-400 mt-1">registered</p>
           </div>
         </div>
       )}

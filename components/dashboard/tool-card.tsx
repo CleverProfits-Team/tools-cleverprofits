@@ -47,18 +47,18 @@ export function ToolCard({ tool }: ToolCardProps) {
     <article
       className={cn(
         'group relative flex flex-col bg-white rounded-2xl border border-slate-200/80',
-        'p-5 transition-all duration-200',
+        'p-6 transition-all duration-200',
         isActive
           ? 'shadow-card hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer'
           : 'shadow-card opacity-90',
       )}
     >
       {/* ── Header: Icon + Status badge ────────────────────────── */}
-      <div className="flex items-start justify-between gap-3 mb-4">
+      <div className="flex items-start justify-between gap-3 mb-5">
         <div
           className={cn(
-            'h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0',
-            'text-white text-sm font-bold select-none shadow-xs',
+            'h-12 w-12 rounded-xl flex items-center justify-center flex-shrink-0',
+            'text-white text-base font-bold select-none shadow-xs',
             iconColor,
           )}
           aria-hidden
@@ -73,7 +73,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         <Link
           href={`/tools/${tool.slug}`}
           className={cn(
-            'font-semibold text-slate-900 text-[15px] leading-snug',
+            'font-semibold text-[#040B4D] text-[15px] leading-snug',
             'hover:text-[#2605EF] transition-colors focus-ring rounded',
           )}
         >
@@ -85,7 +85,7 @@ export function ToolCard({ tool }: ToolCardProps) {
       {/* ── Description ────────────────────────────────────────── */}
       <p
         className={cn(
-          'text-sm line-clamp-2 mb-4 leading-relaxed flex-1',
+          'text-sm line-clamp-2 mb-5 leading-relaxed flex-1',
           tool.description ? 'text-slate-500' : 'text-slate-300 italic',
         )}
       >
@@ -93,7 +93,7 @@ export function ToolCard({ tool }: ToolCardProps) {
       </p>
 
       {/* ── Access, team & tag chips ────────────────────────────── */}
-      <div className="flex flex-wrap items-center gap-1.5 mb-4">
+      <div className="flex flex-wrap items-center gap-1.5 mb-5">
         <AccessBadge level={tool.accessLevel} />
         {tool.team && <Badge>{tool.team}</Badge>}
         {(tool.tags ?? []).map((tag) => (
@@ -107,7 +107,7 @@ export function ToolCard({ tool }: ToolCardProps) {
       </div>
 
       {/* ── Footer ─────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between pt-3 border-t border-slate-100 gap-2">
+      <div className="flex items-center justify-between pt-4 border-t border-slate-100 gap-2">
         <div className="flex items-center gap-1 text-xs text-slate-400 min-w-0 truncate">
           <User className="h-3 w-3 flex-shrink-0" aria-hidden />
           <span className="truncate">{tool.createdByName}</span>
@@ -118,10 +118,10 @@ export function ToolCard({ tool }: ToolCardProps) {
         {isActive ? (
           <a
             href={`/${tool.slug}`}
-            className="inline-flex items-center gap-1 rounded-lg bg-[#2605EF] px-2.5 py-1.5 text-xs font-medium text-white hover:bg-[#1e04cc] transition-colors flex-shrink-0 shadow-xs focus-ring"
-            aria-label={`Open ${tool.name}`}
+            className="inline-flex items-center gap-1 rounded-lg bg-[#2605EF] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1e04cc] transition-colors flex-shrink-0 shadow-xs focus-ring"
+            aria-label={`Launch ${tool.name}`}
           >
-            Open
+            Launch
             <ArrowUpRight className="h-3 w-3" aria-hidden />
           </a>
         ) : (

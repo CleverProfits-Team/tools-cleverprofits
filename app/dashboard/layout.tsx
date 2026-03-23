@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { Nav } from '@/components/nav'
+import { Sidebar } from '@/components/sidebar'
 
 export const metadata: Metadata = {
   title: {
@@ -36,11 +36,11 @@ export default async function DashboardLayout({
     : 0
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Nav pendingCount={pendingCount} />
-      <main className="flex-1 page-container py-8">
-        {children}
-      </main>
+    <div className="md:flex min-h-screen bg-slate-50">
+      <Sidebar pendingCount={pendingCount} />
+      <div className="flex-1 min-w-0">
+        <main className="px-4 sm:px-6 lg:px-8 py-8">{children}</main>
+      </div>
     </div>
   )
 }
