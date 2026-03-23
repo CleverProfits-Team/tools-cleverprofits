@@ -44,6 +44,9 @@ model Tool {
   accessLevel AccessLevel @default(INTERNAL)
   status      ToolStatus  @default(PENDING)
 
+  // Rejection
+  rejectionReason String?
+
   // Audit (Phase 8 will migrate these columns to a User FK)
   createdByName  String
   createdByEmail String
@@ -51,6 +54,28 @@ model Tool {
   updatedAt      DateTime @updatedAt
 
   @@map("tools")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Invitation
+// Created by admins to invite users with a specific role.
+// ─────────────────────────────────────────────────────────────────────────────
+model Invitation {
+  id        String           @id @default(cuid())
+  email     String
+  role      Role
+  token     String           @unique @default(cuid())
+  status    InvitationStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  @@map("invitations")
+}
+
+enum InvitationStatus {
+  PENDING
+  USED
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -79,4 +104,5 @@ enum ToolStatus {
   ACTIVE    // Proxy routing live
   PENDING   // Registered but not yet approved / deployed
   ARCHIVED  // Soft-deleted; proxy returns 503
+  REJECTED  // Rejected by admin with a reason
 }

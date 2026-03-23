@@ -140,8 +140,19 @@ export const updateToolSchema = createToolSchema
   .omit({ slug: true })
   .partial()
   .extend({
-    status: z.enum(['ACTIVE', 'PENDING', 'ARCHIVED']).optional(),
+    status: z.enum(['ACTIVE', 'PENDING', 'ARCHIVED', 'REJECTED']).optional(),
+    rejectionReason: z.string().max(1000).optional(),
   })
 
 export type CreateToolInput = z.infer<typeof createToolSchema>
 export type UpdateToolInput = z.infer<typeof updateToolSchema>
+
+export const updateUserSchema = z.object({
+  role:   z.enum(['SUPER_ADMIN', 'ADMIN', 'BUILDER', 'VIEWER']).optional(),
+  status: z.enum(['ACTIVE', 'SUSPENDED']).optional(),
+})
+
+export const createInvitationSchema = z.object({
+  email: z.string().email(),
+  role:  z.enum(['SUPER_ADMIN', 'ADMIN', 'BUILDER', 'VIEWER']),
+})

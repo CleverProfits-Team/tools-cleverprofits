@@ -90,6 +90,22 @@ export async function PUT(
 
   const data = parsed.data
 
+  if (data.status !== undefined) {
+    const role = session.user.role
+    if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
+      return NextResponse.json(
+        { error: 'Forbidden: only admins can change tool status' },
+        { status: 403 },
+      )
+    }
+    if (data.status === 'REJECTED' && !data.rejectionReason) {
+      return NextResponse.json(
+        { error: 'Rejection reason is required' },
+        { status: 422 },
+      )
+    }
+  }
+
   // If the payload is effectively empty, return early rather than issuing a
   // no-op UPDATE that increments updatedAt unnecessarily.
   if (Object.keys(data).length === 0) {
@@ -114,6 +130,8 @@ export async function PUT(
         ...(data.notes !== undefined
           ? { notes: data.notes || null }
           : {}),
+        // Only persist rejectionReason when status is REJECTED; clear it otherwise
+        rejectionReason: data.status === 'REJECTED' ? (data.rejectionReason ?? null) : null,
       },
     })
 

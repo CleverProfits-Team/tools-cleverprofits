@@ -96,6 +96,21 @@ export const authOptions: NextAuthOptions = {
         select: { status: true },
       })
 
+      // Apply any pending invitation for this email
+      const pendingInvite = await prisma.invitation.findFirst({
+        where: { email, status: 'PENDING', expiresAt: { gt: new Date() } },
+        orderBy: { createdAt: 'desc' },
+      })
+      if (pendingInvite) {
+        await prisma.$transaction([
+          prisma.user.update({ where: { email }, data: { role: pendingInvite.role } }),
+          prisma.invitation.update({
+            where: { id: pendingInvite.id },
+            data: { status: 'USED', usedAt: new Date() },
+          }),
+        ])
+      }
+
       if (dbUser.status === 'SUSPENDED') {
         return '/login?error=Suspended'
       }

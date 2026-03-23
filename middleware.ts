@@ -40,6 +40,7 @@ export default withAuth(
         const isPublicRoute =
           pathname.startsWith('/login') ||
           pathname.startsWith('/api/auth') ||
+          pathname.startsWith('/invite') ||
           pathname === '/api/health'
 
         if (isPublicRoute) return true
