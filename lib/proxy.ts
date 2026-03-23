@@ -409,14 +409,45 @@ export function rewriteHtml(
     .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
     .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
 
-  // Pass 2: Inject <base> tag for relative path resolution
+  // Pass 2: Inject <base> tag + runtime path-prefix script
+  //
+  // The <base> tag handles relative HTML paths. The injected script handles
+  // root-relative paths constructed at runtime in JavaScript — things like
+  // router.push('/login'), fetch('/api/auth/session'), and XHR calls that the
+  // regex passes above cannot reach. Without this, client-side navigation to
+  // /login would leave the proxy context and land on the platform's own login.
   const hasBase = /<base[\s>]/i.test(result)
   const hasHead = /<head[\s>]/i.test(result)
+
+  // Minimal runtime script: intercept History API, fetch, and XHR so that
+  // any root-relative path the app constructs is prefixed with /<slug>.
+  const runtimeScript = `<script>(function(S){` +
+    `var R=new RegExp("^"+S+"(/|$)");` +
+    `function f(u){return typeof u==="string"&&u[0]==="/"&&u[1]!=="/"&&!R.test(u)?S+u:u}` +
+    // History API (Next.js router uses pushState/replaceState for SPA nav)
+    `var ps=history.pushState.bind(history),rs=history.replaceState.bind(history);` +
+    `history.pushState=function(s,t,u){return ps(s,t,f(u))};` +
+    `history.replaceState=function(s,t,u){return rs(s,t,f(u))};` +
+    // fetch API
+    `var ft=window.fetch;` +
+    `window.fetch=function(r,o){return ft.call(this,typeof r==="string"?f(r):r,o)};` +
+    // XMLHttpRequest
+    `var xo=XMLHttpRequest.prototype.open;` +
+    `XMLHttpRequest.prototype.open=function(){` +
+    `if(typeof arguments[1]==="string")arguments[1]=f(arguments[1]);` +
+    `return xo.apply(this,arguments)};` +
+    `}("/${slug}"));</script>`
 
   if (hasHead && !hasBase) {
     result = result.replace(
       /(<head[^>]*>)/i,
-      `$1\n  <base href="${internalBase}/" />`,
+      `$1\n  <base href="${internalBase}/" />\n  ${runtimeScript}`,
+    )
+  } else if (hasHead) {
+    // <base> tag already exists — still inject the runtime script
+    result = result.replace(
+      /(<head[^>]*>)/i,
+      `$1\n  ${runtimeScript}`,
     )
   }
 
