@@ -424,11 +424,11 @@ export function rewriteHtml(
   const runtimeScript = `<script>(function(S){` +
     `var R=new RegExp("^"+S+"(/|$)");` +
     `function f(u){return typeof u==="string"&&u[0]==="/"&&u[1]!=="/"&&!R.test(u)?S+u:u}` +
-    // History API (Next.js router uses pushState/replaceState for SPA nav)
+    // History API (Next.js SPA navigation)
     `var ps=history.pushState.bind(history),rs=history.replaceState.bind(history);` +
     `history.pushState=function(s,t,u){return ps(s,t,f(u))};` +
     `history.replaceState=function(s,t,u){return rs(s,t,f(u))};` +
-    // fetch API
+    // fetch
     `var ft=window.fetch;` +
     `window.fetch=function(r,o){return ft.call(this,typeof r==="string"?f(r):r,o)};` +
     // XMLHttpRequest
@@ -436,6 +436,14 @@ export function rewriteHtml(
     `XMLHttpRequest.prototype.open=function(){` +
     `if(typeof arguments[1]==="string")arguments[1]=f(arguments[1]);` +
     `return xo.apply(this,arguments)};` +
+    // window.location.href setter (hard navigation)
+    `try{var lp=Object.getOwnPropertyDescriptor(Location.prototype,"href");` +
+    `if(lp&&lp.set)Object.defineProperty(Location.prototype,"href",` +
+    `{get:lp.get,set:function(u){lp.set.call(this,f(u))},configurable:true})}catch(e){};` +
+    // location.assign / location.replace
+    `var la=location.assign.bind(location),lr=location.replace.bind(location);` +
+    `location.assign=function(u){return la(f(u))};` +
+    `location.replace=function(u){return lr(f(u))};` +
     `}("/${slug}"));</script>`
 
   if (hasHead && !hasBase) {
