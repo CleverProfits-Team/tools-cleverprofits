@@ -47,8 +47,8 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
   return (
     <div className="flex flex-col h-full">
       {/* ── Main nav ────────────────────────────────────── */}
-      <nav className="flex-1 overflow-y-auto px-3 pt-4 pb-2" aria-label="Main">
-        <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-2 px-2">
+      <nav className="flex-1 overflow-y-auto px-3 pt-5 pb-2" aria-label="Main">
+        <p className="text-[10px] font-semibold text-white/20 uppercase tracking-[0.12em] mb-3 px-2.5">
           Platform
         </p>
         <ul className="space-y-0.5">
@@ -60,10 +60,11 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
                   href={href}
                   onClick={onLinkClick}
                   className={cn(
-                    'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors',
+                    'flex items-center gap-2.5 py-2.5 rounded-lg text-sm border-l-2 px-2.5',
+                    'transition-all duration-150',
                     isActive
-                      ? 'bg-white/15 text-white font-medium'
-                      : 'text-white/55 hover:text-white hover:bg-white/10',
+                      ? 'bg-white/[0.13] text-white font-semibold border-[#2605EF] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
+                      : 'text-white/50 hover:text-white hover:bg-white/[0.07] border-transparent hover:translate-x-[2px]',
                   )}
                 >
                   <Icon className="h-4 w-4 flex-shrink-0" aria-hidden />
@@ -75,8 +76,8 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
         </ul>
 
         {isAdmin && (
-          <div className="mt-5">
-            <p className="text-[10px] font-semibold text-white/25 uppercase tracking-widest mb-2 px-2">
+          <div className="mt-6">
+            <p className="text-[10px] font-semibold text-white/20 uppercase tracking-[0.12em] mb-3 px-2.5">
               Admin
             </p>
             <ul>
@@ -85,10 +86,11 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
                   href="/dashboard/admin/tools"
                   onClick={onLinkClick}
                   className={cn(
-                    'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors',
+                    'flex items-center gap-2.5 py-2.5 rounded-lg text-sm border-l-2 px-2.5',
+                    'transition-all duration-150',
                     pathname.startsWith('/dashboard/admin')
-                      ? 'bg-white/15 text-white font-medium'
-                      : 'text-white/55 hover:text-white hover:bg-white/10',
+                      ? 'bg-white/[0.13] text-white font-semibold border-[#2605EF] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
+                      : 'text-white/50 hover:text-white hover:bg-white/[0.07] border-transparent hover:translate-x-[2px]',
                   )}
                 >
                   <ShieldAlert className="h-4 w-4 flex-shrink-0" aria-hidden />
@@ -107,7 +109,7 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
 
       {/* ── User profile ────────────────────────────────── */}
       {session?.user && (
-        <div className="border-t border-white/10 px-3 py-3">
+        <div className="border-t border-white/[0.08] px-3 py-3">
           <div className="flex items-center gap-2.5 px-2 mb-2">
             {session.user.image ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -137,7 +139,7 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
           </div>
           <button
             onClick={() => signOut({ callbackUrl: '/login' })}
-            className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-lg text-xs text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+            className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-lg text-xs text-white/35 hover:text-white hover:bg-white/[0.07] transition-all duration-150"
           >
             <LogOut className="h-3.5 w-3.5 flex-shrink-0" aria-hidden />
             Sign out
@@ -162,16 +164,16 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   return (
     <>
       {/* ── Desktop sidebar ───────────────────────────────── */}
-      <aside className="hidden md:flex flex-col sticky top-0 h-screen w-60 flex-shrink-0 bg-[#040B4D]">
+      <aside className="hidden md:flex flex-col sticky top-0 h-screen w-60 flex-shrink-0 bg-[#040B4D] border-r border-white/[0.06]">
         {/* Logo */}
-        <div className="flex h-16 items-center gap-2.5 px-5 border-b border-white/10 flex-shrink-0">
+        <div className="flex h-16 items-center gap-2.5 px-5 border-b border-white/[0.08] flex-shrink-0">
           <Link href="/dashboard" className="flex items-center gap-2.5 group">
             <div className="h-8 w-8 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors flex-shrink-0">
               <Wrench className="h-4 w-4 text-white" aria-hidden />
             </div>
             <span className="font-display font-bold text-sm tracking-tight text-white">
               CleverProfits{' '}
-              <span className="text-white/50 font-normal">Tools</span>
+              <span className="text-white/40 font-normal">Tools</span>
             </span>
           </Link>
         </div>
@@ -180,14 +182,14 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
       </aside>
 
       {/* ── Mobile top bar ────────────────────────────────── */}
-      <div className="md:hidden sticky top-0 z-30 flex h-14 items-center justify-between px-4 bg-[#040B4D] border-b border-white/10">
+      <div className="md:hidden sticky top-0 z-30 flex h-14 items-center justify-between px-4 bg-[#040B4D] border-b border-white/[0.08]">
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
           <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center group-hover:bg-[#1e04cc] transition-colors">
             <Wrench className="h-3.5 w-3.5 text-white" aria-hidden />
           </div>
           <span className="font-display font-bold text-sm tracking-tight text-white">
             CleverProfits{' '}
-            <span className="text-white/50 font-normal">Tools</span>
+            <span className="text-white/40 font-normal">Tools</span>
           </span>
         </Link>
 
@@ -219,21 +221,21 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
         <>
           {/* Backdrop */}
           <div
-            className="md:hidden fixed inset-0 z-40 bg-black/50"
+            className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
           {/* Drawer */}
-          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-64 flex flex-col bg-[#040B4D] shadow-2xl">
+          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-64 flex flex-col bg-[#040B4D] shadow-2xl border-r border-white/[0.06]">
             {/* Drawer header */}
-            <div className="flex h-14 items-center justify-between px-4 border-b border-white/10 flex-shrink-0">
+            <div className="flex h-14 items-center justify-between px-4 border-b border-white/[0.08] flex-shrink-0">
               <Link href="/dashboard" className="flex items-center gap-2.5 group" onClick={() => setMobileOpen(false)}>
                 <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center group-hover:bg-[#1e04cc] transition-colors">
                   <Wrench className="h-3.5 w-3.5 text-white" aria-hidden />
                 </div>
                 <span className="font-display font-bold text-sm tracking-tight text-white">
                   CleverProfits{' '}
-                  <span className="text-white/50 font-normal">Tools</span>
+                  <span className="text-white/40 font-normal">Tools</span>
                 </span>
               </Link>
               <button

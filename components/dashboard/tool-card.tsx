@@ -46,11 +46,11 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col bg-white rounded-2xl border border-slate-200/80',
+        'group relative flex flex-col bg-white rounded-2xl border',
         'p-6 transition-all duration-200',
         isActive
-          ? 'shadow-card hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer'
-          : 'shadow-card opacity-90',
+          ? 'border-slate-200/80 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 hover:border-brand-200 cursor-pointer'
+          : 'border-slate-200/80 shadow-card opacity-90',
       )}
     >
       {/* ── Header: Icon + Status badge ────────────────────────── */}
@@ -118,7 +118,11 @@ export function ToolCard({ tool }: ToolCardProps) {
         {isActive ? (
           <a
             href={`/${tool.slug}`}
-            className="inline-flex items-center gap-1 rounded-lg bg-[#2605EF] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1e04cc] transition-colors flex-shrink-0 shadow-xs focus-ring"
+            className={cn(
+              'inline-flex items-center gap-1 rounded-lg bg-[#2605EF] px-3 py-1.5',
+              'text-xs font-semibold text-white shadow-xs focus-ring flex-shrink-0',
+              'transition-all duration-150 hover:bg-[#1e04cc] hover:scale-[1.04] active:scale-95',
+            )}
             aria-label={`Launch ${tool.name}`}
           >
             Launch

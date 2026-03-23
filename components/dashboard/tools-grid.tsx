@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { Search, SlidersHorizontal, Wrench } from 'lucide-react'
 import { ToolCard } from '@/components/dashboard/tool-card'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
@@ -131,18 +131,18 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
       {/* ── Filter bar ──────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-2 mb-6">
         {/* Search */}
-        <div className="relative flex-1 min-w-0">
+        <div className="relative flex-1 min-w-0 max-w-md">
           <Search
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"
             aria-hidden
           />
           <Input
             ref={searchRef}
             type="search"
-            placeholder="Search tools… (press / to focus)"
+            placeholder="Search tools, teams, or owners… (press / to focus)"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-8"
+            className="pl-9 h-10 text-sm placeholder:text-slate-400 transition-all"
             aria-label="Search tools"
           />
         </div>
@@ -229,13 +229,13 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
         </div>
       ) : tools.length === 0 ? (
         /* Empty state — no tools at all */
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center mb-4">
-            <PlusCircle className="h-6 w-6 text-slate-400" aria-hidden />
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#eeeeff] to-[#d5d4ff] flex items-center justify-center mb-5 shadow-xs">
+            <Wrench className="h-7 w-7 text-[#2605EF]" aria-hidden />
           </div>
-          <h3 className="text-sm font-semibold text-slate-900 mb-1">No tools yet</h3>
-          <p className="text-sm text-slate-500 mb-4 max-w-xs">
-            Register your first internal tool to get started.
+          <h3 className="text-base font-semibold text-[#040B4D] mb-1.5">Your toolkit is empty</h3>
+          <p className="text-sm text-slate-400 mb-6 max-w-xs leading-relaxed">
+            Register your first internal tool and make it available to the CleverProfits team.
           </p>
           <Button asChild size="sm">
             <Link href="/dashboard/register">

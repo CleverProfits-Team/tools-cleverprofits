@@ -137,8 +137,8 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                   <tr
                     key={tool.id}
                     className={cn(
-                      'transition-colors',
-                      isPending ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50/50',
+                      'transition-colors cursor-pointer',
+                      isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-slate-50',
                     )}
                   >
                     {/* Left accent border via first cell */}
@@ -149,7 +149,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                           <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">Needs review</span>
                         </div>
                       )}
-                      <div className="font-semibold text-slate-900">{tool.name}</div>
+                      <div className="font-semibold text-[#040B4D]">{tool.name}</div>
                       <div className="text-xs text-slate-400 font-mono mt-0.5">/{tool.slug}</div>
                     </td>
                     <td className={tdCls}>
@@ -167,10 +167,10 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                       <Link
                         href={`/dashboard/admin/tools/${tool.id}`}
                         className={cn(
-                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap',
+                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-150 whitespace-nowrap',
                           isPending
-                            ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-xs'
-                            : 'border border-slate-200 text-slate-600 hover:bg-slate-50',
+                            ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-xs hover:scale-[1.03] active:scale-95'
+                            : 'border border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300',
                         )}
                       >
                         {isPending ? 'Review' : 'View'}
