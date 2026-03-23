@@ -54,6 +54,31 @@ export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Analytics helper
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Fire-and-forget ProxyHit record. Never throws — errors are logged only. */
+function recordHit(
+  tool: { id: string; slug: string; name: string },
+  method: string,
+  path: string,
+  statusCode: number,
+  durationMs: number,
+): void {
+  prisma.proxyHit.create({
+    data: {
+      toolId:     tool.id,
+      toolSlug:   tool.slug,
+      toolName:   tool.name,
+      method,
+      path:       path.slice(0, 2048),
+      statusCode,
+      durationMs,
+    },
+  }).catch((err) => console.error('[Proxy] Failed to record hit:', err))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Core handler
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -82,13 +107,13 @@ async function handleProxy(
   // We only select the four fields the proxy needs. Keeping the SELECT narrow
   // avoids pulling notes/description/etc. on every proxied request.
 
-  type ToolRow = { slug: string; externalUrl: string; status: string; name: string }
+  type ToolRow = { id: string; slug: string; externalUrl: string; status: string; name: string }
   let tool: ToolRow | null
 
   try {
     tool = await prisma.tool.findUnique({
       where: { slug: params.slug },
-      select: { slug: true, externalUrl: true, status: true, name: true },
+      select: { id: true, slug: true, externalUrl: true, status: true, name: true },
     })
   } catch (err) {
     console.error(`[Proxy] DB lookup failed for slug "${params.slug}":`, err)
@@ -142,9 +167,11 @@ async function handleProxy(
 
   // ── Step 4: Build upstream URL ─────────────────────────────────────────────
 
+  const hitStart     = Date.now()
   const upstreamBase = tool.externalUrl.replace(/\/$/, '')
   const segments     = params.path ?? []
   const upstreamUrl  = buildUpstreamUrl(upstreamBase, segments, request.nextUrl.search)
+  const hitPath      = '/' + segments.join('/') + (request.nextUrl.search ?? '')
 
   // ── Step 5: Build forwarded headers ───────────────────────────────────────
 
@@ -303,6 +330,7 @@ async function handleProxy(
     resHeaders.delete('content-length')
     resHeaders.set('content-type', 'text/html; charset=utf-8')
 
+    recordHit(tool, request.method, hitPath, upstream.status, Date.now() - hitStart)
     return new Response(rewritten, {
       status:  upstream.status,
       headers: resHeaders,
@@ -327,6 +355,7 @@ async function handleProxy(
     const rewritten = rewriteCss(css, upstreamBase, params.slug)
     resHeaders.delete('content-length')
 
+    recordHit(tool, request.method, hitPath, upstream.status, Date.now() - hitStart)
     return new Response(rewritten, {
       status:  upstream.status,
       headers: resHeaders,
@@ -351,6 +380,7 @@ async function handleProxy(
     const rewritten = rewriteJs(js, upstreamBase, params.slug)
     resHeaders.delete('content-length')
 
+    recordHit(tool, request.method, hitPath, upstream.status, Date.now() - hitStart)
     return new Response(rewritten, {
       status:  upstream.status,
       headers: resHeaders,
@@ -362,6 +392,7 @@ async function handleProxy(
   // Images, fonts, JSON API responses, binary downloads — piped from the
   // upstream ReadableStream to the browser without buffering.
 
+  recordHit(tool, request.method, hitPath, upstream.status, Date.now() - hitStart)
   return new Response(upstream.body, {
     status:  upstream.status,
     headers: resHeaders,

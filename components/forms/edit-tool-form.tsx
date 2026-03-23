@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, Loader2, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
 import type { AccessLevel } from '@prisma/client'
 
@@ -38,6 +39,8 @@ export function EditToolForm({ tool, isAdmin: _isAdmin }: Props) {
   const [team,        setTeam]        = useState(tool.team ?? '')
   const [description, setDescription] = useState(tool.description ?? '')
   const [notes,       setNotes]       = useState(tool.notes ?? '')
+  const [tags,        setTags]        = useState<string[]>((tool.tags ?? []).map((t) => t.name))
+  const [tagInput,    setTagInput]    = useState('')
 
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [submitting,  setSubmitting]  = useState(false)
@@ -72,6 +75,7 @@ export function EditToolForm({ tool, isAdmin: _isAdmin }: Props) {
           team:        team.trim()        || undefined,
           description: description.trim() || undefined,
           notes:       notes.trim()       || undefined,
+          tags,
         }),
       })
 
@@ -201,6 +205,21 @@ export function EditToolForm({ tool, isAdmin: _isAdmin }: Props) {
         </div>
       </div>
 
+      {/* ── Section 5: Tags ─────────────────────────────────────────── */}
+      <div className="space-y-5">
+        <SectionHeader label="Tags" note="optional" />
+        <TagInput
+          tags={tags}
+          inputValue={tagInput}
+          onInputChange={setTagInput}
+          onAdd={(tag) => {
+            if (!tags.includes(tag) && tags.length < 10) setTags((t) => [...t, tag])
+            setTagInput('')
+          }}
+          onRemove={(tag) => setTags((t) => t.filter((x) => x !== tag))}
+        />
+      </div>
+
       {/* Server error */}
       {serverError && (
         <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
@@ -231,6 +250,67 @@ function SectionHeader({ label, note }: { label: string; note?: string }) {
         {note && <span className="font-normal normal-case tracking-normal ml-1 text-slate-300">· {note}</span>}
       </span>
       <div className="flex-1 h-px bg-slate-100" />
+    </div>
+  )
+}
+
+interface TagInputProps {
+  tags:          string[]
+  inputValue:    string
+  onInputChange: (val: string) => void
+  onAdd:         (tag: string) => void
+  onRemove:      (tag: string) => void
+}
+
+function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInputProps) {
+  function commitTag(raw: string) {
+    const tag = raw.trim().replace(/,+$/, '').trim()
+    if (tag) onAdd(tag)
+  }
+
+  return (
+    <div>
+      <Label>Tags</Label>
+      <div className={cn(
+        'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5',
+        'focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-colors',
+      )}>
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={() => onRemove(tag)}
+              className="text-slate-400 hover:text-slate-700 transition-colors"
+              aria-label={`Remove tag ${tag}`}
+            >
+              <X className="h-2.5 w-2.5" aria-hidden />
+            </button>
+          </span>
+        ))}
+        {tags.length < 10 && (
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => onInputChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault()
+                commitTag(inputValue)
+              } else if (e.key === 'Backspace' && !inputValue && tags.length > 0) {
+                onRemove(tags[tags.length - 1])
+              }
+            }}
+            onBlur={() => { if (inputValue.trim()) commitTag(inputValue) }}
+            placeholder={tags.length === 0 ? 'Add tags… (Enter or comma to confirm)' : ''}
+            className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-slate-300 py-0.5"
+          />
+        )}
+      </div>
+      <p className="text-xs text-slate-400 mt-1.5">Up to 10 tags. Press Enter or comma to add.</p>
     </div>
   )
 }

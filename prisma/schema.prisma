@@ -53,6 +53,11 @@ model Tool {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  // Relations
+  tags     Tag[]         @relation("ToolTags")
+  hits     ProxyHit[]
+  versions ToolVersion[]
+
   @@map("tools")
 }
 
@@ -105,6 +110,59 @@ enum ToolStatus {
   PENDING   // Registered but not yet approved / deployed
   ARCHIVED  // Soft-deleted; proxy returns 503
   REJECTED  // Rejected by admin with a reason
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tag
+// Canonical tags for organizing tools. Many-to-many with Tool.
+// ─────────────────────────────────────────────────────────────────────────────
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  tools Tool[] @relation("ToolTags")
+
+  @@map("tags")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ProxyHit
+// One row per proxied request — used for usage analytics.
+// ─────────────────────────────────────────────────────────────────────────────
+model ProxyHit {
+  id         String   @id @default(cuid())
+  toolId     String
+  toolSlug   String
+  toolName   String
+  method     String
+  path       String   @db.VarChar(2048)
+  statusCode Int
+  durationMs Int
+  createdAt  DateTime @default(now())
+
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId])
+  @@index([createdAt(sort: Desc)])
+  @@map("proxy_hits")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ToolVersion
+// Immutable changelog entry created on every tool update.
+// ─────────────────────────────────────────────────────────────────────────────
+model ToolVersion {
+  id             String   @id @default(cuid())
+  toolId         String
+  version        Int
+  changes        Json     // { fieldName: { from: any, to: any } }
+  changedByEmail String
+  changedByName  String
+  createdAt      DateTime @default(now())
+
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@index([toolId, version])
+  @@map("tool_versions")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

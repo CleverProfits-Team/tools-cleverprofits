@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
   const team        = searchParams.get('team') || undefined
   const statusParam = searchParams.get('status') || undefined
   const levelParam  = searchParams.get('accessLevel') || undefined
+  const tagParam    = searchParams.get('tag') || undefined
   const mine        = searchParams.get('mine') === 'true'
 
   // Validate enum params — silently ignore unknown values rather than 422-ing,
@@ -86,6 +87,10 @@ export async function GET(request: NextRequest) {
 
   const teamFilter: Prisma.ToolWhereInput = team ? { team } : {}
 
+  const tagFilter: Prisma.ToolWhereInput = tagParam
+    ? { tags: { some: { name: tagParam } } }
+    : {}
+
   try {
     const tools = await prisma.tool.findMany({
       where: {
@@ -94,7 +99,9 @@ export async function GET(request: NextRequest) {
         ...statusFilter,
         ...accessLevelFilter,
         ...ownerFilter,
+        ...tagFilter,
       },
+      include: { tags: { select: { id: true, name: true } } },
       orderBy: { createdAt: 'desc' },
     })
 
@@ -176,9 +183,19 @@ export async function POST(request: NextRequest) {
         createdByEmail: session.user.email,
 
         // New tools start as PENDING until an admin activates them.
-        // Override: pass status in body only if you add admin-only logic here.
         status: 'PENDING',
+
+        // Tags: upsert by name and connect
+        tags: data.tags?.length
+          ? {
+              connectOrCreate: data.tags.map((name) => ({
+                where:  { name },
+                create: { name },
+              })),
+            }
+          : undefined,
       },
+      include: { tags: { select: { id: true, name: true } } },
     })
   } catch (err) {
     // P2002 = unique constraint violation → slug already taken

@@ -14,7 +14,8 @@ export default async function MyToolsPage() {
   if (!session?.user?.email) redirect('/login')
 
   const rawTools = await prisma.tool.findMany({
-    where: { createdByEmail: session.user.email },
+    where:   { createdByEmail: session.user.email },
+    include: { tags: { select: { id: true, name: true } } },
     orderBy: { createdAt: 'desc' },
   })
 

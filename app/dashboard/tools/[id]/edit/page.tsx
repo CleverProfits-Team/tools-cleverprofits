@@ -11,7 +11,10 @@ export default async function EditToolPage({ params }: { params: { id: string } 
   const session = await getServerSession(authOptions)
   if (!session?.user?.email) redirect('/login')
 
-  const tool = await prisma.tool.findUnique({ where: { id: params.id } })
+  const tool = await prisma.tool.findUnique({
+    where:   { id: params.id },
+    include: { tags: { select: { id: true, name: true } } },
+  })
   if (!tool) notFound()
 
   const role     = session.user.role as string

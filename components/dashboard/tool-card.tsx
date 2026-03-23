@@ -92,10 +92,18 @@ export function ToolCard({ tool }: ToolCardProps) {
         {tool.description ?? 'No description provided'}
       </p>
 
-      {/* ── Access & team chips ────────────────────────────────── */}
+      {/* ── Access, team & tag chips ────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         <AccessBadge level={tool.accessLevel} />
         {tool.team && <Badge>{tool.team}</Badge>}
+        {(tool.tags ?? []).map((tag) => (
+          <span
+            key={tag.id}
+            className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500"
+          >
+            {tag.name}
+          </span>
+        ))}
       </div>
 
       {/* ── Footer ─────────────────────────────────────────────── */}

@@ -12,7 +12,10 @@ export const metadata: Metadata = { title: 'Admin — Tool Review' }
 export default async function AdminToolDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
 
-  const raw = await prisma.tool.findUnique({ where: { id: params.id } })
+  const raw = await prisma.tool.findUnique({
+    where:   { id: params.id },
+    include: { tags: { select: { id: true, name: true } } },
+  })
   if (!raw) notFound()
 
   const tool: SerializedTool = {

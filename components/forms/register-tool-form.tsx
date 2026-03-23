@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { CheckCircle2, AlertCircle, Loader2, ExternalLink, Copy, Check } from 'lucide-react'
+import { CheckCircle2, AlertCircle, Loader2, ExternalLink, Copy, Check, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -25,6 +25,7 @@ interface FormValues {
   team:        string
   accessLevel: string
   notes:       string
+  tags:        string[]
 }
 
 interface FieldErrors {
@@ -87,7 +88,9 @@ export function RegisterToolForm() {
     team:        '',
     accessLevel: '',
     notes:       '',
+    tags:        [],
   })
+  const [tagInput, setTagInput] = useState('')
   const [fieldErrors,  setFieldErrors]  = useState<FieldErrors>({})
   const [slugState,    setSlugState]    = useState<SlugState>('idle')
   const [slugReason,   setSlugReason]   = useState<string>()
@@ -199,6 +202,7 @@ export function RegisterToolForm() {
           team:        values.team.trim()         || undefined,
           accessLevel: values.accessLevel,
           notes:       values.notes.trim()        || undefined,
+          tags:        values.tags,
         }),
       })
 
@@ -269,7 +273,7 @@ export function RegisterToolForm() {
           <Button
             onClick={() => {
               setRegisteredSlug(undefined)
-              setValues({ name: '', slug: '', externalUrl: '', description: '', team: '', accessLevel: '', notes: '' })
+              setValues({ name: '', slug: '', externalUrl: '', description: '', team: '', accessLevel: '', notes: '', tags: [] })
               setSlugEdited(false)
               setSlugState('idle')
             }}
@@ -427,6 +431,23 @@ export function RegisterToolForm() {
         </div>
       </div>
 
+      {/* ── Section 5: Tags ──────────────────────────────────────── */}
+      <div className="space-y-5">
+        <SectionHeader label="Tags" note="optional" />
+        <TagInput
+          tags={values.tags}
+          inputValue={tagInput}
+          onInputChange={setTagInput}
+          onAdd={(tag) => {
+            if (!values.tags.includes(tag) && values.tags.length < 10) {
+              setValues((v) => ({ ...v, tags: [...v.tags, tag] }))
+            }
+            setTagInput('')
+          }}
+          onRemove={(tag) => setValues((v) => ({ ...v, tags: v.tags.filter((t) => t !== tag) }))}
+        />
+      </div>
+
       {/* Server error */}
       {serverError && (
         <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
@@ -472,4 +493,67 @@ function SectionHeader({ label, note }: { label: string; note?: string }) {
 
 function FieldError({ children }: { children: React.ReactNode }) {
   return <p className="text-xs text-red-500 mt-1">{children}</p>
+}
+
+interface TagInputProps {
+  tags:          string[]
+  inputValue:    string
+  onInputChange: (val: string) => void
+  onAdd:         (tag: string) => void
+  onRemove:      (tag: string) => void
+}
+
+function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInputProps) {
+  function commitTag(raw: string) {
+    const tag = raw.trim().replace(/,+$/, '').trim()
+    if (tag) onAdd(tag)
+  }
+
+  return (
+    <div>
+      <Label>Tags</Label>
+      <div className={cn(
+        'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5',
+        'focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-colors',
+      )}>
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={() => onRemove(tag)}
+              className="text-slate-400 hover:text-slate-700 transition-colors"
+              aria-label={`Remove tag ${tag}`}
+            >
+              <X className="h-2.5 w-2.5" aria-hidden />
+            </button>
+          </span>
+        ))}
+        {tags.length < 10 && (
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => onInputChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault()
+                commitTag(inputValue)
+              } else if (e.key === 'Backspace' && !inputValue && tags.length > 0) {
+                onRemove(tags[tags.length - 1])
+              }
+            }}
+            onBlur={() => { if (inputValue.trim()) commitTag(inputValue) }}
+            placeholder={tags.length === 0 ? 'Add tags… (Enter or comma to confirm)' : ''}
+            className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-slate-300 py-0.5"
+          />
+        )}
+      </div>
+      <p className="text-xs text-slate-400 mt-1.5">
+        Up to 10 tags. Press Enter or comma to add.
+      </p>
+    </div>
+  )
 }

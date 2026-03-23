@@ -43,17 +43,31 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
   const [teamFilter,   setTeamFilter]   = useState(() => searchParams.get('team')   ?? '')
   const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? '')
   const [accessFilter, setAccessFilter] = useState(() => searchParams.get('access') ?? '')
+  const [tagFilter,    setTagFilter]    = useState(() => searchParams.get('tag')    ?? '')
   const [mineOnly,     setMineOnly]     = useState(() => searchParams.get('mine') === 'true')
+
+  // All unique tags across all tools
+  const allTags = useMemo(() => {
+    const names = new Set<string>()
+    tools.forEach((t) => (t.tags ?? []).forEach((tag) => names.add(tag.name)))
+    return [...names].sort()
+  }, [tools])
+
+  const tagOptions = useMemo(() => [
+    { value: '', label: 'All tags' },
+    ...allTags.map((t) => ({ value: t, label: t })),
+  ], [allTags])
 
   // Sync filters → URL (debounced 300 ms for the text query)
   const syncUrl = useCallback((
-    q: string, team: string, status: string, access: string, mine: boolean
+    q: string, team: string, status: string, access: string, tag: string, mine: boolean
   ) => {
     const params = new URLSearchParams()
     if (q)      params.set('q',      q)
     if (team)   params.set('team',   team)
     if (status) params.set('status', status)
     if (access) params.set('access', access)
+    if (tag)    params.set('tag',    tag)
     if (mine)   params.set('mine',   'true')
     const qs = params.toString()
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
@@ -61,9 +75,9 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
 
   // Debounce query changes
   useEffect(() => {
-    const t = setTimeout(() => syncUrl(query, teamFilter, statusFilter, accessFilter, mineOnly), 300)
+    const t = setTimeout(() => syncUrl(query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly), 300)
     return () => clearTimeout(t)
-  }, [query, teamFilter, statusFilter, accessFilter, mineOnly, syncUrl])
+  }, [query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly, syncUrl])
 
   // '/' key focuses the search input (skip if already in an input)
   useEffect(() => {
@@ -92,21 +106,23 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           .toLowerCase()
         if (!haystack.includes(q)) return false
       }
-      if (teamFilter   && t.team        !== teamFilter)                     return false
-      if (statusFilter && t.status      !== (statusFilter as ToolStatus))   return false
-      if (accessFilter && t.accessLevel !== (accessFilter as AccessLevel))  return false
-      if (mineOnly     && t.createdByEmail !== currentUserEmail)             return false
+      if (teamFilter   && t.team        !== teamFilter)                               return false
+      if (statusFilter && t.status      !== (statusFilter as ToolStatus))           return false
+      if (accessFilter && t.accessLevel !== (accessFilter as AccessLevel))          return false
+      if (tagFilter    && !(t.tags ?? []).some((tag) => tag.name === tagFilter))    return false
+      if (mineOnly     && t.createdByEmail !== currentUserEmail)                    return false
       return true
     })
   }, [tools, query, teamFilter, statusFilter, accessFilter, mineOnly, currentUserEmail])
 
-  const hasFilters = query || teamFilter || statusFilter || accessFilter || mineOnly
+  const hasFilters = query || teamFilter || statusFilter || accessFilter || tagFilter || mineOnly
 
   function clearFilters() {
     setQuery('')
     setTeamFilter('')
     setStatusFilter('')
     setAccessFilter('')
+    setTagFilter('')
     setMineOnly(false)
   }
 
@@ -160,6 +176,16 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
             aria-label="Filter by access level"
             className="w-auto min-w-[150px]"
           />
+
+          {allTags.length > 0 && (
+            <Select
+              value={tagFilter}
+              onChange={(e) => setTagFilter(e.target.value)}
+              options={tagOptions}
+              aria-label="Filter by tag"
+              className="w-auto min-w-[120px]"
+            />
+          )}
 
           {/* Mine toggle */}
           <button

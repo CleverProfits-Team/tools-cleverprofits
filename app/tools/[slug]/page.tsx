@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { StatusBadge, AccessBadge } from '@/components/ui/badge'
-import { ExternalLink, ArrowLeft, Clock, Users, Pencil } from 'lucide-react'
+import { ExternalLink, ArrowLeft, Clock, Users, Pencil, History } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,7 +27,10 @@ export default async function ToolInfoPage({
   const isAdmin = session?.user?.role === 'ADMIN' || session?.user?.role === 'SUPER_ADMIN'
   const userEmail = session?.user?.email ?? ''
 
-  const tool = await prisma.tool.findUnique({ where: { slug: params.slug } })
+  const tool = await prisma.tool.findUnique({
+    where:   { slug: params.slug },
+    include: { tags: { select: { id: true, name: true } } },
+  })
 
   // Not found or archived (and not admin)
   if (!tool || (tool.status === 'ARCHIVED' && !isAdmin)) notFound()
@@ -44,6 +47,16 @@ export default async function ToolInfoPage({
 
   const showEdit = isAdmin || (isOwner && (tool.status === 'PENDING' || tool.status === 'REJECTED'))
   const updated  = searchParams.updated === '1'
+
+  // Version history (shown to owner + admins)
+  const canSeeChangelog = isAdmin || isOwner
+  const versions = canSeeChangelog
+    ? await prisma.toolVersion.findMany({
+        where:   { toolId: tool.id },
+        orderBy: { version: 'desc' },
+        take:    10,
+      })
+    : []
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -118,6 +131,20 @@ export default async function ToolInfoPage({
               <p className="text-slate-600 text-sm leading-relaxed mb-6">{tool.description}</p>
             )}
 
+            {/* Tags */}
+            {tool.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mb-5">
+                {tool.tags.map((tag) => (
+                  <span
+                    key={tag.id}
+                    className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600"
+                  >
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* Meta grid */}
             <div className="grid grid-cols-2 gap-4 mb-6 py-4 border-y border-slate-100">
               {tool.team && (
@@ -153,6 +180,48 @@ export default async function ToolInfoPage({
               </a>
             )}
           </div>
+
+          {/* Changelog */}
+          {canSeeChangelog && versions.length > 0 && (
+            <div className="border-t border-slate-100 px-6 sm:px-8 py-5">
+              <div className="flex items-center gap-2 mb-3">
+                <History className="h-4 w-4 text-slate-400" aria-hidden />
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">Change History</h2>
+              </div>
+              <ol className="space-y-3">
+                {versions.map((v) => {
+                  const changes = v.changes as Record<string, { from: unknown; to: unknown }>
+                  const changedAt = new Date(v.createdAt).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric',
+                  })
+                  return (
+                    <li key={v.id} className="flex gap-3 text-sm">
+                      <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500">
+                        v{v.version}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs text-slate-400 mb-1">
+                          {v.changedByName} · {changedAt}
+                        </p>
+                        <ul className="space-y-0.5">
+                          {Object.entries(changes).map(([field, { from, to }]) => (
+                            <li key={field} className="text-xs text-slate-600">
+                              <span className="font-medium capitalize">{field}</span>
+                              {' '}changed
+                              {String(from) !== '' && (
+                                <> from <code className="bg-slate-100 px-1 rounded text-[11px]">{String(from)}</code></>
+                              )}
+                              {' '}to <code className="bg-slate-100 px-1 rounded text-[11px]">{String(to)}</code>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ol>
+            </div>
+          )}
         </div>
 
       </div>

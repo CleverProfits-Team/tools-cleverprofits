@@ -129,6 +129,17 @@ export const createToolSchema = z.object({
     .max(1000, 'Notes must be 1000 characters or fewer')
     .optional()
     .or(z.literal('')),
+
+  tags: z
+    .array(
+      z.string()
+        .min(1, 'Tag cannot be empty')
+        .max(50, 'Tag must be 50 characters or fewer')
+        .regex(/^[a-zA-Z0-9 _-]+$/, 'Tags may only contain letters, numbers, spaces, hyphens, and underscores'),
+    )
+    .max(10, 'Maximum 10 tags allowed')
+    .optional()
+    .default([]),
 })
 
 /**

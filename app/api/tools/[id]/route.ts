@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import { Prisma } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { updateToolSchema } from '@/lib/validations'
@@ -24,6 +25,7 @@ export async function GET(
 
   const tool = await prisma.tool.findUnique({
     where: { id: params.id },
+    include: { tags: { select: { id: true, name: true } } },
   })
 
   if (!tool) {
@@ -62,7 +64,12 @@ export async function PUT(
   // Verify the tool exists before parsing the body — avoids wasted work
   const existing = await prisma.tool.findUnique({
     where: { id: params.id },
-    select: { id: true, slug: true, name: true, status: true, createdByEmail: true },
+    select: {
+      id: true, slug: true, name: true, status: true, createdByEmail: true,
+      externalUrl: true, description: true, team: true, notes: true,
+      accessLevel: true, rejectionReason: true,
+      tags: { select: { id: true, name: true } },
+    },
   })
 
   if (!existing) {
@@ -105,14 +112,17 @@ export async function PUT(
 
   const data = parsed.data
 
-  if (data.status !== undefined) {
+  // Extract tags from payload (handled separately via relation)
+  const { tags: incomingTags, ...scalarData } = data
+
+  if (scalarData.status !== undefined) {
     if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
       return NextResponse.json(
         { error: 'Forbidden: only admins can change tool status' },
         { status: 403 },
       )
     }
-    if (data.status === 'REJECTED' && !data.rejectionReason) {
+    if (scalarData.status === 'REJECTED' && !scalarData.rejectionReason) {
       return NextResponse.json(
         { error: 'Rejection reason is required' },
         { status: 422 },
@@ -122,7 +132,7 @@ export async function PUT(
 
   // If the payload is effectively empty, return early rather than issuing a
   // no-op UPDATE that increments updatedAt unnecessarily.
-  if (Object.keys(data).length === 0) {
+  if (Object.keys(scalarData).length === 0 && incomingTags === undefined) {
     return NextResponse.json(
       { error: 'No updatable fields provided' },
       { status: 400 },
@@ -130,33 +140,86 @@ export async function PUT(
   }
 
   try {
+    // ── Build tag update operation ─────────────────────────────────────────
+    let tagsUpdate: Record<string, unknown> | undefined
+    if (incomingTags !== undefined) {
+      tagsUpdate = {
+        set: [],  // disconnect all existing tags first
+        connectOrCreate: incomingTags.map((name) => ({
+          where:  { name },
+          create: { name },
+        })),
+      }
+    }
+
+    // ── Compute changelog diff ─────────────────────────────────────────────
+    const TRACKED_FIELDS = [
+      'name', 'externalUrl', 'description', 'team', 'notes', 'accessLevel', 'status',
+    ] as const
+
+    type TrackedField = typeof TRACKED_FIELDS[number]
+    const changes: Record<string, { from: unknown; to: unknown }> = {}
+
+    for (const field of TRACKED_FIELDS) {
+      if (scalarData[field as keyof typeof scalarData] !== undefined) {
+        const from = existing[field as keyof typeof existing]
+        const to   = scalarData[field as keyof typeof scalarData]
+        if (from !== to) changes[field] = { from, to }
+      }
+    }
+
+    if (incomingTags !== undefined) {
+      const fromTags = (existing.tags ?? []).map((t: { name: string }) => t.name).sort()
+      const toTags   = [...incomingTags].sort()
+      if (JSON.stringify(fromTags) !== JSON.stringify(toTags)) {
+        changes['tags'] = { from: fromTags, to: toTags }
+      }
+    }
+
     const tool = await prisma.tool.update({
       where: { id: params.id },
       data: {
-        ...data,
+        ...scalarData,
         // Coerce empty strings to null for optional text fields
-        ...(data.description !== undefined
-          ? { description: data.description || null }
+        ...(scalarData.description !== undefined
+          ? { description: scalarData.description || null }
           : {}),
-        ...(data.team !== undefined
-          ? { team: data.team || null }
+        ...(scalarData.team !== undefined
+          ? { team: scalarData.team || null }
           : {}),
-        ...(data.notes !== undefined
-          ? { notes: data.notes || null }
+        ...(scalarData.notes !== undefined
+          ? { notes: scalarData.notes || null }
           : {}),
         // Only persist rejectionReason when status is REJECTED; clear it otherwise
-        rejectionReason: data.status === 'REJECTED' ? (data.rejectionReason ?? null) : null,
+        rejectionReason: scalarData.status === 'REJECTED' ? (scalarData.rejectionReason ?? null) : null,
+        // Tags relation update
+        ...(tagsUpdate ? { tags: tagsUpdate } : {}),
       },
+      include: { tags: { select: { id: true, name: true } } },
     })
 
-    // Audit status changes
-    if (data.status) {
+    // ── Write ToolVersion if anything changed ──────────────────────────────
+    if (Object.keys(changes).length > 0) {
+      const versionCount = await prisma.toolVersion.count({ where: { toolId: params.id } })
+      prisma.toolVersion.create({
+        data: {
+          toolId:         params.id,
+          version:        versionCount + 1,
+          changes:        changes as Prisma.InputJsonValue,
+          changedByEmail: session.user.email,
+          changedByName:  session.user.name ?? '',
+        },
+      }).catch((err) => console.error('[ToolVersion] Failed to write:', err))
+    }
+
+    // ── Audit status changes ───────────────────────────────────────────────
+    if (scalarData.status) {
       const wasArchived = existing.status === 'ARCHIVED'
       const wasRejected = existing.status === 'REJECTED'
       const auditAction =
-        data.status === 'ACTIVE'    ? ((wasArchived || wasRejected) ? 'TOOL_RESTORED' : 'TOOL_APPROVED')
-        : data.status === 'REJECTED' ? 'TOOL_REJECTED'
-        : data.status === 'ARCHIVED' ? 'TOOL_ARCHIVED'
+        scalarData.status === 'ACTIVE'    ? ((wasArchived || wasRejected) ? 'TOOL_RESTORED' : 'TOOL_APPROVED')
+        : scalarData.status === 'REJECTED' ? 'TOOL_REJECTED'
+        : scalarData.status === 'ARCHIVED' ? 'TOOL_ARCHIVED'
         : null
 
       if (auditAction) {
@@ -166,7 +229,7 @@ export async function PUT(
           actorName:  session.user.name,
           toolId:     tool.id,
           toolName:   tool.name,
-          detail:     data.status === 'REJECTED' ? data.rejectionReason : undefined,
+          detail:     scalarData.status === 'REJECTED' ? scalarData.rejectionReason : undefined,
         })
       }
     }
