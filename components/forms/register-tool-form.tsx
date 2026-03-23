@@ -283,139 +283,160 @@ export function RegisterToolForm() {
 
   // ── Form ─────────────────────────────────────────────────────────────────
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-6 max-w-xl">
+    <form onSubmit={handleSubmit} noValidate className="space-y-8 max-w-xl">
 
-      {/* Name */}
-      <div>
-        <Label htmlFor="name">Tool name <span className="text-red-500">*</span></Label>
-        <Input
-          id="name"
-          placeholder="e.g. Revenue Dashboard"
-          value={values.name}
-          onChange={set('name')}
-          error={fieldErrors.name}
-          autoFocus
-          autoComplete="off"
-        />
+      {/* ── Section 1: Identity ─────────────────────────────────────── */}
+      <div className="space-y-5">
+        <SectionHeader label="Identity" />
+
+        {/* Name */}
+        <div>
+          <Label htmlFor="name">Tool name <span className="text-red-500">*</span></Label>
+          <Input
+            id="name"
+            placeholder="e.g. Revenue Dashboard"
+            value={values.name}
+            onChange={set('name')}
+            error={fieldErrors.name}
+            autoFocus
+            autoComplete="off"
+          />
+          {fieldErrors.name && <FieldError>{fieldErrors.name}</FieldError>}
+        </div>
+
+        {/* Slug */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <Label htmlFor="slug" className="mb-0">
+              URL slug <span className="text-red-500">*</span>
+            </Label>
+            <SlugStatus state={slugState} reason={slugReason} />
+          </div>
+          <div className="flex items-center">
+            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
+              /
+            </span>
+            <Input
+              id="slug"
+              placeholder="revenue-dashboard"
+              value={values.slug}
+              onChange={set('slug')}
+              error={fieldErrors.slug}
+              className={cn(
+                'rounded-l-none font-mono',
+                slugState === 'available' && 'border-emerald-300 focus-visible:ring-emerald-300',
+                (slugState === 'taken' || slugState === 'invalid') && 'border-red-300 focus-visible:ring-red-300',
+              )}
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+          {!fieldErrors.slug && (
+            <p className="text-xs text-slate-400 mt-1.5">
+              Auto-generated from name · lowercase letters, numbers, hyphens only
+            </p>
+          )}
+          {fieldErrors.slug && <FieldError>{fieldErrors.slug}</FieldError>}
+        </div>
       </div>
 
-      {/* Slug */}
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <Label htmlFor="slug" className="mb-0">
-            URL slug <span className="text-red-500">*</span>
+      {/* ── Section 2: Connection ───────────────────────────────────── */}
+      <div className="space-y-5">
+        <SectionHeader label="Connection" />
+
+        <div>
+          <Label htmlFor="externalUrl">
+            Railway URL <span className="text-red-500">*</span>
           </Label>
-          <SlugStatus state={slugState} reason={slugReason} />
-        </div>
-        <div className="flex items-center">
-          <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
-            /
-          </span>
           <Input
-            id="slug"
-            placeholder="revenue-dashboard"
-            value={values.slug}
-            onChange={set('slug')}
-            error={fieldErrors.slug}
-            className={cn(
-              'rounded-l-none font-mono',
-              slugState === 'available' && 'border-emerald-300 focus-visible:ring-emerald-300',
-              (slugState === 'taken' || slugState === 'invalid') && 'border-red-300 focus-visible:ring-red-300',
-            )}
+            id="externalUrl"
+            type="url"
+            placeholder="https://my-app.up.railway.app"
+            value={values.externalUrl}
+            onChange={set('externalUrl')}
+            error={fieldErrors.externalUrl}
             autoComplete="off"
             spellCheck={false}
           />
-        </div>
-        {!fieldErrors.slug && (
-          <p className="text-xs text-slate-400 mt-1">
-            Auto-generated from name. Lowercase letters, numbers, and hyphens only.
+          <p className="text-xs text-slate-400 mt-1.5">
+            Proxied server-side — the Railway URL is never exposed to users.
           </p>
-        )}
+          {fieldErrors.externalUrl && <FieldError>{fieldErrors.externalUrl}</FieldError>}
+        </div>
       </div>
 
-      {/* External URL */}
-      <div>
-        <Label htmlFor="externalUrl">
-          Railway URL <span className="text-red-500">*</span>
-        </Label>
-        <Input
-          id="externalUrl"
-          type="url"
-          placeholder="https://my-app.up.railway.app"
-          value={values.externalUrl}
-          onChange={set('externalUrl')}
-          error={fieldErrors.externalUrl}
-          autoComplete="off"
-          spellCheck={false}
-        />
-        <p className="text-xs text-slate-400 mt-1">
-          The Railway deployment URL that will be proxied. Never exposed to users.
-        </p>
+      {/* ── Section 3: Access ───────────────────────────────────────── */}
+      <div className="space-y-5">
+        <SectionHeader label="Access" />
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="accessLevel">
+              Access level <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              id="accessLevel"
+              value={values.accessLevel}
+              onChange={set('accessLevel')}
+              options={ACCESS_OPTIONS}
+              error={fieldErrors.accessLevel}
+            />
+            {fieldErrors.accessLevel && <FieldError>{fieldErrors.accessLevel}</FieldError>}
+          </div>
+
+          <div>
+            <Label htmlFor="team">Team <span className="text-slate-400 font-normal">(optional)</span></Label>
+            <Input
+              id="team"
+              placeholder="Finance, Ops…"
+              value={values.team}
+              onChange={set('team')}
+              autoComplete="off"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Access level */}
-      <div>
-        <Label htmlFor="accessLevel">
-          Access level <span className="text-red-500">*</span>
-        </Label>
-        <Select
-          id="accessLevel"
-          value={values.accessLevel}
-          onChange={set('accessLevel')}
-          options={ACCESS_OPTIONS}
-          error={fieldErrors.accessLevel}
-        />
-      </div>
+      {/* ── Section 4: Details ──────────────────────────────────────── */}
+      <div className="space-y-5">
+        <SectionHeader label="Details" note="optional" />
 
-      {/* Team (optional) */}
-      <div>
-        <Label htmlFor="team">Team <span className="text-slate-400 font-normal">(optional)</span></Label>
-        <Input
-          id="team"
-          placeholder="e.g. Finance, Marketing, Operations…"
-          value={values.team}
-          onChange={set('team')}
-          autoComplete="off"
-        />
-      </div>
+        <div>
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            placeholder="What does this tool do? Who should use it?"
+            value={values.description}
+            onChange={set('description')}
+            rows={3}
+          />
+        </div>
 
-      {/* Description (optional) */}
-      <div>
-        <Label htmlFor="description">Description <span className="text-slate-400 font-normal">(optional)</span></Label>
-        <Textarea
-          id="description"
-          placeholder="What does this tool do? Who should use it?"
-          value={values.description}
-          onChange={set('description')}
-          rows={3}
-        />
-      </div>
-
-      {/* Notes (optional) */}
-      <div>
-        <Label htmlFor="notes">Internal notes <span className="text-slate-400 font-normal">(optional)</span></Label>
-        <Textarea
-          id="notes"
-          placeholder="Login credentials, onboarding tips, known issues…"
-          value={values.notes}
-          onChange={set('notes')}
-          rows={3}
-        />
-        <p className="text-xs text-slate-400 mt-1">
-          Only visible to platform admins — not shown to end users.
-        </p>
+        <div>
+          <Label htmlFor="notes">Internal notes</Label>
+          <Textarea
+            id="notes"
+            placeholder="Login credentials, onboarding tips, known issues…"
+            value={values.notes}
+            onChange={set('notes')}
+            rows={3}
+          />
+          <p className="text-xs text-slate-400 mt-1.5">
+            Visible to platform admins only.
+          </p>
+        </div>
       </div>
 
       {/* Server error */}
       {serverError && (
-        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3 py-2.5 text-sm text-red-700">
+        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
           <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
           {serverError}
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
         <Button
           type="submit"
           disabled={submitting || slugState === 'checking'}
@@ -433,4 +454,22 @@ export function RegisterToolForm() {
       </div>
     </form>
   )
+}
+
+// ── Small helpers ─────────────────────────────────────────────────────────────
+
+function SectionHeader({ label, note }: { label: string; note?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+        {label}
+        {note && <span className="font-normal normal-case tracking-normal ml-1 text-slate-300">· {note}</span>}
+      </span>
+      <div className="flex-1 h-px bg-slate-100" />
+    </div>
+  )
+}
+
+function FieldError({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs text-red-500 mt-1">{children}</p>
 }

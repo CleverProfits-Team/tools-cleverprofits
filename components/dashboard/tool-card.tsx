@@ -22,42 +22,43 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col bg-white rounded-xl border border-slate-200',
-        'p-5 shadow-card transition-shadow duration-150',
-        isActive && 'hover:shadow-card-hover',
+        'group relative flex flex-col bg-white rounded-xl border shadow-sm',
+        'p-5 transition-all duration-150',
+        isActive
+          ? 'border-slate-200 hover:border-slate-300 hover:shadow-md cursor-pointer'
+          : 'border-slate-200 opacity-90',
       )}
     >
-      {/* ── Header ──────────────────────────────────────────────────── */}
+      {/* ── Header ─────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex-1 min-w-0">
-          <Link href={`/tools/${tool.slug}`} className="hover:underline focus-ring rounded">
-            <h3 className="font-semibold text-slate-900 text-[15px] leading-snug truncate">
-              {tool.name}
-            </h3>
+          <Link
+            href={`/tools/${tool.slug}`}
+            className={cn(
+              'block font-semibold text-slate-900 text-[15px] leading-snug truncate',
+              'hover:text-blue-600 transition-colors focus-ring rounded',
+            )}
+          >
+            {tool.name}
           </Link>
           <p className="text-xs text-slate-400 font-mono mt-0.5 truncate">
             /{tool.slug}
           </p>
         </div>
-
-        {/* Status badge — top-right */}
         <div className="flex-shrink-0 mt-0.5">
           <StatusBadge status={tool.status} />
         </div>
       </div>
 
       {/* ── Description ─────────────────────────────────────────────── */}
-      {tool.description ? (
-        <p className="text-sm text-slate-500 line-clamp-2 mb-4 leading-relaxed flex-1">
-          {tool.description}
-        </p>
-      ) : (
-        <p className="text-sm text-slate-300 italic mb-4 flex-1">
-          No description
-        </p>
-      )}
+      <p className={cn(
+        'text-sm line-clamp-2 mb-4 leading-relaxed flex-1',
+        tool.description ? 'text-slate-500' : 'text-slate-300 italic',
+      )}>
+        {tool.description ?? 'No description provided'}
+      </p>
 
-      {/* ── Classification chips ─────────────────────────────────────── */}
+      {/* ── Chips ───────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         <AccessBadge level={tool.accessLevel} />
         {tool.team && <Badge>{tool.team}</Badge>}
@@ -79,7 +80,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         {isActive ? (
           <Link
             href={`/${tool.slug}`}
-            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-700 transition-colors flex-shrink-0 focus-ring"
+            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-700 transition-colors flex-shrink-0 shadow-sm focus-ring"
             aria-label={`Open ${tool.name}`}
           >
             Open

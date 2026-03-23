@@ -2,14 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { ArrowRight, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Select } from '@/components/ui/select'
 import type { SerializedTool } from '@/types'
 import type { ToolStatus } from '@prisma/client'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────────────────────────────────────
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', {
@@ -19,23 +16,22 @@ function formatDate(iso: string) {
   })
 }
 
-function ToolStatusBadge({ status }: { status: ToolStatus }) {
-  const styles: Record<ToolStatus, string> = {
-    ACTIVE:   'bg-emerald-100 text-emerald-700',
-    PENDING:  'bg-amber-100 text-amber-700',
-    ARCHIVED: 'bg-slate-100 text-slate-500',
-    REJECTED: 'bg-red-100 text-red-700',
-  }
+const STATUS_CONFIG: Record<ToolStatus, { label: string; dot: string; pill: string }> = {
+  ACTIVE:   { label: 'Active',   dot: 'bg-emerald-500', pill: 'bg-emerald-50  text-emerald-700 ring-1 ring-emerald-600/20' },
+  PENDING:  { label: 'Pending',  dot: 'bg-amber-500',   pill: 'bg-amber-50   text-amber-700   ring-1 ring-amber-600/20'   },
+  ARCHIVED: { label: 'Archived', dot: 'bg-slate-400',   pill: 'bg-slate-100  text-slate-500   ring-1 ring-slate-500/20'   },
+  REJECTED: { label: 'Rejected', dot: 'bg-red-500',     pill: 'bg-red-50     text-red-700     ring-1 ring-red-600/20'     },
+}
+
+function StatusPill({ status }: { status: ToolStatus }) {
+  const { label, dot, pill } = STATUS_CONFIG[status]
   return (
-    <span className={cn('inline-block rounded-full px-2 py-0.5 text-xs font-medium', styles[status])}>
-      {status}
+    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap', pill)}>
+      <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', dot)} aria-hidden />
+      {label}
     </span>
   )
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface Props {
   initialTools: SerializedTool[]
@@ -46,23 +42,25 @@ type StatusFilter = 'ALL' | ToolStatus
 
 export function AdminToolsList({ initialTools, teams }: Props) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
-  const [teamFilter, setTeamFilter]     = useState<string>('ALL')
-  const [pendingOnly, setPendingOnly]   = useState(false)
+  const [teamFilter,   setTeamFilter]   = useState<string>('ALL')
+  const [pendingOnly,  setPendingOnly]  = useState(false)
 
   const filtered = initialTools.filter((t) => {
     if (pendingOnly && t.status !== 'PENDING') return false
     if (statusFilter !== 'ALL' && t.status !== statusFilter) return false
-    if (teamFilter !== 'ALL' && t.team !== teamFilter) return false
+    if (teamFilter   !== 'ALL' && t.team    !== teamFilter)   return false
     return true
   })
 
-  const thCls = 'px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider'
-  const tdCls = 'px-3 py-3 text-sm text-slate-700 align-top'
+  const pendingCount = initialTools.filter((t) => t.status === 'PENDING').length
+
+  const thCls = 'px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'
+  const tdCls = 'px-4 py-3.5 text-sm text-slate-700 align-middle'
 
   return (
     <div>
-      {/* Filter row */}
-      <div className="flex flex-wrap gap-3 mb-4">
+      {/* Toolbar */}
+      <div className="flex flex-wrap items-center gap-3 mb-5">
         <Select
           value={pendingOnly ? 'PENDING' : statusFilter}
           disabled={pendingOnly}
@@ -90,60 +88,97 @@ export function AdminToolsList({ initialTools, teams }: Props) {
         )}
 
         <button
-          onClick={() => {
-            setPendingOnly((v) => !v)
-            if (!pendingOnly) setStatusFilter('ALL')
-          }}
+          onClick={() => { setPendingOnly((v) => !v); if (!pendingOnly) setStatusFilter('ALL') }}
           className={cn(
-            'rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
+            'inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
             pendingOnly
-              ? 'border-amber-500 bg-amber-50 text-amber-700'
+              ? 'border-amber-400 bg-amber-50 text-amber-700'
               : 'border-slate-200 text-slate-600 hover:bg-slate-50',
           )}
         >
-          Pending only
+          <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', pendingOnly ? 'bg-amber-500' : 'bg-slate-300')} aria-hidden />
+          Needs review
+          {pendingCount > 0 && (
+            <span className={cn(
+              'rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none',
+              pendingOnly ? 'bg-amber-200 text-amber-800' : 'bg-slate-200 text-slate-600',
+            )}>
+              {pendingCount}
+            </span>
+          )}
         </button>
+
+        <span className="ml-auto text-xs text-slate-400">
+          {filtered.length} tool{filtered.length !== 1 ? 's' : ''}
+        </span>
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-slate-500 py-12 text-center">No tools match the current filters</p>
+        <div className="rounded-xl border border-slate-200 bg-white py-16 text-center">
+          <p className="text-sm text-slate-400">No tools match the current filters.</p>
+        </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-slate-200">
+        <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="border-b border-slate-200 bg-slate-50/80">
               <tr>
-                <th className={thCls}>Name / Slug</th>
+                <th className={thCls}>Tool</th>
                 <th className={thCls}>Owner</th>
                 <th className={thCls}>Team</th>
                 <th className={thCls}>Status</th>
-                <th className={thCls}>Created</th>
-                <th className={thCls}>Actions</th>
+                <th className={cn(thCls, 'hidden lg:table-cell')}>Registered</th>
+                <th className={thCls}></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filtered.map((tool) => (
-                <tr key={tool.id} className="hover:bg-slate-50/50">
-                  <td className={tdCls}>
-                    <div className="font-medium text-slate-900">{tool.name}</div>
-                    <div className="text-xs text-slate-400">{tool.slug}</div>
-                  </td>
-                  <td className={tdCls}>
-                    <div>{tool.createdByName}</div>
-                    <div className="text-xs text-slate-400">{tool.createdByEmail}</div>
-                  </td>
-                  <td className={tdCls}>{tool.team ?? '—'}</td>
-                  <td className={tdCls}><ToolStatusBadge status={tool.status} /></td>
-                  <td className={tdCls}>{formatDate(tool.createdAt)}</td>
-                  <td className={tdCls}>
-                    <Link
-                      href={`/dashboard/admin/tools/${tool.id}`}
-                      className="text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
-                    >
-                      Review →
-                    </Link>
-                  </td>
-                </tr>
-              ))}
+              {filtered.map((tool) => {
+                const isPending = tool.status === 'PENDING'
+                return (
+                  <tr
+                    key={tool.id}
+                    className={cn(
+                      'transition-colors',
+                      isPending ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50/60',
+                    )}
+                  >
+                    <td className={tdCls}>
+                      {isPending && (
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <Clock className="h-3 w-3 text-amber-500" aria-hidden />
+                          <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">Needs review</span>
+                        </div>
+                      )}
+                      <div className="font-semibold text-slate-900">{tool.name}</div>
+                      <div className="text-xs text-slate-400 font-mono mt-0.5">/{tool.slug}</div>
+                    </td>
+                    <td className={tdCls}>
+                      <div className="font-medium text-slate-800">{tool.createdByName}</div>
+                      <div className="text-xs text-slate-400">{tool.createdByEmail}</div>
+                    </td>
+                    <td className={cn(tdCls, 'text-slate-500')}>{tool.team ?? <span className="text-slate-300">—</span>}</td>
+                    <td className={tdCls}>
+                      <StatusPill status={tool.status} />
+                    </td>
+                    <td className={cn(tdCls, 'text-slate-400 hidden lg:table-cell whitespace-nowrap')}>
+                      {formatDate(tool.createdAt)}
+                    </td>
+                    <td className={cn(tdCls, 'text-right')}>
+                      <Link
+                        href={`/dashboard/admin/tools/${tool.id}`}
+                        className={cn(
+                          'inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors whitespace-nowrap',
+                          isPending
+                            ? 'bg-amber-600 text-white hover:bg-amber-700 shadow-sm'
+                            : 'border border-slate-200 text-slate-600 hover:bg-slate-50',
+                        )}
+                      >
+                        {isPending ? 'Review' : 'View'}
+                        <ArrowRight className="h-3 w-3" aria-hidden />
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
