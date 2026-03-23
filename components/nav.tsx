@@ -12,7 +12,11 @@ const NAV_LINKS = [
   { href: '/dashboard/register',  label: 'Register Tool', icon: PlusCircle },
 ]
 
-export function Nav() {
+interface NavProps {
+  pendingCount?: number
+}
+
+export function Nav({ pendingCount = 0 }: NavProps) {
   const pathname  = usePathname()
   const { data: session } = useSession()
 
@@ -66,6 +70,11 @@ export function Nav() {
                 >
                   <ShieldAlert className="h-3.5 w-3.5" aria-hidden />
                   Admin
+                  {pendingCount > 0 && (
+                    <span className="inline-flex items-center justify-center rounded-full bg-amber-500 text-white text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
+                      {pendingCount}
+                    </span>
+                  )}
                 </Link>
               )}
             </nav>

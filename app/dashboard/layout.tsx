@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/db'
 import { Nav } from '@/components/nav'
 
 export const metadata: Metadata = {
@@ -29,9 +30,14 @@ export default async function DashboardLayout({
     redirect('/login')
   }
 
+  const isAdmin = session.user.role === 'ADMIN' || session.user.role === 'SUPER_ADMIN'
+  const pendingCount = isAdmin
+    ? await prisma.tool.count({ where: { status: 'PENDING' } })
+    : 0
+
   return (
     <div className="min-h-screen flex flex-col">
-      <Nav />
+      <Nav pendingCount={pendingCount} />
       <main className="flex-1 page-container py-8">
         {children}
       </main>

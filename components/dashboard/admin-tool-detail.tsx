@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink } from 'lucide-react'
+import { ArrowLeft, ExternalLink, CheckCircle2, XCircle, Archive, RotateCcw, Pencil } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
 import type { ToolStatus } from '@prisma/client'
@@ -177,63 +177,81 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
         <div className="rounded-lg border border-slate-200 bg-white p-6">
           <h3 className="text-sm font-semibold text-slate-900 mb-4">Actions</h3>
           <div className="space-y-2">
-            <Link
-              href={`/dashboard/tools/${tool.id}/edit`}
-              className="block w-full rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 text-center hover:bg-slate-50 transition-colors"
-            >
-              Edit tool
-            </Link>
+
+            {/* PENDING: approve/reject are primary actions */}
             {tool.status === 'PENDING' && (
               <>
                 {isOwnTool ? (
-                  <div title="You cannot approve your own tool">
-                    <button
-                      disabled
-                      className="w-full rounded-md bg-emerald-200 px-4 py-2 text-sm font-medium text-emerald-500 cursor-not-allowed"
-                    >
-                      Approve
-                    </button>
-                    <p className="text-xs text-slate-400 mt-1 text-center">Cannot approve your own tool</p>
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-center">
+                    <p className="text-xs text-slate-500">You cannot approve your own tool.</p>
                   </div>
                 ) : (
                   <button
                     onClick={() => mutate('ACTIVE')}
                     disabled={loading !== null}
-                    className="w-full rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-sm"
                   >
-                    {loading === 'ACTIVE' ? 'Saving…' : 'Approve'}
+                    <CheckCircle2 className="h-4 w-4" aria-hidden />
+                    {loading === 'ACTIVE' ? 'Approving…' : 'Approve tool'}
                   </button>
                 )}
 
                 <button
                   onClick={() => setShowRejectModal(true)}
                   disabled={loading !== null}
-                  className="w-full rounded-md border border-red-200 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 transition-colors"
                 >
-                  {loading === 'REJECTED' ? 'Saving…' : 'Reject'}
+                  <XCircle className="h-4 w-4" aria-hidden />
+                  {loading === 'REJECTED' ? 'Rejecting…' : 'Reject'}
+                </button>
+
+                <div className="pt-1 border-t border-slate-100" />
+
+                <button
+                  onClick={() => mutate('ARCHIVED')}
+                  disabled={loading !== null}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                >
+                  <Archive className="h-3.5 w-3.5" aria-hidden />
+                  {loading === 'ARCHIVED' ? 'Archiving…' : 'Archive'}
                 </button>
               </>
             )}
 
-            {(tool.status === 'ACTIVE' || tool.status === 'PENDING') && (
+            {/* ACTIVE */}
+            {tool.status === 'ACTIVE' && (
               <button
                 onClick={() => mutate('ARCHIVED')}
                 disabled={loading !== null}
-                className="w-full rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors"
               >
-                {loading === 'ARCHIVED' ? 'Saving…' : 'Archive'}
+                <Archive className="h-3.5 w-3.5" aria-hidden />
+                {loading === 'ARCHIVED' ? 'Archiving…' : 'Archive tool'}
               </button>
             )}
 
+            {/* ARCHIVED or REJECTED: restore */}
             {(tool.status === 'ARCHIVED' || tool.status === 'REJECTED') && (
               <button
                 onClick={() => mutate('ACTIVE')}
                 disabled={loading !== null}
-                className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm"
               >
-                {loading === 'ACTIVE' ? 'Saving…' : 'Restore'}
+                <RotateCcw className="h-4 w-4" aria-hidden />
+                {loading === 'ACTIVE' ? 'Restoring…' : 'Restore to Active'}
               </button>
             )}
+
+            {/* Edit — always available, tertiary */}
+            <div className="pt-1 border-t border-slate-100">
+              <Link
+                href={`/dashboard/tools/${tool.id}/edit`}
+                className="flex items-center justify-center gap-1.5 w-full rounded-lg px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                <Pencil className="h-3.5 w-3.5" aria-hidden />
+                Edit tool details
+              </Link>
+            </div>
           </div>
         </div>
       </div>

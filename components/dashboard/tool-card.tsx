@@ -79,20 +79,19 @@ export function ToolCard({ tool }: ToolCardProps) {
         {isActive ? (
           <Link
             href={`/${tool.slug}`}
-            className={cn(
-              'flex items-center gap-1 text-xs font-medium text-blue-600',
-              'hover:text-blue-700 transition-colors flex-shrink-0',
-              'focus-ring rounded',
-            )}
+            className="inline-flex items-center gap-1 rounded-md bg-blue-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-blue-700 transition-colors flex-shrink-0 focus-ring"
             aria-label={`Open ${tool.name}`}
           >
             Open
-            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
+            <ArrowUpRight className="h-3 w-3" aria-hidden />
           </Link>
         ) : (
-          <span className="text-xs text-slate-300 flex-shrink-0">
-            Not active
-          </span>
+          <Link
+            href={`/tools/${tool.slug}`}
+            className="text-xs text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0"
+          >
+            View details
+          </Link>
         )}
       </div>
     </article>
