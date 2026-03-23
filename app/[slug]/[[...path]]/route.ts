@@ -34,7 +34,6 @@ import { getToken } from 'next-auth/jwt'
 import { prisma } from '@/lib/db'
 import {
   STRIP_RESPONSE_HEADERS,
-  isNextAuthSetCookie,
   buildUpstreamUrl,
   buildForwardHeaders,
   rewriteLocation,
@@ -175,6 +174,7 @@ async function handleProxy(
     upstreamBase,
     clientIp,
     originalHost,
+    params.slug,
   )
 
   // Inject authenticated user identity so upstream tools can trust who the
@@ -284,13 +284,11 @@ async function handleProxy(
     // Drop headers that become invalid after the proxy hop
     if (STRIP_RESPONSE_HEADERS.has(lk)) return
 
-    // Rewrite Set-Cookie to scope it to /slug and strip the upstream domain.
-    // Drop NextAuth-named cookies — they would collide with the platform's own
-    // session cookie and break middleware auth for the proxied path.
+    // Rewrite Set-Cookie: scope to /slug, drop upstream domain, rename any
+    // NextAuth cookies with a slug prefix to avoid colliding with the platform's
+    // own session cookie. prepareCookiesForUpstream() reverses the rename on outgoing requests.
     if (lk === 'set-cookie') {
-      if (!isNextAuthSetCookie(value)) {
-        resHeaders.append('set-cookie', rewriteSetCookie(value, params.slug))
-      }
+      resHeaders.append('set-cookie', rewriteSetCookie(value, params.slug))
       return
     }
 

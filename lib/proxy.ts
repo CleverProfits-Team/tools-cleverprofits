@@ -133,6 +133,7 @@ export function buildForwardHeaders(
   upstreamBase: string,
   clientIp: string,
   originalHost: string,
+  slug: string,
 ): Headers {
   const out = new Headers()
 
@@ -142,10 +143,10 @@ export function buildForwardHeaders(
     // 1. Skip hop-by-hop (includes 'host' — we set it explicitly below)
     if (HOP_BY_HOP.has(lk)) return
 
-    // 2. Sanitise Cookie: strip platform auth cookies before forwarding
+    // 2. Sanitise Cookie: drop platform auth cookies, restore renamed tool cookies
     if (lk === 'cookie') {
-      const sanitised = stripNextAuthCookies(value)
-      if (sanitised) out.set('cookie', sanitised)
+      const prepared = prepareCookiesForUpstream(value, slug)
+      if (prepared) out.set('cookie', prepared)
       return
     }
 
@@ -185,21 +186,49 @@ export function buildForwardHeaders(
 }
 
 /**
- * Removes NextAuth-owned cookies from a Cookie header string.
+ * Prepares the Cookie header to be forwarded to an upstream tool.
  *
- * Returns the sanitised cookie string (may be empty if all cookies belonged
- * to NextAuth — in that case the caller should omit the header entirely).
+ * Two-step treatment for NextAuth cookies:
+ *
+ *  1. Platform NextAuth cookies (bare "next-auth.*" names, Path=/)
+ *     These are DROPPED. Sending the platform's encrypted session token to a
+ *     third-party service would expose it to decryption with a different secret.
+ *
+ *  2. Tool NextAuth cookies (renamed "{slug}~next-auth.*" by rewriteSetCookie)
+ *     These are RESTORED to their original names ("next-auth.*") before
+ *     forwarding. The upstream app's NextAuth can then verify them normally.
+ *
+ * All other cookies are forwarded as-is.
  */
-function stripNextAuthCookies(cookieHeader: string): string {
+function prepareCookiesForUpstream(cookieHeader: string, slug: string): string {
+  const slugTilde = `${slug}~`
   return cookieHeader
     .split(';')
     .map((c) => c.trim())
-    .filter((cookie) => {
-      const name = cookie.split('=')[0].trim().toLowerCase()
-      return !NEXTAUTH_COOKIE_PREFIXES.some((prefix) =>
-        name.startsWith(prefix.toLowerCase()),
-      )
+    .map((cookie) => {
+      const eqIdx = cookie.indexOf('=')
+      if (eqIdx < 0) return cookie
+      const name = cookie.slice(0, eqIdx).trim()
+      const nameLower = name.toLowerCase()
+
+      // 1. Drop platform NextAuth cookies (no slug prefix)
+      if (NEXTAUTH_COOKIE_PREFIXES.some((p) => nameLower.startsWith(p.toLowerCase()))) {
+        return null
+      }
+
+      // 2. Restore renamed tool NextAuth cookies: "{slug}~next-auth.*" → "next-auth.*"
+      if (name.startsWith(slugTilde)) {
+        const originalName = name.slice(slugTilde.length)
+        if (NEXTAUTH_COOKIE_PREFIXES.some((p) =>
+          originalName.toLowerCase().startsWith(p.toLowerCase()),
+        )) {
+          return `${originalName}${cookie.slice(eqIdx)}`
+        }
+      }
+
+      return cookie
     })
+    .filter((c): c is string => c !== null)
     .join('; ')
     .trim()
 }
@@ -293,6 +322,14 @@ export function rewriteSetCookie(raw: string, slug: string): string {
   const output: string[] = []
   let hasPath = false
 
+  // Detect if this is a NextAuth-owned cookie so we can rename it to avoid
+  // colliding with the platform's own NextAuth cookie of the same name.
+  const eqPos = parts[0].indexOf('=')
+  const cookieName = (eqPos >= 0 ? parts[0].slice(0, eqPos) : parts[0]).trim()
+  const isNextAuth = NEXTAUTH_COOKIE_PREFIXES.some((p) =>
+    cookieName.toLowerCase().startsWith(p.toLowerCase()),
+  )
+
   for (const part of parts) {
     const lower = part.toLowerCase().trimStart()
 
@@ -323,6 +360,13 @@ export function rewriteSetCookie(raw: string, slug: string): string {
   // If the upstream omitted Path, default the cookie to the tool's root
   if (!hasPath) {
     output.push(`Path=/${slug}`)
+  }
+
+  // Rename NextAuth cookies to avoid collision with the platform's own session cookie.
+  // "next-auth.session-token=abc"  →  "growth-system~next-auth.session-token=abc"
+  // prepareCookiesForUpstream() reverses this when forwarding the cookie to the origin.
+  if (isNextAuth) {
+    output[0] = `${slug}~${output[0]}`
   }
 
   return output.join('; ')
@@ -357,7 +401,7 @@ export function forwardSetCookies(
 ): void {
   srcHeaders.forEach((value, key) => {
     if (key.toLowerCase() === 'set-cookie') {
-      if (isNextAuthSetCookie(value)) return   // drop — would collide with platform cookie
+      // rewriteSetCookie() now handles NextAuth cookie renaming — no need to drop here
       dstHeaders.append('set-cookie', rewriteSetCookie(value, slug))
     }
   })
@@ -423,14 +467,24 @@ export function rewriteHtml(
   // any root-relative path the app constructs is prefixed with /<slug>.
   const runtimeScript = `<script>(function(S){` +
     `var R=new RegExp("^"+S+"(/|$)");` +
-    `function f(u){return typeof u==="string"&&u[0]==="/"&&u[1]!=="/"&&!R.test(u)?S+u:u}` +
+    `var O=location.origin;` +
+    // f(): rewrite root-relative AND origin-absolute paths so they stay inside /<slug>
+    // Next.js App Router constructs absolute URLs via new URL('/login', location.href),
+    // producing "https://host/login". We must catch those too, not just "/login".
+    `function f(u){` +
+      `if(typeof u!=="string")return u;` +
+      `if(u[0]==="/"&&u[1]!=="/"&&!R.test(u))return S+u;` +  // root-relative /path
+      `var p=u.startsWith(O)?u.slice(O.length):null;` +        // strip origin
+      `if(p&&p[0]==="/"&&!R.test(p))return O+S+p;` +           // absolute on this origin
+      `return u;` +
+    `}` +
     // History API (Next.js SPA navigation)
     `var ps=history.pushState.bind(history),rs=history.replaceState.bind(history);` +
     `history.pushState=function(s,t,u){return ps(s,t,f(u))};` +
     `history.replaceState=function(s,t,u){return rs(s,t,f(u))};` +
-    // fetch
+    // fetch — also handle URL objects (Next.js passes new URL(...) to fetch)
     `var ft=window.fetch;` +
-    `window.fetch=function(r,o){return ft.call(this,typeof r==="string"?f(r):r,o)};` +
+    `window.fetch=function(r,o){if(r instanceof URL)r=r.href;return ft.call(this,typeof r==="string"?f(r):r,o)};` +
     // XMLHttpRequest
     `var xo=XMLHttpRequest.prototype.open;` +
     `XMLHttpRequest.prototype.open=function(){` +
