@@ -182,9 +182,10 @@ export const createDraftSchema = z.object({
 
   name: z
     .string()
-    .max(100, 'Name must be 100 characters or fewer')
-    .optional()
-    .or(z.literal('')),
+    .min(1, 'Tool name is required')
+    .max(100, 'Name must be 100 characters or fewer'),
+
+  slug: slugSchema.optional(),
 
   githubRepoUrl: z
     .string()

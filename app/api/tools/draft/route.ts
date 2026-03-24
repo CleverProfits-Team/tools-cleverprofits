@@ -89,11 +89,12 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { externalUrl, name, githubRepoUrl, description } = parsed.data
+  const { externalUrl, name, slug: providedSlug, githubRepoUrl, description } = parsed.data
 
-  // Derive name + slug if not provided
-  const toolName = (name?.trim()) || nameFromUrl(externalUrl)
-  const slug     = await generateUniqueSlug(toolName)
+  const toolName = name.trim()
+  const slug     = providedSlug?.trim()
+    ? providedSlug.trim()
+    : await generateUniqueSlug(toolName)
 
   let tool
   try {
