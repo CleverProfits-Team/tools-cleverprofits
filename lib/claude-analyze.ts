@@ -55,6 +55,7 @@ function buildUserPrompt(
   pageContext:    string,
   githubContext:  string | null,
   existingTools:  string[],
+  description:    string | null,
 ): string {
   const existingBlock = existingTools.length > 0
     ? `\nExisting tools on the platform (for overlap detection):\n${existingTools.map((t) => `- ${t}`).join('\n')}`
@@ -64,10 +65,14 @@ function buildUserPrompt(
     ? `\n\n--- GitHub Repository ---\n${githubContext}`
     : ''
 
+  const descriptionBlock = description
+    ? `\n\n--- Registrant's Description ---\n${description}`
+    : ''
+
   return `Analyze this internal tool and return structured metadata as a JSON object.
 
 --- Page Information ---
-${pageContext}${githubBlock}${existingBlock}
+${pageContext}${githubBlock}${descriptionBlock}${existingBlock}
 
 Return a JSON object with EXACTLY this shape (all fields required, use null if unknown):
 {
@@ -93,6 +98,7 @@ export async function analyzeWithClaude(
   pageContext:   string,
   githubContext: string | null,
   existingTools: string[],
+  description:   string | null = null,
 ): Promise<AIAnalysisResult> {
   const fallback: AIAnalysisResult = {
     title: null, summary: null, description: null, objective: null,
@@ -111,7 +117,7 @@ export async function analyzeWithClaude(
       model:      'claude-haiku-4-5-20251001',  // fast + cheap for structured extraction
       max_tokens: 1024,
       system:     buildSystemPrompt(),
-      messages:   [{ role: 'user', content: buildUserPrompt(pageContext, githubContext, existingTools) }],
+      messages:   [{ role: 'user', content: buildUserPrompt(pageContext, githubContext, existingTools, description) }],
     })
 
     raw = message.content

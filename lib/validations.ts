@@ -188,10 +188,14 @@ export const createDraftSchema = z.object({
 
   githubRepoUrl: z
     .string()
+    .min(1, 'GitHub repo URL is required')
     .url('Must be a valid URL')
-    .refine((url) => url.includes('github.com'), 'Must be a GitHub URL')
-    .optional()
-    .or(z.literal('')),
+    .refine((url) => url.includes('github.com'), 'Must be a GitHub URL'),
+
+  description: z
+    .string()
+    .min(1, 'Brief description is required')
+    .max(500, 'Description must be 500 characters or fewer'),
 })
 
 /**

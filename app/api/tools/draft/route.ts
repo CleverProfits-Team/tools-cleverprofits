@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { externalUrl, name, githubRepoUrl } = parsed.data
+  const { externalUrl, name, githubRepoUrl, description } = parsed.data
 
   // Derive name + slug if not provided
   const toolName = (name?.trim()) || nameFromUrl(externalUrl)
@@ -103,6 +103,7 @@ export async function POST(request: NextRequest) {
         slug,
         externalUrl,
         githubRepoUrl: githubRepoUrl || null,
+        description:   description   || null,
         status:        'DRAFT',
         // analysisStatus defaults to PENDING_ANALYSIS via schema default
         createdByName:  session.user.name  ?? '',

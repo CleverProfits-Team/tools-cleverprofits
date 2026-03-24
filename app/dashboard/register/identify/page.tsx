@@ -2,32 +2,45 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, AlertCircle, ChevronDown } from 'lucide-react'
+import { Loader2, AlertCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { WizardShell } from '@/components/forms/wizard-shell'
-import { cn } from '@/lib/utils'
 
 export default function IdentifyPage() {
   const router = useRouter()
 
-  const [url,        setUrl]        = useState('')
-  const [name,       setName]       = useState('')
-  const [github,     setGithub]     = useState('')
-  const [showGithub, setShowGithub] = useState(false)
-  const [errors,     setErrors]     = useState<Record<string, string>>({})
-  const [loading,    setLoading]    = useState(false)
-  const [serverErr,  setServerErr]  = useState('')
+  const [url,         setUrl]         = useState('')
+  const [name,        setName]        = useState('')
+  const [github,      setGithub]      = useState('')
+  const [description, setDescription] = useState('')
+  const [errors,      setErrors]      = useState<Record<string, string>>({})
+  const [loading,     setLoading]     = useState(false)
+  const [serverErr,   setServerErr]   = useState('')
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  function validate() {
     const errs: Record<string, string> = {}
     if (!url.trim()) {
       errs.url = 'Tool URL is required'
     } else if (!url.startsWith('https://') && !url.startsWith('http://')) {
       errs.url = 'URL must start with http:// or https://'
     }
+    if (!github.trim()) {
+      errs.github = 'GitHub repo URL is required'
+    } else if (!github.includes('github.com')) {
+      errs.github = 'Must be a GitHub URL (github.com/…)'
+    }
+    if (!description.trim()) {
+      errs.description = 'Brief description is required'
+    }
+    return errs
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const errs = validate()
     setErrors(errs)
     if (Object.keys(errs).length) return
 
@@ -39,16 +52,18 @@ export default function IdentifyPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           externalUrl:   url.trim(),
-          name:          name.trim()   || undefined,
-          githubRepoUrl: github.trim() || undefined,
+          name:          name.trim()        || undefined,
+          githubRepoUrl: github.trim(),
+          description:   description.trim(),
         }),
       })
       const data = await res.json()
       if (!res.ok) {
         const msg =
-          data?.issues?.externalUrl?.[0]    ??
-          data?.issues?.githubRepoUrl?.[0]  ??
-          data?.error                        ??
+          data?.issues?.externalUrl?.[0]   ??
+          data?.issues?.githubRepoUrl?.[0] ??
+          data?.issues?.description?.[0]   ??
+          data?.error                       ??
           'Something went wrong'
         setServerErr(msg)
         return
@@ -65,7 +80,7 @@ export default function IdentifyPage() {
     <WizardShell
       currentStep={1}
       title="Register a new tool"
-      subtitle="Start with the tool's URL — we'll analyze it automatically and fill in the details."
+      subtitle="Provide the tool URL, its GitHub repo, and a brief description so we can analyze it accurately."
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-6">
 
@@ -87,9 +102,46 @@ export default function IdentifyPage() {
           />
           {errors.url
             ? <p className="text-xs text-red-500 mt-1.5">{errors.url}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">
-                The Railway (or any HTTPS) URL of the tool. Never exposed to end users.
-              </p>
+            : <p className="text-xs text-slate-400 mt-1.5">The Railway (or any HTTPS) URL. Never exposed to end users.</p>
+          }
+        </div>
+
+        {/* GitHub repo */}
+        <div>
+          <Label htmlFor="github">
+            GitHub repository <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="github"
+            type="url"
+            placeholder="https://github.com/operations-cleverprofits/my-tool"
+            value={github}
+            onChange={(e) => { setGithub(e.target.value); setErrors((p) => ({ ...p, github: '' })) }}
+            error={errors.github}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          {errors.github
+            ? <p className="text-xs text-red-500 mt-1.5">{errors.github}</p>
+            : <p className="text-xs text-slate-400 mt-1.5">Used to read the README and tech stack for AI analysis.</p>
+          }
+        </div>
+
+        {/* Description */}
+        <div>
+          <Label htmlFor="description">
+            Brief description <span className="text-red-500">*</span>
+          </Label>
+          <Textarea
+            id="description"
+            placeholder="What does this tool do? Who uses it and what problem does it solve?"
+            value={description}
+            onChange={(e) => { setDescription(e.target.value); setErrors((p) => ({ ...p, description: '' })) }}
+            rows={3}
+          />
+          {errors.description
+            ? <p className="text-xs text-red-500 mt-1.5">{errors.description}</p>
+            : <p className="text-xs text-slate-400 mt-1.5">2–3 sentences in your own words — this is the most important input for AI analysis.</p>
           }
         </div>
 
@@ -106,39 +158,6 @@ export default function IdentifyPage() {
             onChange={(e) => setName(e.target.value)}
             autoComplete="off"
           />
-        </div>
-
-        {/* GitHub (collapsible) */}
-        <div>
-          <button
-            type="button"
-            onClick={() => setShowGithub((v) => !v)}
-            className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors"
-          >
-            <ChevronDown
-              className={cn('h-3.5 w-3.5 transition-transform duration-150', showGithub && 'rotate-180')}
-              aria-hidden
-            />
-            Add GitHub repository{' '}
-            <span className="font-normal text-slate-400">(optional)</span>
-          </button>
-
-          {showGithub && (
-            <div className="mt-3">
-              <Input
-                id="github"
-                type="url"
-                placeholder="https://github.com/org/repo"
-                value={github}
-                onChange={(e) => setGithub(e.target.value)}
-                autoComplete="off"
-                spellCheck={false}
-              />
-              <p className="text-xs text-slate-400 mt-1.5">
-                Enriches AI analysis with README, tech stack, and topics.
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Server error */}

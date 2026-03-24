@@ -50,6 +50,7 @@ export async function POST(
       name:           true,
       externalUrl:    true,
       githubRepoUrl:  true,
+      description:    true,
       status:         true,
       analysisStatus: true,
       createdByEmail: true,
@@ -104,7 +105,7 @@ export async function POST(
     )
 
     // ── Step 5: AI analysis ────────────────────────────────────────────────
-    const aiResult = await analyzeWithClaude(pageContext, githubContext, existingToolLines)
+    const aiResult = await analyzeWithClaude(pageContext, githubContext, existingToolLines, tool.description)
 
     // ── Step 6: Build the raw snapshot for audit purposes ─────────────────
     const snapshotParts = [pageContext]
