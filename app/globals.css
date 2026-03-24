@@ -66,4 +66,16 @@
       radial-gradient(ellipse 40% 30% at 100% 0%, rgb(24 25 125 / 0.5) 0%, transparent 60%),
       linear-gradient(160deg, #040B4D 0%, #030828 100%);
   }
+
+  /* ── Animate-in for page content ─────────────────────────────────────────
+     Apply to page wrappers for a gentle fade-up on load. */
+  .animate-in {
+    animation: fade-up 0.35s ease both;
+  }
+
+  /* ── Interactive row ─────────────────────────────────────────────────────
+     For admin table rows and list items that are clickable. */
+  .row-interactive {
+    @apply transition-colors duration-100 cursor-pointer hover:bg-slate-50/80;
+  }
 }

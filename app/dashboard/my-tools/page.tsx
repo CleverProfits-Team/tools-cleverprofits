@@ -35,7 +35,7 @@ export default async function MyToolsPage() {
   }
 
   return (
-    <div>
+    <div className="animate-in">
       <div className="mb-8">
         <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">My Submissions</h1>
         <p className="text-sm text-slate-500 mt-1">Tools you&apos;ve registered on the platform</p>

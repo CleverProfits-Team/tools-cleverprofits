@@ -16,5 +16,13 @@ export default async function AdminAuditPage() {
     createdAt: l.createdAt.toISOString(),
   }))
 
-  return <AdminAuditLog logs={serialized} />
+  return (
+    <div>
+      <div className="mb-6">
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Audit Log</h1>
+        <p className="text-sm text-slate-500 mt-1">Immutable record of all significant platform actions.</p>
+      </div>
+      <AdminAuditLog logs={serialized} />
+    </div>
+  )
 }

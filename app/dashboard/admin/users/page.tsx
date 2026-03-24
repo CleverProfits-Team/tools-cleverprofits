@@ -20,10 +20,16 @@ export default async function AdminUsersPage() {
   }))
 
   return (
-    <AdminUsersPanel
-      initialUsers={users}
-      currentUserId={session!.user.id}
-      currentUserRole={session!.user.role}
-    />
+    <div>
+      <div className="mb-6">
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Users</h1>
+        <p className="text-sm text-slate-500 mt-1">Manage team members, roles, and access levels.</p>
+      </div>
+      <AdminUsersPanel
+        initialUsers={users}
+        currentUserId={session!.user.id}
+        currentUserRole={session!.user.role}
+      />
+    </div>
   )
 }

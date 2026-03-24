@@ -5,22 +5,23 @@ import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium',
-    'ring-offset-white transition-colors',
+    'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium select-none',
+    'ring-offset-white transition-all duration-150',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
+    'active:scale-[0.97]',
   ].join(' '),
   {
     variants: {
       variant: {
         primary:
-          'bg-[#2605EF] text-white hover:bg-[#1e04cc] active:bg-[#1803b3]',
+          'bg-[#2605EF] text-white shadow-xs hover:bg-[#1e04cc] active:bg-[#1803b3]',
         secondary:
-          'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 active:bg-slate-100',
+          'bg-white text-slate-700 border border-slate-200 shadow-xs hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100',
         ghost:
           'text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200',
         destructive:
-          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800',
+          'bg-red-600 text-white shadow-xs hover:bg-red-700 active:bg-red-800',
         link:
           'text-[#2605EF] underline-offset-4 hover:underline h-auto p-0',
       },

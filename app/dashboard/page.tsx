@@ -32,7 +32,7 @@ export default async function DashboardPage() {
   const firstName    = session?.user?.name?.split(' ')[0] ?? ''
 
   return (
-    <div>
+    <div className="animate-in">
       {/* Full-bleed hero: negative margins break out of the layout padding,
           hero fills the full content-area width flush with the sidebar. */}
       <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-8 bg-hero-mesh relative overflow-hidden">

@@ -157,6 +157,10 @@ export default async function InsightsPage() {
 
   return (
     <div className="space-y-8">
+      <div>
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Insights</h1>
+        <p className="text-sm text-slate-500 mt-1">Organizational intelligence — tool health, usage patterns, and gaps.</p>
+      </div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
