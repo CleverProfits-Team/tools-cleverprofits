@@ -97,11 +97,15 @@ export async function PATCH(
       where: { id: params.id },
       data: {
         // Scalar updates — coerce empty strings to null for optional text fields
-        ...(scalars.name           !== undefined ? { name:           scalars.name }                     : {}),
-        ...(scalars.team           !== undefined ? { team:           scalars.team           || null }   : {}),
-        ...(scalars.accessLevel    !== undefined ? { accessLevel:    scalars.accessLevel }              : {}),
-        ...(scalars.isExperimental !== undefined ? { isExperimental: scalars.isExperimental }           : {}),
-        ...(scalars.githubRepoUrl  !== undefined ? { githubRepoUrl:  scalars.githubRepoUrl  || null }   : {}),
+        ...(scalars.name            !== undefined ? { name:            scalars.name }                      : {}),
+        ...(scalars.team            !== undefined ? { team:            scalars.team            || null }   : {}),
+        ...(scalars.ownerName       !== undefined ? { ownerName:       scalars.ownerName       || null }   : {}),
+        ...(scalars.ownerEmail      !== undefined ? { ownerEmail:      scalars.ownerEmail      || null }   : {}),
+        ...(scalars.maintainerName  !== undefined ? { maintainerName:  scalars.maintainerName  || null }   : {}),
+        ...(scalars.maintainerEmail !== undefined ? { maintainerEmail: scalars.maintainerEmail || null }   : {}),
+        ...(scalars.accessLevel     !== undefined ? { accessLevel:     scalars.accessLevel }               : {}),
+        ...(scalars.isExperimental  !== undefined ? { isExperimental:  scalars.isExperimental }            : {}),
+        ...(scalars.githubRepoUrl   !== undefined ? { githubRepoUrl:   scalars.githubRepoUrl   || null }   : {}),
         ...(scalars.description    !== undefined ? { description:    scalars.description    || null }   : {}),
         ...(scalars.notes          !== undefined ? { notes:          scalars.notes          || null }   : {}),
         // AI field overrides

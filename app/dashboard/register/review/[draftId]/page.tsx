@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Loader2, AlertCircle, AlertTriangle, Sparkles, X,
+  Loader2, AlertCircle, AlertTriangle, Sparkles, X, User, Wrench,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,6 +23,10 @@ interface FullDraft {
   description:      string | null
   notes:            string | null
   team:             string | null
+  ownerName:        string | null
+  ownerEmail:       string | null
+  maintainerName:   string | null
+  maintainerEmail:  string | null
   analysisStatus:   string
   aiTitle:          string | null
   aiSummary:        string | null
@@ -131,12 +135,16 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
   const [loadErr,  setLoadErr]  = useState('')
 
   // Form state
-  const [name,        setName]        = useState('')
-  const [summary,     setSummary]     = useState('')
-  const [description, setDescription] = useState('')
-  const [notes,       setNotes]       = useState('')
-  const [tags,        setTags]        = useState<string[]>([])
-  const [tagInput,    setTagInput]    = useState('')
+  const [name,            setName]            = useState('')
+  const [summary,         setSummary]         = useState('')
+  const [description,     setDescription]     = useState('')
+  const [notes,           setNotes]           = useState('')
+  const [ownerName,       setOwnerName]       = useState('')
+  const [ownerEmail,      setOwnerEmail]      = useState('')
+  const [maintainerName,  setMaintainerName]  = useState('')
+  const [maintainerEmail, setMaintainerEmail] = useState('')
+  const [tags,            setTags]            = useState<string[]>([])
+  const [tagInput,        setTagInput]        = useState('')
 
   // AI metadata (display only)
   const [aiCategory,       setAiCategory]       = useState<string | null>(null)
@@ -166,6 +174,10 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
         setSummary(d.aiSummary   || '')
         setDescription(d.aiDescription || d.description || '')
         setNotes(d.notes         || '')
+        setOwnerName(d.ownerName         || '')
+        setOwnerEmail(d.ownerEmail       || '')
+        setMaintainerName(d.maintainerName   || '')
+        setMaintainerEmail(d.maintainerEmail || '')
         setTags(d.tags?.map((t) => t.name) ?? [])
 
         // Display-only AI metadata
@@ -193,11 +205,15 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
         method:  'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name:        name.trim(),
-          description: description.trim() || '',
-          notes:       notes.trim()       || '',
+          name:            name.trim(),
+          description:     description.trim() || '',
+          notes:           notes.trim()       || '',
           tags,
-          aiSummary:   summary.trim()     || '',
+          aiSummary:       summary.trim()     || '',
+          ownerName:       ownerName.trim()       || '',
+          ownerEmail:      ownerEmail.trim()      || '',
+          maintainerName:  maintainerName.trim()  || '',
+          maintainerEmail: maintainerEmail.trim() || '',
         }),
       })
       if (!patchRes.ok) {
@@ -340,6 +356,81 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
             />
+          </div>
+        </div>
+
+        {/* ── Ownership ───────────────────────────────────────────────── */}
+        <div className="space-y-5">
+          <SectionDivider label="Ownership" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Owner */}
+            <div className="rounded-lg border border-slate-200 p-3.5 space-y-3">
+              <div className="flex items-center gap-2">
+                <User className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Product owner</p>
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <Label htmlFor="review-ownerName" className="text-xs">Name</Label>
+                  <Input
+                    id="review-ownerName"
+                    placeholder="Full name"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                    autoComplete="off"
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="review-ownerEmail" className="text-xs">Email</Label>
+                  <Input
+                    id="review-ownerEmail"
+                    type="email"
+                    placeholder="owner@cleverprofits.com"
+                    value={ownerEmail}
+                    onChange={(e) => setOwnerEmail(e.target.value)}
+                    autoComplete="off"
+                    className="h-8 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* Maintainer */}
+            <div className="rounded-lg border border-slate-200 p-3.5 space-y-3">
+              <div className="flex items-center gap-2">
+                <Wrench className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Maintainer</p>
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <Label htmlFor="review-maintainerName" className="text-xs">
+                    Name <span className="font-normal text-slate-300">(optional)</span>
+                  </Label>
+                  <Input
+                    id="review-maintainerName"
+                    placeholder="Full name"
+                    value={maintainerName}
+                    onChange={(e) => setMaintainerName(e.target.value)}
+                    autoComplete="off"
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="review-maintainerEmail" className="text-xs">
+                    Email <span className="font-normal text-slate-300">(optional)</span>
+                  </Label>
+                  <Input
+                    id="review-maintainerEmail"
+                    type="email"
+                    placeholder="maintainer@cleverprofits.com"
+                    value={maintainerEmail}
+                    onChange={(e) => setMaintainerEmail(e.target.value)}
+                    autoComplete="off"
+                    className="h-8 text-sm"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

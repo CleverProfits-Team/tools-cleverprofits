@@ -205,11 +205,15 @@ export const createDraftSchema = z.object({
  */
 export const updateDraftSchema = z.object({
   // Step 2: ownership & governance
-  name:           z.string().min(1).max(100).optional(),
-  team:           z.string().max(100).optional().or(z.literal('')),
-  accessLevel:    z.enum(['INTERNAL', 'RESTRICTED', 'LEADERSHIP']).optional(),
-  isExperimental: z.boolean().optional(),
-  githubRepoUrl:  z.string().url().optional().or(z.literal('')),
+  name:            z.string().min(1).max(100).optional(),
+  team:            z.string().max(100).optional().or(z.literal('')),
+  ownerName:       z.string().max(100).optional().or(z.literal('')),
+  ownerEmail:      z.string().email().optional().or(z.literal('')),
+  maintainerName:  z.string().max(100).optional().or(z.literal('')),
+  maintainerEmail: z.string().email().optional().or(z.literal('')),
+  accessLevel:     z.enum(['INTERNAL', 'RESTRICTED', 'LEADERSHIP']).optional(),
+  isExperimental:  z.boolean().optional(),
+  githubRepoUrl:   z.string().url().optional().or(z.literal('')),
 
   // Review step: human-edited copy
   description: z.string().max(500).optional().or(z.literal('')),

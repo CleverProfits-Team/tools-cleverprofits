@@ -40,7 +40,11 @@ model Tool {
   notes       String?
 
   // Ownership & classification
-  team        String?
+  team             String?
+  ownerName        String?  // Product owner — responsible for the tool's purpose & direction
+  ownerEmail       String?
+  maintainerName   String?  // Technical maintainer — responsible for keeping it running
+  maintainerEmail  String?
   accessLevel AccessLevel @default(INTERNAL)
   status      ToolStatus  @default(PENDING)
 
