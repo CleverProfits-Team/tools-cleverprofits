@@ -25,7 +25,7 @@ export function StatusBadge({ status }: { status: ToolStatus }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium',
+        'inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-xs font-medium',
         STATUS_STYLES[status],
       )}
     >
@@ -64,7 +64,7 @@ export function AccessBadge({ level }: { level: AccessLevel }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+        'inline-flex items-center rounded px-2 py-0.5 text-xs font-medium',
         ACCESS_STYLES[level],
       )}
     >
@@ -87,7 +87,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+        'inline-flex items-center rounded px-2 py-0.5 text-xs font-medium',
         'bg-slate-100 text-slate-600 ring-1 ring-slate-500/20',
         className,
       )}

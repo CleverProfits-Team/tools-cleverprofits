@@ -47,6 +47,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
   const [accessFilter, setAccessFilter] = useState(() => searchParams.get('access') ?? '')
   const [tagFilter,    setTagFilter]    = useState(() => searchParams.get('tag')    ?? '')
   const [mineOnly,     setMineOnly]     = useState(() => searchParams.get('mine') === 'true')
+  const [filtersOpen,  setFiltersOpen]  = useState(false)
 
   const allTags = useMemo(() => {
     const names = new Set<string>()
@@ -114,6 +115,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
   }, [tools, query, teamFilter, statusFilter, accessFilter, mineOnly, currentUserEmail, tagFilter])
 
   const hasFilters = query || teamFilter || statusFilter || accessFilter || tagFilter || mineOnly
+  const activeFilterCount = [teamFilter, statusFilter, accessFilter, tagFilter, mineOnly ? 'mine' : ''].filter(Boolean).length
 
   function clearFilters() {
     setQuery('')
@@ -139,83 +141,105 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
   return (
     <div>
       {/* ── Filter bar ──────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
-        <div className="relative flex-1 min-w-0 max-w-md">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"
-            aria-hidden
-          />
-          <Input
-            ref={searchRef}
-            type="search"
-            placeholder="Search tools, teams, or owners…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="pl-9 h-10 text-sm placeholder:text-slate-400 transition-all"
-            aria-label="Search tools"
-          />
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          <SlidersHorizontal className="h-4 w-4 text-slate-400 flex-shrink-0 hidden sm:block" aria-hidden />
-
-          {teams.length > 0 && (
-            <Select
-              value={teamFilter}
-              onChange={(e) => setTeamFilter(e.target.value)}
-              options={teamOptions}
-              aria-label="Filter by team"
-              className="w-auto min-w-[130px]"
+      <div className="mb-6 space-y-2">
+        {/* Row 1: Search + filter toggle */}
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1 min-w-0 max-w-md">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"
+              aria-hidden
             />
-          )}
-
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            options={STATUS_OPTIONS}
-            aria-label="Filter by status"
-            className="w-auto min-w-[130px]"
-          />
-
-          <Select
-            value={accessFilter}
-            onChange={(e) => setAccessFilter(e.target.value)}
-            options={ACCESS_OPTIONS}
-            aria-label="Filter by access level"
-            className="w-auto min-w-[150px]"
-          />
-
-          {allTags.length > 0 && (
-            <Select
-              value={tagFilter}
-              onChange={(e) => setTagFilter(e.target.value)}
-              options={tagOptions}
-              aria-label="Filter by tag"
-              className="w-auto min-w-[120px]"
+            <Input
+              ref={searchRef}
+              type="search"
+              placeholder="Search tools, teams, or owners…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="pl-9 h-10 text-sm placeholder:text-slate-400 transition-all"
+              aria-label="Search tools"
             />
-          )}
+          </div>
 
           <button
-            onClick={() => setMineOnly((v) => !v)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
-              mineOnly
+            onClick={() => setFiltersOpen((v) => !v)}
+            aria-expanded={filtersOpen}
+            className={`inline-flex items-center gap-2 h-10 px-3.5 rounded-lg border text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+              filtersOpen || activeFilterCount > 0
                 ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
                 : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
             }`}
-            aria-pressed={mineOnly}
           >
-            My tools
+            <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="inline-flex items-center justify-center rounded bg-[#2605EF] text-white text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
+                {activeFilterCount}
+              </span>
+            )}
           </button>
 
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-slate-400 hover:text-slate-600 transition-colors whitespace-nowrap underline underline-offset-2"
+              className="text-xs text-slate-400 hover:text-slate-600 transition-colors whitespace-nowrap underline underline-offset-2 flex-shrink-0"
             >
               Clear
             </button>
           )}
         </div>
+
+        {/* Row 2: Filter dropdowns (collapsible) */}
+        {filtersOpen && (
+          <div className="flex items-center gap-2 flex-wrap pt-1">
+            {teams.length > 0 && (
+              <Select
+                value={teamFilter}
+                onChange={(e) => setTeamFilter(e.target.value)}
+                options={teamOptions}
+                aria-label="Filter by team"
+                className="w-auto min-w-[130px]"
+              />
+            )}
+
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              options={STATUS_OPTIONS}
+              aria-label="Filter by status"
+              className="w-auto min-w-[130px]"
+            />
+
+            <Select
+              value={accessFilter}
+              onChange={(e) => setAccessFilter(e.target.value)}
+              options={ACCESS_OPTIONS}
+              aria-label="Filter by access level"
+              className="w-auto min-w-[150px]"
+            />
+
+            {allTags.length > 0 && (
+              <Select
+                value={tagFilter}
+                onChange={(e) => setTagFilter(e.target.value)}
+                options={tagOptions}
+                aria-label="Filter by tag"
+                className="w-auto min-w-[120px]"
+              />
+            )}
+
+            <button
+              onClick={() => setMineOnly((v) => !v)}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
+                mineOnly
+                  ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
+                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
+              }`}
+              aria-pressed={mineOnly}
+            >
+              My tools
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Results count (filters active) ──────────────────────────── */}

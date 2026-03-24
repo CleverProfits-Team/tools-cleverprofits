@@ -39,14 +39,15 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col bg-white rounded-2xl overflow-hidden',
-        'border border-slate-100',
+        'group relative flex flex-col bg-white rounded-xl overflow-hidden',
+        'border border-slate-100 border-l-[3px]',
         'transition-all duration-200 ease-out',
         'hover:-translate-y-1',
         'hover:shadow-[0_16px_40px_rgba(4,11,77,0.10),0_4px_12px_rgba(4,11,77,0.06)]',
         'hover:border-slate-200/60',
         !isActive && 'opacity-80',
       )}
+      style={{ borderLeftColor: accent.hex }}
     >
       {/* Per-tool atmospheric glow — each card has its own light source */}
       <div
@@ -54,13 +55,6 @@ export function ToolCard({ tool }: ToolCardProps) {
         style={{
           background: `radial-gradient(ellipse 110% 160% at -5% -15%, ${accent.hex}16 0%, transparent 55%)`,
         }}
-        aria-hidden
-      />
-
-      {/* Top accent stripe */}
-      <div
-        className="relative h-[3px] w-full flex-shrink-0"
-        style={{ backgroundColor: accent.hex }}
         aria-hidden
       />
 
@@ -73,7 +67,7 @@ export function ToolCard({ tool }: ToolCardProps) {
             className={cn(
               'h-11 w-11 rounded-xl flex items-center justify-center flex-shrink-0',
               'text-white text-[15px] font-bold select-none',
-              'shadow-[0_2px_10px_rgba(0,0,0,0.20)]',
+              'shadow-[0_2px_10px_rgba(4,11,77,0.22)]',
               'transition-transform duration-200 group-hover:scale-[1.06]',
               accent.bg,
             )}
@@ -114,7 +108,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           {(tool.tags ?? []).map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center rounded-full bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
+              className="inline-flex items-center rounded bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
             >
               {tag.name}
             </span>

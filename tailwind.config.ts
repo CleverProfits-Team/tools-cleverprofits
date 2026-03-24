@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans:    ['var(--font-jakarta)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-space-grotesk)', 'var(--font-jakarta)', 'ui-sans-serif', 'sans-serif'],
+        sans:    ['var(--font-dm-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-syne)', 'var(--font-dm-sans)', 'ui-sans-serif', 'sans-serif'],
       },
       colors: {
         // CleverProfits brand palette (from brand guidelines)
@@ -39,10 +39,10 @@ const config: Config = {
         },
       },
       boxShadow: {
-        card:          '0 1px 4px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04)',
-        'card-hover':  '0 8px 28px -4px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.06)',
-        'xs':          '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-        'elevated':    '0 12px 32px -8px rgb(0 0 0 / 0.14), 0 4px 10px -4px rgb(0 0 0 / 0.06)',
+        card:          '0 1px 4px 0 rgba(4,11,77,0.06), 0 1px 2px -1px rgba(4,11,77,0.04)',
+        'card-hover':  '0 8px 28px -4px rgba(4,11,77,0.12), 0 4px 8px -4px rgba(4,11,77,0.06)',
+        'xs':          '0 1px 2px 0 rgba(4,11,77,0.05)',
+        'elevated':    '0 12px 32px -8px rgba(4,11,77,0.14), 0 4px 10px -4px rgba(4,11,77,0.06)',
         'glow-blue':   '0 0 0 3px rgb(38 5 239 / 0.15)',
       },
       borderRadius: {

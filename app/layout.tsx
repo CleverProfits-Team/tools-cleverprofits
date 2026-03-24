@@ -1,20 +1,19 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, Space_Grotesk } from 'next/font/google'
+import { DM_Sans, Syne } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import './globals.css'
 
-const jakarta = Plus_Jakarta_Sans({
+const dmSans = DM_Sans({
   subsets: ['latin'],
-  variable: '--font-jakarta',
+  variable: '--font-dm-sans',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
 })
 
-const spaceGrotesk = Space_Grotesk({
+const syne = Syne({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-syne',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -33,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${jakarta.variable} ${spaceGrotesk.variable} font-sans h-full antialiased`}>
+      <body className={`${dmSans.variable} ${syne.variable} font-sans h-full antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

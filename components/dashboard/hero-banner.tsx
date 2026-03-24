@@ -40,6 +40,10 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         }}
         aria-hidden
       />
+      {/* Decorative circle outlines — echo the bubble language */}
+      <div className="absolute -top-20 right-8 w-72 h-72 rounded-full border border-white/[0.05] pointer-events-none" aria-hidden />
+      <div className="absolute -bottom-16 right-1/4 w-52 h-52 rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
+      <div className="absolute top-4 right-1/3 w-36 h-36 rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
 
       {/* Mouse spotlight */}
       <div

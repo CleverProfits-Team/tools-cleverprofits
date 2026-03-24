@@ -60,7 +60,7 @@ function LoginContent() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-white rounded-2xl shadow-elevated px-8 py-10">
+      <div className="bg-white rounded-xl shadow-elevated px-8 py-10">
 
         {/* ── Logotype ─────────────────────────────────────────────────── */}
         <div className="flex items-center gap-3 mb-8">
@@ -209,7 +209,17 @@ function GoogleLogo() {
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-[#0F0038] px-4">
+    <main className="min-h-screen flex items-center justify-center bg-hero-mesh px-4 relative overflow-hidden">
+      {/* Dot-grid texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.06]"
+        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize: '22px 22px' }}
+        aria-hidden
+      />
+      {/* Decorative circles — echo the bubble language */}
+      <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
+      <div className="absolute -bottom-24 -left-24 w-[360px] h-[360px] rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
+      <div className="absolute top-1/3 right-1/4 w-[200px] h-[200px] rounded-full border border-white/[0.035] pointer-events-none" aria-hidden />
       <Suspense fallback={<LoginSkeleton />}>
         <LoginContent />
       </Suspense>
