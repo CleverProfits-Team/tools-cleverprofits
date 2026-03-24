@@ -156,7 +156,7 @@ export default function IdentifyPage() {
           </div>
           <div className="flex items-center">
             <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
-              /
+              tools.cleverprofits.com/
             </span>
             <Input
               id="slug"

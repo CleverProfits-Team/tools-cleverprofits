@@ -274,7 +274,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   return (
     <>
       {/* ── Desktop sidebar ───────────────────────────── */}
-      <aside className="hidden md:flex flex-col sticky top-0 h-screen w-[220px] flex-shrink-0 bg-[#040B4D] border-r border-white/[0.05]">
+      <aside className="hidden md:flex flex-col sticky top-0 h-screen w-[252px] flex-shrink-0 bg-[#040B4D] border-r border-white/[0.05]">
         {/* Logo */}
         <div className="h-[52px] flex items-center px-4 border-b border-white/[0.06] flex-shrink-0">
           <Logo />
@@ -316,7 +316,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[220px] flex flex-col bg-[#040B4D] shadow-2xl border-r border-white/[0.05]">
+          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[252px] flex flex-col bg-[#040B4D] shadow-2xl border-r border-white/[0.05]">
             <div className="h-12 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
               <Logo />
               <button
