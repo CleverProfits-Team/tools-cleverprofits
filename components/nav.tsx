@@ -224,7 +224,6 @@ export function Nav({ pendingCount = 0 }: NavProps) {
           )}
 
         </div>
-        </div>
       </div>
     </header>
   )
