@@ -13,17 +13,26 @@ export default async function MyToolsPage() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.email) redirect('/login')
 
-  const rawTools = await prisma.tool.findMany({
-    where:   { createdByEmail: session.user.email, status: { not: 'DRAFT' } },
-    include: { tags: { select: { id: true, name: true } } },
-    orderBy: { createdAt: 'desc' },
-  })
+  const [rawTools, rawDrafts] = await Promise.all([
+    prisma.tool.findMany({
+      where:   { createdByEmail: session.user.email, status: { not: 'DRAFT' } },
+      include: { tags: { select: { id: true, name: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.tool.findMany({
+      where:   { createdByEmail: session.user.email, status: 'DRAFT' },
+      include: { tags: { select: { id: true, name: true } } },
+      orderBy: { createdAt: 'desc' },
+    }),
+  ])
 
-  const tools: SerializedTool[] = rawTools.map((t) => ({
-    ...t,
-    createdAt: t.createdAt.toISOString(),
-    updatedAt: t.updatedAt.toISOString(),
-  }))
+  function serialize(t: typeof rawTools[number]): SerializedTool {
+    return {
+      ...t,
+      createdAt: t.createdAt.toISOString(),
+      updatedAt: t.updatedAt.toISOString(),
+    }
+  }
 
   return (
     <div>
@@ -31,7 +40,7 @@ export default async function MyToolsPage() {
         <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">My Submissions</h1>
         <p className="text-sm text-slate-500 mt-1">Tools you&apos;ve registered on the platform</p>
       </div>
-      <MyToolsList tools={tools} />
+      <MyToolsList tools={rawTools.map(serialize)} drafts={rawDrafts.map(serialize)} />
     </div>
   )
 }

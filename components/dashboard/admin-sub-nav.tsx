@@ -17,6 +17,7 @@ export function AdminSubNav({ pendingCount }: Props) {
     { href: '/dashboard/admin/invitations', label: 'Invitations' },
     { href: '/dashboard/admin/audit',       label: 'Audit Log' },
     { href: '/dashboard/admin/analytics',   label: 'Analytics' },
+    { href: '/dashboard/admin/insights',    label: 'Insights' },
   ]
 
   return (

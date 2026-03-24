@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, CheckCircle2, XCircle, Archive, RotateCcw, Pencil } from 'lucide-react'
+import {
+  ArrowLeft, ExternalLink, CheckCircle2, XCircle, Archive,
+  RotateCcw, Pencil, Sparkles, AlertTriangle,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
 import type { ToolStatus } from '@prisma/client'
@@ -37,6 +40,19 @@ function ToolStatusBadge({ status }: { status: ToolStatus }) {
   )
 }
 
+function ConfidenceBadge({ value }: { value: number | null }) {
+  if (value === null || value === undefined) return null
+  const pct  = Math.round(value * 100)
+  const color = value >= 0.7 ? 'bg-emerald-100 text-emerald-700'
+              : value >= 0.4 ? 'bg-amber-100 text-amber-700'
+              : 'bg-red-100 text-red-700'
+  return (
+    <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium', color)}>
+      {pct}% confidence
+    </span>
+  )
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────────────────────────────────────
@@ -49,11 +65,11 @@ interface Props {
 
 export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUserRole }: Props) {
   const router = useRouter()
-  const [tool, setTool]                 = useState(initialTool)
+  const [tool, setTool]                       = useState(initialTool)
   const [showRejectModal, setShowRejectModal] = useState(false)
-  const [rejectReason, setRejectReason] = useState('')
-  const [loading, setLoading]           = useState<string | null>(null)
-  const [error, setError]               = useState<string | null>(null)
+  const [rejectReason, setRejectReason]       = useState('')
+  const [loading, setLoading]                 = useState<string | null>(null)
+  const [error, setError]                     = useState<string | null>(null)
 
   // SUPER_ADMIN can approve any tool, including their own
   const isOwnTool = tool.createdByEmail === currentUserEmail && currentUserRole !== 'SUPER_ADMIN'
@@ -87,6 +103,16 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
   const fieldLabel = 'text-xs font-medium text-slate-500 uppercase tracking-wider'
   const fieldValue = 'mt-1 text-sm text-slate-900'
 
+  // AI fields presence check
+  const hasAiData = !!(
+    tool.aiSummary || tool.aiObjective || tool.aiCategory ||
+    tool.aiTechStack || tool.aiFrameworkGuess || tool.aiConfidence != null
+  )
+
+  const overlapWarnings = Array.isArray(tool.aiOverlapWarnings)
+    ? (tool.aiOverlapWarnings as string[])
+    : []
+
   return (
     <div>
       {/* Back link */}
@@ -114,64 +140,155 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
 
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
         {/* ── Details ──────────────────────────────────────────────────── */}
-        <div className="rounded-lg border border-slate-200 bg-white p-6 space-y-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-xl font-bold text-slate-900">{tool.name}</h2>
-              <p className="text-sm text-slate-400 font-mono mt-0.5">{tool.slug}</p>
+        <div className="space-y-6">
+
+          {/* Main info card */}
+          <div className="rounded-lg border border-slate-200 bg-white p-6 space-y-5">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">{tool.name}</h2>
+                <p className="text-sm text-slate-400 font-mono mt-0.5">{tool.slug}</p>
+              </div>
+              <ToolStatusBadge status={tool.status} />
             </div>
-            <ToolStatusBadge status={tool.status} />
-          </div>
 
-          <div>
-            <p className={fieldLabel}>External URL</p>
-            <a
-              href={tool.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 inline-flex items-center gap-1 text-sm text-[#2605EF] hover:text-[#1803b3] hover:underline break-all"
-            >
-              {tool.externalUrl}
-              <ExternalLink className="h-3 w-3 flex-shrink-0" aria-hidden />
-            </a>
-          </div>
-
-          {tool.description && (
             <div>
-              <p className={fieldLabel}>Description</p>
-              <p className={fieldValue}>{tool.description}</p>
+              <p className={fieldLabel}>External URL</p>
+              <a
+                href={tool.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex items-center gap-1 text-sm text-[#2605EF] hover:text-[#1803b3] hover:underline break-all"
+              >
+                {tool.externalUrl}
+                <ExternalLink className="h-3 w-3 flex-shrink-0" aria-hidden />
+              </a>
+            </div>
+
+            {tool.description && (
+              <div>
+                <p className={fieldLabel}>Description</p>
+                <p className={fieldValue}>{tool.description}</p>
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className={fieldLabel}>Team</p>
+                <p className={fieldValue}>{tool.team ?? '—'}</p>
+              </div>
+              <div>
+                <p className={fieldLabel}>Access Level</p>
+                <p className={fieldValue}>{tool.accessLevel}</p>
+              </div>
+            </div>
+
+            {tool.notes && (
+              <div>
+                <p className={fieldLabel}>Notes</p>
+                <p className={fieldValue}>{tool.notes}</p>
+              </div>
+            )}
+
+            <div className="border-t border-slate-100 pt-4 grid grid-cols-2 gap-4">
+              <div>
+                <p className={fieldLabel}>Registered By</p>
+                <p className={fieldValue}>{tool.createdByName}</p>
+                <p className="text-xs text-slate-400">{tool.createdByEmail}</p>
+              </div>
+              <div>
+                <p className={fieldLabel}>Registered On</p>
+                <p className={fieldValue}>{formatDate(tool.createdAt)}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ── AI Analysis card ──────────────────────────────────────── */}
+          {hasAiData && (
+            <div className="rounded-lg border border-violet-200 bg-white p-6 space-y-5">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-7 w-7 rounded-md bg-violet-100 flex items-center justify-center">
+                    <Sparkles className="h-3.5 w-3.5 text-violet-600" aria-hidden />
+                  </div>
+                  <h3 className="text-sm font-semibold text-slate-900">AI Analysis</h3>
+                </div>
+                <ConfidenceBadge value={tool.aiConfidence ?? null} />
+              </div>
+
+              {/* Summary */}
+              {tool.aiSummary && (
+                <div>
+                  <p className={fieldLabel}>Summary</p>
+                  <p className={cn(fieldValue, 'italic text-slate-600')}>
+                    &ldquo;{tool.aiSummary}&rdquo;
+                  </p>
+                </div>
+              )}
+
+              {/* Objective */}
+              {tool.aiObjective && (
+                <div>
+                  <p className={fieldLabel}>Objective</p>
+                  <p className={fieldValue}>{tool.aiObjective}</p>
+                </div>
+              )}
+
+              {/* Suggested users */}
+              {tool.aiSuggestedUsers && (
+                <div>
+                  <p className={fieldLabel}>Suggested Users</p>
+                  <p className={fieldValue}>{tool.aiSuggestedUsers}</p>
+                </div>
+              )}
+
+              {/* Category / Framework / Tech Stack row */}
+              <div className="grid grid-cols-3 gap-4">
+                {tool.aiCategory && (
+                  <div>
+                    <p className={fieldLabel}>Category</p>
+                    <p className={cn(fieldValue, 'capitalize')}>{tool.aiCategory}</p>
+                  </div>
+                )}
+                {tool.aiFrameworkGuess && (
+                  <div>
+                    <p className={fieldLabel}>Framework</p>
+                    <p className={fieldValue}>{tool.aiFrameworkGuess}</p>
+                  </div>
+                )}
+                {tool.aiTechStack && (
+                  <div>
+                    <p className={fieldLabel}>Tech Stack</p>
+                    <p className={fieldValue}>{tool.aiTechStack}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* AI description (collapsed) */}
+              {tool.aiDescription && tool.aiDescription !== tool.description && (
+                <div>
+                  <p className={fieldLabel}>AI Description</p>
+                  <p className="mt-1 text-sm text-slate-600 leading-relaxed">{tool.aiDescription}</p>
+                </div>
+              )}
+
+              {/* Overlap warnings */}
+              {overlapWarnings.length > 0 && (
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" aria-hidden />
+                    <p className="text-xs font-semibold text-amber-700">Possible overlap with existing tools</p>
+                  </div>
+                  <ul className="space-y-0.5">
+                    {overlapWarnings.map((name, i) => (
+                      <li key={i} className="text-xs text-amber-700">• {name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className={fieldLabel}>Team</p>
-              <p className={fieldValue}>{tool.team ?? '—'}</p>
-            </div>
-            <div>
-              <p className={fieldLabel}>Access Level</p>
-              <p className={fieldValue}>{tool.accessLevel}</p>
-            </div>
-          </div>
-
-          {tool.notes && (
-            <div>
-              <p className={fieldLabel}>Notes</p>
-              <p className={fieldValue}>{tool.notes}</p>
-            </div>
-          )}
-
-          <div className="border-t border-slate-100 pt-4 grid grid-cols-2 gap-4">
-            <div>
-              <p className={fieldLabel}>Registered By</p>
-              <p className={fieldValue}>{tool.createdByName}</p>
-              <p className="text-xs text-slate-400">{tool.createdByEmail}</p>
-            </div>
-            <div>
-              <p className={fieldLabel}>Registered On</p>
-              <p className={fieldValue}>{formatDate(tool.createdAt)}</p>
-            </div>
-          </div>
         </div>
 
         {/* ── Actions ──────────────────────────────────────────────────── */}
