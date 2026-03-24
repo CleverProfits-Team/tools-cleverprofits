@@ -148,7 +148,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           <Input
             ref={searchRef}
             type="search"
-            placeholder="Search tools, teams, or owners… (press / to focus)"
+            placeholder="Search tools, teams, or owners…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="pl-9 h-10 text-sm placeholder:text-slate-400 transition-all"

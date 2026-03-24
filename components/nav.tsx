@@ -152,7 +152,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
 
               {/* Dropdown panel */}
               {open && (
-                <div className="absolute right-0 top-full mt-1.5 w-64 rounded-xl border border-slate-200 bg-white shadow-elevated overflow-hidden z-50">
+                <div className="absolute right-0 top-full mt-1.5 w-72 rounded-xl border border-slate-200 bg-white shadow-elevated overflow-hidden z-50">
                   {/* User info header */}
                   <div className="px-4 py-4 border-b border-slate-100 bg-gradient-to-br from-[#040B4D] to-[#18197D]">
                     <div className="flex items-center gap-3">
