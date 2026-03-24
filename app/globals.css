@@ -18,7 +18,7 @@
 
   body {
     height: 100%;
-    @apply bg-slate-50 text-slate-900;
+    @apply bg-[#EEF2FB] text-slate-900;
   }
 
   /* Smooth focus outlines everywhere */
@@ -39,6 +39,16 @@
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 }
 
+/* ── Bubble rise animation ────────────────────────────────────────────────── */
+@keyframes bubble-rise {
+  0%   { transform: translateY(0)     translateX(0px)  scale(1);    opacity: 0;    }
+  8%   { opacity: 1; }
+  40%  { transform: translateY(-35vh) translateX(10px) scale(1.04); }
+  70%  { transform: translateY(-65vh) translateX(-8px) scale(0.98); }
+  92%  { opacity: 0.5; }
+  100% { transform: translateY(-96vh) translateX(4px)  scale(0.9);  opacity: 0;    }
+}
+
 @layer components {
   /* Reusable focus ring utility */
   .focus-ring {
@@ -50,11 +60,11 @@
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* ── Subtle dot-grid texture ──────────────────────────────────────────────
-     Adds engineering precision feel to dashboard backgrounds. */
+  /* ── Dot-grid texture ─────────────────────────────────────────────────────
+     Slightly blue-tinted so it harmonises with the dark sidebar. */
   .bg-dot-grid {
-    background-color: #f8fafc;
-    background-image: radial-gradient(circle, rgb(148 163 184 / 0.4) 1px, transparent 1px);
+    background-color: #EEF2FB;
+    background-image: radial-gradient(circle, rgb(99 110 176 / 0.22) 1px, transparent 1px);
     background-size: 22px 22px;
   }
 
@@ -65,6 +75,23 @@
       radial-gradient(ellipse 80% 55% at 60% -10%, rgb(38 5 239 / 0.28) 0%, transparent 65%),
       radial-gradient(ellipse 40% 30% at 100% 0%, rgb(24 25 125 / 0.5) 0%, transparent 60%),
       linear-gradient(160deg, #040B4D 0%, #030828 100%);
+  }
+
+  /* ── Seamless edge — left bleed from sidebar into content ─────────────────
+     Adds a very subtle navy tint at the left edge of the content area that
+     fades to transparent, bridging the hard sidebar/content boundary. */
+  .content-seamless {
+    position: relative;
+  }
+  .content-seamless::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    right: auto;
+    width: 120px;
+    background: linear-gradient(to right, rgba(4, 11, 77, 0.055), transparent);
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* ── Animate-in for page content ─────────────────────────────────────────
@@ -78,4 +105,9 @@
   .row-interactive {
     @apply transition-colors duration-100 cursor-pointer hover:bg-slate-50/80;
   }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

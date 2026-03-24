@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
@@ -248,12 +248,66 @@ interface SidebarProps {
   pendingCount?: number
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Bubble definitions — static so no hydration mismatch
+// ─────────────────────────────────────────────────────────────────────────────
+
+const BUBBLES = [
+  { id: 1, size: 56,  left: '14%',  bottom: '-60px', delay: 0,   duration: 13 },
+  { id: 2, size: 32,  left: '68%',  bottom: '-40px', delay: 2.5, duration: 9  },
+  { id: 3, size: 80,  left: '38%',  bottom: '-80px', delay: 5,   duration: 16 },
+  { id: 4, size: 24,  left: '82%',  bottom: '-30px', delay: 1.2, duration: 10 },
+  { id: 5, size: 48,  left: '22%',  bottom: '-50px', delay: 7,   duration: 12 },
+  { id: 6, size: 38,  left: '55%',  bottom: '-45px', delay: 3.8, duration: 11 },
+  { id: 7, size: 65,  left: '8%',   bottom: '-65px', delay: 9,   duration: 15 },
+  { id: 8, size: 28,  left: '73%',  bottom: '-35px', delay: 6,   duration: 8  },
+  { id: 9, size: 44,  left: '45%',  bottom: '-55px', delay: 11,  duration: 14 },
+]
+
 export function Sidebar({ pendingCount = 0 }: SidebarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileOpen,  setMobileOpen]  = useState(false)
+  const [sidebarWidth, setSidebarWidth] = useState(252)
+  const [mouse, setMouse] = useState({ x: -1000, y: -1000 })
+
+  const asideRef    = useRef<HTMLElement>(null)
+  const isDragging  = useRef(false)
+  const dragStartX  = useRef(0)
+  const dragStartW  = useRef(252)
+
   const { data: session } = useSession()
 
   const initials = (session?.user?.name ?? 'U')
     .split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()
+
+  // ── Spotlight ──────────────────────────────────────────────────────────────
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }, [])
+  const handleMouseLeave = useCallback(() => setMouse({ x: -1000, y: -1000 }), [])
+
+  // ── Resize ─────────────────────────────────────────────────────────────────
+  const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    isDragging.current = true
+    dragStartX.current = e.clientX
+    dragStartW.current = sidebarWidth
+  }, [sidebarWidth])
+
+  useEffect(() => {
+    function onMove(e: MouseEvent) {
+      if (!isDragging.current) return
+      const delta = e.clientX - dragStartX.current
+      setSidebarWidth(Math.min(360, Math.max(180, dragStartW.current + delta)))
+    }
+    function onUp() { isDragging.current = false }
+    document.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseup',   onUp)
+    return () => {
+      document.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseup',   onUp)
+    }
+  }, [])
 
   const Logo = () => (
     <Link href="/dashboard" className="flex items-center gap-2.5 group">
@@ -274,12 +328,59 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   return (
     <>
       {/* ── Desktop sidebar ───────────────────────────── */}
-      <aside className="hidden md:flex flex-col sticky top-0 h-screen w-[252px] flex-shrink-0 bg-[#040B4D] border-r border-white/[0.05]">
+      <aside
+        ref={asideRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ width: sidebarWidth }}
+        className="hidden md:flex flex-col sticky top-0 h-screen flex-shrink-0 bg-[#040B4D] border-r border-white/[0.05] overflow-hidden relative"
+      >
+        {/* Floating bubbles */}
+        {BUBBLES.map((b) => (
+          <div
+            key={b.id}
+            aria-hidden
+            style={{
+              position:        'absolute',
+              width:           b.size,
+              height:          b.size,
+              left:            b.left,
+              bottom:          b.bottom,
+              borderRadius:    '50%',
+              background:      'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 55%, transparent 70%)',
+              border:          '1px solid rgba(255,255,255,0.07)',
+              animation:       `bubble-rise ${b.duration}s ${b.delay}s infinite ease-in-out`,
+              pointerEvents:   'none',
+            }}
+          />
+        ))}
+
+        {/* Mouse spotlight */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(320px circle at ${mouse.x}px ${mouse.y}px, rgba(99,60,255,0.22), rgba(38,5,239,0.06) 50%, transparent 70%)`,
+          }}
+        />
+
         {/* Logo */}
-        <div className="h-[52px] flex items-center px-4 border-b border-white/[0.06] flex-shrink-0">
+        <div className="h-[52px] flex items-center px-4 border-b border-white/[0.06] flex-shrink-0 relative z-10">
           <Logo />
         </div>
-        <SidebarNav pendingCount={pendingCount} />
+
+        <div className="relative z-10 flex-1 min-h-0">
+          <SidebarNav pendingCount={pendingCount} />
+        </div>
+
+        {/* Resize handle */}
+        <div
+          onMouseDown={handleResizeMouseDown}
+          className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize group z-20"
+          title="Drag to resize"
+        >
+          <div className="absolute right-0 top-0 bottom-0 w-px bg-white/[0.05] group-hover:bg-[#2605EF]/50 group-hover:w-[3px] transition-all duration-150" />
+        </div>
       </aside>
 
       {/* ── Mobile top bar ────────────────────────────── */}
