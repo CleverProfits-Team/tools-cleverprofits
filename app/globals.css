@@ -49,4 +49,21 @@
   .page-container {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
+
+  /* ── Subtle dot-grid texture ──────────────────────────────────────────────
+     Adds engineering precision feel to dashboard backgrounds. */
+  .bg-dot-grid {
+    background-color: #f8fafc;
+    background-image: radial-gradient(circle, rgb(148 163 184 / 0.4) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* ── Dark hero mesh ───────────────────────────────────────────────────────
+     Deep navy with electric-blue radial glow. Used for full-bleed headers. */
+  .bg-hero-mesh {
+    background:
+      radial-gradient(ellipse 80% 55% at 60% -10%, rgb(38 5 239 / 0.28) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 30% at 100% 0%, rgb(24 25 125 / 0.5) 0%, transparent 60%),
+      linear-gradient(160deg, #040B4D 0%, #030828 100%);
+  }
 }

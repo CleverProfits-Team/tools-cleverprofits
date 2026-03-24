@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Plus_Jakarta_Sans, Space_Grotesk } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import './globals.css'
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-jakarta',
   display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
 })
 
 const spaceGrotesk = Space_Grotesk({
@@ -32,11 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans h-full antialiased`}>
-        {/*
-          SessionProvider must wrap the entire app so that useSession() works
-          in any Client Component. It does not affect Server Components.
-        */}
+      <body className={`${jakarta.variable} ${spaceGrotesk.variable} font-sans h-full antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

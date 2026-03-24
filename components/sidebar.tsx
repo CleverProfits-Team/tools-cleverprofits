@@ -63,8 +63,8 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
                     'flex items-center gap-2.5 py-2.5 rounded-lg text-sm border-l-2 px-2.5',
                     'transition-all duration-150',
                     isActive
-                      ? 'bg-white/[0.13] text-white font-semibold border-[#2605EF] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
-                      : 'text-white/50 hover:text-white hover:bg-white/[0.07] border-transparent hover:translate-x-[2px]',
+                      ? 'bg-white/[0.12] text-white font-semibold border-[#2605EF] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),-1px_0_10px_rgba(38,5,239,0.2)]'
+                      : 'text-white/45 hover:text-white/90 hover:bg-white/[0.06] border-transparent hover:translate-x-[2px]',
                   )}
                 >
                   <Icon className="h-4 w-4 flex-shrink-0" aria-hidden />
@@ -89,8 +89,8 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
                     'flex items-center gap-2.5 py-2.5 rounded-lg text-sm border-l-2 px-2.5',
                     'transition-all duration-150',
                     pathname.startsWith('/dashboard/admin')
-                      ? 'bg-white/[0.13] text-white font-semibold border-[#2605EF] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
-                      : 'text-white/50 hover:text-white hover:bg-white/[0.07] border-transparent hover:translate-x-[2px]',
+                      ? 'bg-white/[0.12] text-white font-semibold border-[#2605EF] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),-1px_0_10px_rgba(38,5,239,0.2)]'
+                      : 'text-white/45 hover:text-white/90 hover:bg-white/[0.06] border-transparent hover:translate-x-[2px]',
                   )}
                 >
                   <ShieldAlert className="h-4 w-4 flex-shrink-0" aria-hidden />

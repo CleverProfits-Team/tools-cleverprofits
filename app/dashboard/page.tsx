@@ -5,122 +5,105 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { ToolsGrid } from '@/components/dashboard/tools-grid'
-import { Button } from '@/components/ui/button'
-import { PlusCircle, CheckCircle2, Clock, Package } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { PlusCircle } from 'lucide-react'
 import type { SerializedTool } from '@/types'
 
 export const metadata: Metadata = { title: 'Dashboard' }
-
-// Revalidate every 60 s so the list stays fresh without needing a full
-// navigation. Individual tool state changes are reflected within a minute.
 export const revalidate = 60
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
 
-  // Fetch all tools, newest first.
-  // Querying directly from Prisma (not via the API route) avoids a round-trip
-  // HTTP call and is faster for server-rendered pages.
   const rawTools = await prisma.tool.findMany({
     where:   { status: { not: 'DRAFT' } },
     include: { tags: { select: { id: true, name: true } } },
     orderBy: { createdAt: 'desc' },
   })
 
-  // Serialize Date → string before passing to Client Components
   const tools: SerializedTool[] = rawTools.map((t) => ({
     ...t,
     createdAt: t.createdAt.toISOString(),
     updatedAt: t.updatedAt.toISOString(),
   }))
 
-  // Pre-compute unique teams for the filter dropdown (avoids re-computing in client)
-  const teams = [
-    ...new Set(rawTools.map((t) => t.team).filter(Boolean)),
-  ].sort() as string[]
-
-  // Quick stats for the header
+  const teams        = [...new Set(rawTools.map((t) => t.team).filter(Boolean))].sort() as string[]
   const activeCount  = rawTools.filter((t) => t.status === 'ACTIVE').length
   const pendingCount = rawTools.filter((t) => t.status === 'PENDING').length
+  const firstName    = session?.user?.name?.split(' ')[0] ?? ''
 
   return (
     <div>
-      {/* ── Page header ─────────────────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
-        <div>
-          <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
-            Your tools
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Launch, manage, and scale internal tools across CleverProfits teams.
-          </p>
-        </div>
+      {/* Full-bleed hero: negative margins break out of the layout padding,
+          hero fills the full content-area width flush with the sidebar. */}
+      <div className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-8 bg-hero-mesh relative overflow-hidden">
+        {/* Subtle dot-grid overlay on dark background */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.07]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',
+            backgroundSize: '22px 22px',
+          }}
+          aria-hidden
+        />
 
-        <Button asChild size="md">
-          <Link href="/dashboard/register">
-            <PlusCircle className="h-4 w-4" aria-hidden />
-            Register Tool
-          </Link>
-        </Button>
+        <div className="relative px-4 sm:px-6 lg:px-8 pt-9 pb-7">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              {firstName && (
+                <p className="text-white/40 text-[11px] font-medium uppercase tracking-[0.12em] mb-1.5">
+                  Welcome back, {firstName}
+                </p>
+              )}
+              <h1 className="font-display font-bold text-[28px] text-white tracking-tight leading-none">
+                Your tools
+              </h1>
+              <p className="text-white/45 text-sm mt-1.5">
+                Launch, manage, and scale internal tools across CleverProfits.
+              </p>
+            </div>
+
+            <Link
+              href="/dashboard/register"
+              className="inline-flex items-center gap-2 rounded-xl bg-white/[0.1] border border-white/[0.15] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.18] hover:border-white/25 transition-all duration-150 self-start sm:self-end flex-shrink-0 backdrop-blur-sm"
+            >
+              <PlusCircle className="h-4 w-4" aria-hidden />
+              Register Tool
+            </Link>
+          </div>
+
+          {/* ── Inline stats row ─────────────────────────────── */}
+          {tools.length > 0 && (
+            <div className="flex items-stretch mt-7 pt-5 border-t border-white/[0.08]">
+              <div className="pr-7">
+                <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
+                  {activeCount}
+                </p>
+                <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Active</p>
+              </div>
+
+              <div className="w-px bg-white/[0.1] self-stretch" />
+
+              <div className="px-7">
+                <p className={`text-[26px] font-display font-bold tabular-nums leading-none ${pendingCount > 0 ? 'text-amber-400' : 'text-white'}`}>
+                  {pendingCount}
+                </p>
+                <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Pending</p>
+              </div>
+
+              <div className="w-px bg-white/[0.1] self-stretch" />
+
+              <div className="pl-7">
+                <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
+                  {tools.length}
+                </p>
+                <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Total</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* ── Stat cards ──────────────────────────────────────────────── */}
-      {tools.length > 0 && (
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          {/* Active */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active</p>
-              <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                <CheckCircle2 className="h-4 w-4 text-emerald-500" aria-hidden />
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-slate-900 tabular-nums">{activeCount}</p>
-            <p className="text-xs text-slate-400 mt-1">tools live</p>
-          </div>
-
-          {/* Pending */}
-          <div className={cn(
-            'rounded-2xl border shadow-card p-5',
-            pendingCount > 0 ? 'bg-amber-50 border-amber-200' : 'bg-white border-slate-200/80',
-          )}>
-            <div className="flex items-center justify-between mb-3">
-              <p className={cn(
-                'text-xs font-semibold uppercase tracking-widest',
-                pendingCount > 0 ? 'text-amber-500' : 'text-slate-400',
-              )}>Pending</p>
-              <div className={cn(
-                'h-8 w-8 rounded-lg flex items-center justify-center',
-                pendingCount > 0 ? 'bg-amber-100' : 'bg-slate-50',
-              )}>
-                <Clock className={cn('h-4 w-4', pendingCount > 0 ? 'text-amber-500' : 'text-slate-400')} aria-hidden />
-              </div>
-            </div>
-            <p className={cn(
-              'text-3xl font-bold tabular-nums',
-              pendingCount > 0 ? 'text-amber-700' : 'text-slate-900',
-            )}>{pendingCount}</p>
-            <p className={cn('text-xs mt-1', pendingCount > 0 ? 'text-amber-500' : 'text-slate-400')}>
-              awaiting review
-            </p>
-          </div>
-
-          {/* Total */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Total</p>
-              <div className="h-8 w-8 rounded-lg bg-[#040B4D]/5 flex items-center justify-center">
-                <Package className="h-4 w-4 text-[#040B4D]/60" aria-hidden />
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-slate-900 tabular-nums">{tools.length}</p>
-            <p className="text-xs text-slate-400 mt-1">registered</p>
-          </div>
-        </div>
-      )}
-
-      {/* ── Tools grid (client component for search + filter) ────────── */}
+      {/* ── Tools grid ──────────────────────────────────────────────────── */}
       <Suspense>
         <ToolsGrid
           tools={tools}
