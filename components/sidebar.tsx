@@ -71,7 +71,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
           'group flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-[13px] transition-all duration-150 relative',
           isActive
             ? 'bg-white/[0.11] text-white font-medium'
-            : 'text-white/42 hover:text-white/85 hover:bg-white/[0.05]',
+            : 'text-white/60 hover:text-white hover:bg-white/[0.07]',
         )}
       >
         {/* Left accent pill */}
@@ -86,7 +86,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
         <Icon
           className={cn(
             'h-[15px] w-[15px] flex-shrink-0 transition-colors ml-1',
-            isActive ? 'text-white' : 'text-white/35 group-hover:text-white/65',
+            isActive ? 'text-white' : 'text-white/55 group-hover:text-white/90',
           )}
         />
 
@@ -108,7 +108,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold text-white/18 uppercase tracking-[0.13em] px-3.5 mb-1 mt-0.5">
+    <p className="text-[10px] font-semibold text-white/35 uppercase tracking-[0.13em] px-3.5 mb-1 mt-0.5">
       {children}
     </p>
   )
