@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
@@ -52,14 +52,37 @@ export function Nav({ pendingCount = 0 }: NavProps) {
     return () => document.removeEventListener('mousedown', handler)
   }, [open])
 
+  const [navMouse, setNavMouse] = useState({ x: -1000, y: -1000 })
+
+  const handleNavMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setNavMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }, [])
+
+  const handleNavMouseLeave = useCallback(() => {
+    setNavMouse({ x: -1000, y: -1000 })
+  }, [])
+
   const role     = session?.user?.role as string | undefined
   const isAdmin  = role === 'ADMIN' || role === 'SUPER_ADMIN'
   const initials = (session?.user?.name ?? 'U')
     .split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()
 
   return (
-    <header className="sticky top-0 z-30 bg-[#040B4D] border-b border-[#18197D]/60 shadow-md">
-      <div className="page-container">
+    <header
+      className="sticky top-0 z-30 bg-[#040B4D] border-b border-[#18197D]/60 shadow-md overflow-hidden"
+      onMouseMove={handleNavMouseMove}
+      onMouseLeave={handleNavMouseLeave}
+    >
+      {/* Mouse spotlight */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(350px circle at ${navMouse.x}px ${navMouse.y}px, rgba(99,60,255,0.25), rgba(38,5,239,0.08) 45%, transparent 65%)`,
+        }}
+        aria-hidden
+      />
+      <div className="page-container relative">
         <div className="flex h-14 items-center justify-between gap-4">
 
           {/* ── Brand + nav ──────────────────────────────────────────── */}
@@ -200,6 +223,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
             </div>
           )}
 
+        </div>
         </div>
       </div>
     </header>
