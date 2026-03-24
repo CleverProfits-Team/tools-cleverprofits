@@ -1,11 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { ArrowUpRight, User } from 'lucide-react'
 import { StatusBadge, AccessBadge, Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
-
-// ── Deterministic accent color from tool name ─────────────────────────────────
-// Each entry has a Tailwind bg class (icon) and a hex value (accent stripe).
 
 const PALETTE = [
   { bg: 'bg-blue-500',    hex: '#3b82f6' },
@@ -40,73 +39,91 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col bg-white rounded-2xl border shadow-card overflow-hidden',
-        'transition-all duration-200',
-        isActive
-          ? 'border-slate-200/70 hover:shadow-card-hover hover:-translate-y-[2px] hover:border-[#2605EF]/25 cursor-pointer'
-          : 'border-slate-200/70 opacity-85',
+        'group relative flex flex-col bg-white rounded-2xl overflow-hidden',
+        'border border-slate-100',
+        'transition-all duration-200 ease-out',
+        'hover:-translate-y-1',
+        'hover:shadow-[0_16px_40px_rgba(4,11,77,0.10),0_4px_12px_rgba(4,11,77,0.06)]',
+        'hover:border-slate-200/60',
+        !isActive && 'opacity-80',
       )}
     >
-      {/* ── Colored accent stripe ──────────────────────────── */}
-      <div className="h-[3px] w-full flex-shrink-0" style={{ backgroundColor: accent.hex }} />
+      {/* Per-tool atmospheric glow — each card has its own light source */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(ellipse 110% 160% at -5% -15%, ${accent.hex}16 0%, transparent 55%)`,
+        }}
+        aria-hidden
+      />
 
-      <div className="p-5 flex flex-col flex-1">
+      {/* Top accent stripe */}
+      <div
+        className="relative h-[3px] w-full flex-shrink-0"
+        style={{ backgroundColor: accent.hex }}
+        aria-hidden
+      />
 
-        {/* ── Header: icon + name + badge ────────────────────── */}
-        <div className="flex items-start gap-3 mb-3.5">
+      {/* Body */}
+      <div className="relative flex flex-col flex-1 p-5 pt-4">
+
+        {/* Icon + status */}
+        <div className="flex items-start justify-between mb-4">
           <div
             className={cn(
-              'h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0',
-              'text-white text-sm font-bold select-none shadow-xs',
+              'h-11 w-11 rounded-xl flex items-center justify-center flex-shrink-0',
+              'text-white text-[15px] font-bold select-none',
+              'shadow-[0_2px_10px_rgba(0,0,0,0.20)]',
+              'transition-transform duration-200 group-hover:scale-[1.06]',
               accent.bg,
             )}
             aria-hidden
           >
             {initial}
           </div>
-
-          <div className="flex-1 min-w-0 pt-0.5">
-            <Link
-              href={`/tools/${tool.slug}`}
-              className="font-semibold text-[#040B4D] text-[15px] leading-snug block hover:text-[#2605EF] transition-colors focus-ring rounded"
-            >
-              {tool.name}
-            </Link>
-            <p className="text-[11px] text-slate-400 font-mono mt-0.5 truncate">/{tool.slug}</p>
-          </div>
-
-          <div className="flex-shrink-0 pt-0.5">
-            <StatusBadge status={tool.status} />
-          </div>
+          <StatusBadge status={tool.status} />
         </div>
 
-        {/* ── Description ────────────────────────────────────── */}
+        {/* Name */}
+        <Link
+          href={`/tools/${tool.slug}`}
+          className="font-display font-bold text-[15.5px] leading-snug text-[#040B4D] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-ring rounded"
+        >
+          {tool.name}
+        </Link>
+
+        {/* Slug */}
+        <p className="text-[11px] font-mono text-slate-300 mb-3 tracking-wide">
+          /{tool.slug}
+        </p>
+
+        {/* Description */}
         <p
           className={cn(
-            'text-[13px] leading-relaxed line-clamp-2 mb-4 flex-1',
-            tool.description ? 'text-slate-500' : 'text-slate-300 italic',
+            'text-[12.5px] leading-relaxed line-clamp-2 mb-4 flex-1',
+            tool.description ? 'text-slate-400' : 'text-slate-300 italic',
           )}
         >
           {tool.description ?? 'No description provided'}
         </p>
 
-        {/* ── Chips: access + team + tags ────────────────────── */}
+        {/* Chips: access + team + tags */}
         <div className="flex flex-wrap items-center gap-1.5 mb-4">
           <AccessBadge level={tool.accessLevel} />
           {tool.team && <Badge>{tool.team}</Badge>}
           {(tool.tags ?? []).map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500"
+              className="inline-flex items-center rounded-full bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
             >
               {tag.name}
             </span>
           ))}
         </div>
 
-        {/* ── Footer ─────────────────────────────────────────── */}
-        <div className="flex items-center justify-between pt-3.5 border-t border-slate-100 gap-2">
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 min-w-0">
+        {/* Footer */}
+        <div className="mt-auto pt-3.5 border-t border-slate-50 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-300 min-w-0">
             <User className="h-3 w-3 flex-shrink-0" aria-hidden />
             <span className="truncate">{tool.createdByName}</span>
           </div>
@@ -115,10 +132,10 @@ export function ToolCard({ tool }: ToolCardProps) {
             <a
               href={`/${tool.slug}`}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5',
-                'text-[11px] font-semibold text-white shadow-xs flex-shrink-0',
-                'bg-[#040B4D] hover:bg-[#2605EF]',
-                'transition-all duration-150 active:scale-95',
+                'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 flex-shrink-0',
+                'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold',
+                'shadow-xs transition-all duration-150 active:scale-95',
+                'group-hover:shadow-[0_0_0_3px_rgba(38,5,239,0.12)]',
               )}
               aria-label={`Launch ${tool.name}`}
             >
@@ -128,7 +145,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           ) : (
             <Link
               href={`/tools/${tool.slug}`}
-              className="text-[11px] text-slate-400 hover:text-slate-600 transition-colors flex-shrink-0"
+              className="text-[11px] text-slate-400 hover:text-[#2605EF] transition-colors flex-shrink-0 font-medium"
             >
               View →
             </Link>

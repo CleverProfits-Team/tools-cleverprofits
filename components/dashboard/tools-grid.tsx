@@ -2,8 +2,9 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { Search, SlidersHorizontal, Wrench } from 'lucide-react'
+import { Search, SlidersHorizontal, Wrench, Zap } from 'lucide-react'
 import { ToolCard } from '@/components/dashboard/tool-card'
+import { ToolRow } from '@/components/dashboard/tool-row'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import type { SerializedTool } from '@/types'
@@ -32,13 +33,14 @@ const ACCESS_OPTIONS = [
   { value: 'LEADERSHIP', label: 'Leadership' },
 ]
 
-export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
-  const router      = useRouter()
-  const pathname    = usePathname()
-  const searchParams = useSearchParams()
-  const searchRef   = useRef<HTMLInputElement>(null)
+const FEATURED_COUNT = 3
 
-  // Initialise from URL params
+export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
+  const router       = useRouter()
+  const pathname     = usePathname()
+  const searchParams = useSearchParams()
+  const searchRef    = useRef<HTMLInputElement>(null)
+
   const [query,        setQuery]        = useState(() => searchParams.get('q')      ?? '')
   const [teamFilter,   setTeamFilter]   = useState(() => searchParams.get('team')   ?? '')
   const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? '')
@@ -46,7 +48,6 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
   const [tagFilter,    setTagFilter]    = useState(() => searchParams.get('tag')    ?? '')
   const [mineOnly,     setMineOnly]     = useState(() => searchParams.get('mine') === 'true')
 
-  // All unique tags across all tools
   const allTags = useMemo(() => {
     const names = new Set<string>()
     tools.forEach((t) => (t.tags ?? []).forEach((tag) => names.add(tag.name)))
@@ -58,7 +59,6 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
     ...allTags.map((t) => ({ value: t, label: t })),
   ], [allTags])
 
-  // Sync filters → URL (debounced 300 ms for the text query)
   const syncUrl = useCallback((
     q: string, team: string, status: string, access: string, tag: string, mine: boolean
   ) => {
@@ -73,16 +73,14 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
     router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
   }, [router, pathname])
 
-  // Debounce query changes
   useEffect(() => {
     const t = setTimeout(() => syncUrl(query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly), 300)
     return () => clearTimeout(t)
   }, [query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly, syncUrl])
 
-  // '/' key focuses the search input (skip if already in an input)
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key !== '/' ) return
+      if (e.key !== '/') return
       const tag = (e.target as HTMLElement).tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
       e.preventDefault()
@@ -106,14 +104,14 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           .toLowerCase()
         if (!haystack.includes(q)) return false
       }
-      if (teamFilter   && t.team        !== teamFilter)                               return false
-      if (statusFilter && t.status      !== (statusFilter as ToolStatus))           return false
-      if (accessFilter && t.accessLevel !== (accessFilter as AccessLevel))          return false
-      if (tagFilter    && !(t.tags ?? []).some((tag) => tag.name === tagFilter))    return false
-      if (mineOnly     && t.createdByEmail !== currentUserEmail)                    return false
+      if (teamFilter   && t.team        !== teamFilter)                              return false
+      if (statusFilter && t.status      !== (statusFilter as ToolStatus))            return false
+      if (accessFilter && t.accessLevel !== (accessFilter as AccessLevel))           return false
+      if (tagFilter    && !(t.tags ?? []).some((tag) => tag.name === tagFilter))     return false
+      if (mineOnly     && t.createdByEmail !== currentUserEmail)                     return false
       return true
     })
-  }, [tools, query, teamFilter, statusFilter, accessFilter, mineOnly, currentUserEmail])
+  }, [tools, query, teamFilter, statusFilter, accessFilter, mineOnly, currentUserEmail, tagFilter])
 
   const hasFilters = query || teamFilter || statusFilter || accessFilter || tagFilter || mineOnly
 
@@ -126,11 +124,22 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
     setMineOnly(false)
   }
 
+  const featuredTools = useMemo(() => {
+    if (hasFilters) return []
+    return filtered.filter((t) => t.status === 'ACTIVE').slice(0, FEATURED_COUNT)
+  }, [filtered, hasFilters])
+
+  const featuredIds = useMemo(() => new Set(featuredTools.map((t) => t.id)), [featuredTools])
+
+  const listTools = useMemo(() => {
+    if (hasFilters) return filtered
+    return filtered.filter((t) => !featuredIds.has(t.id))
+  }, [filtered, hasFilters, featuredIds])
+
   return (
     <div>
       {/* ── Filter bar ──────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row gap-2 mb-6">
-        {/* Search */}
         <div className="relative flex-1 min-w-0 max-w-md">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"
@@ -147,7 +156,6 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           />
         </div>
 
-        {/* Dropdowns */}
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           <SlidersHorizontal className="h-4 w-4 text-slate-400 flex-shrink-0 hidden sm:block" aria-hidden />
 
@@ -187,7 +195,6 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
             />
           )}
 
-          {/* Mine toggle */}
           <button
             onClick={() => setMineOnly((v) => !v)}
             className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
@@ -211,7 +218,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
         </div>
       </div>
 
-      {/* ── Results count ───────────────────────────────────────────── */}
+      {/* ── Results count (filters active) ──────────────────────────── */}
       {hasFilters && (
         <p className="text-xs text-slate-400 mb-4">
           {filtered.length === 0
@@ -220,12 +227,64 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
         </p>
       )}
 
-      {/* ── Grid ────────────────────────────────────────────────────── */}
+      {/* ── Content ─────────────────────────────────────────────────── */}
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))}
+        <div className="space-y-8">
+
+          {/* ── Featured: spotlight section ── */}
+          {featuredTools.length > 0 && (
+            <section>
+              {/* Section divider with embedded label */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="h-5 w-5 rounded-md bg-[#2605EF]/10 flex items-center justify-center">
+                    <Zap className="h-3 w-3 text-[#2605EF]" aria-hidden />
+                  </div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em]">
+                    Ready to launch
+                  </span>
+                </div>
+                <div className="flex-1 h-px bg-slate-100" />
+              </div>
+
+              {/* Staggered card grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {featuredTools.map((tool, i) => (
+                  <div
+                    key={tool.id}
+                    className="animate-in"
+                    style={{ animationDelay: `${i * 55}ms` }}
+                  >
+                    <ToolCard tool={tool} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* ── Index: unified panel for remaining tools ── */}
+          {listTools.length > 0 && (
+            <section>
+              {/* Section divider with count badge */}
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em] flex-shrink-0">
+                  {featuredTools.length > 0 ? 'All tools' : 'Tools'}
+                </span>
+                <span className="inline-flex items-center justify-center h-4 min-w-[1rem] rounded-full bg-slate-100 text-[10px] font-bold text-slate-400 px-1 flex-shrink-0 tabular-nums">
+                  {listTools.length}
+                </span>
+                <div className="flex-1 h-px bg-slate-100" />
+              </div>
+
+              {/* Premium unified panel */}
+              <div className="rounded-xl border border-slate-100 overflow-hidden bg-white shadow-[0_1px_4px_rgba(4,11,77,0.04)]">
+                {listTools.map((tool) => (
+                  <ToolRow key={tool.id} tool={tool} />
+                ))}
+              </div>
+            </section>
+          )}
+
         </div>
       ) : tools.length === 0 ? (
         /* Empty state — no tools at all */
@@ -233,7 +292,9 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#eeeeff] to-[#d5d4ff] flex items-center justify-center mb-5 shadow-xs">
             <Wrench className="h-7 w-7 text-[#2605EF]" aria-hidden />
           </div>
-          <h3 className="text-base font-semibold text-[#040B4D] mb-1.5">Your toolkit is empty</h3>
+          <h3 className="font-display font-bold text-[17px] text-[#040B4D] mb-2">
+            Your toolkit is empty
+          </h3>
           <p className="text-sm text-slate-400 mb-6 max-w-xs leading-relaxed">
             Register your first internal tool and make it available to the CleverProfits team.
           </p>
@@ -250,7 +311,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           <p className="text-sm text-slate-500 mb-2">No tools match your filters.</p>
           <button
             onClick={clearFilters}
-            className="text-sm text-[#2605EF] hover:text-[#1e04cc] underline underline-offset-2"
+            className="text-sm text-[#2605EF] hover:text-[#1e04cc] underline underline-offset-2 transition-colors"
           >
             Clear all filters
           </button>
