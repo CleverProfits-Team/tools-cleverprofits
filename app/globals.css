@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Semantic color tokens ────────────────────────────────────────────────── */
+:root {
+  /* Brand */
+  --cp-brand:      #2605EF;
+  --cp-deep:       #040B4D;
+  --cp-mid:        #18197D;
+  --cp-navy:       #1508AC;
+  --cp-navy-black: #0F0038;
+
+  /* Surfaces */
+  --cp-bg:          #f9f9f9;
+  --cp-surface:     #FFFFFF;
+  --cp-surface-sub: #f4f3f3;
+
+  /* Borders */
+  --cp-border:        #e2e8f0;
+  --cp-border-subtle: #f1f5f9;
+
+  /* Text */
+  --cp-text:          #040B4D;
+  --cp-text-secondary:#64748b;
+  --cp-text-muted:    #94a3b8;
+
+  /* Status */
+  --cp-active:   #10b981;
+  --cp-pending:  #f59e0b;
+  --cp-error:    #ef4444;
+  --cp-archived: #94a3b8;
+
+  /* Shadows (navy-tinted) */
+  --cp-shadow-xs:  0 1px 2px 0 rgba(4,11,77,0.05);
+  --cp-shadow-sm:  0 1px 4px 0 rgba(4,11,77,0.06), 0 1px 2px -1px rgba(4,11,77,0.04);
+  --cp-shadow-md:  0 4px 16px -2px rgba(4,11,77,0.10), 0 2px 6px -2px rgba(4,11,77,0.06);
+  --cp-shadow-lg:  0 12px 32px -8px rgba(4,11,77,0.14), 0 4px 10px -4px rgba(4,11,77,0.06);
+}
+
 @layer base {
   *,
   *::before,
@@ -18,7 +54,25 @@
 
   body {
     height: 100%;
-    @apply bg-[#EEF2FB] text-slate-900;
+    @apply bg-[#f9f9f9] text-[#1a1c1c];
+  }
+
+  /* ── Typography system ────────────────────────────────────────────────────
+     Headers: Inter — tight tracking at display sizes
+     Body:    DM Sans — regular weight only, never 500+ (bleeds into Inter)
+     Labels:  Inter — holds up better than DM Sans at 11-12px */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-inter), ui-sans-serif, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  label, th, .ui-label {
+    font-family: var(--font-inter), ui-sans-serif, sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
   }
 
   /* Smooth focus outlines everywhere */
@@ -37,6 +91,15 @@
   ::-webkit-scrollbar-track  { background: transparent; }
   ::-webkit-scrollbar-thumb  { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+}
+
+/* ── Pulsing dot (status indicator) ──────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55); opacity: 1; }
+  50%       { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0);  opacity: 0.8; }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
 /* ── Bubble rise animation ────────────────────────────────────────────────── */
@@ -63,9 +126,22 @@
   /* ── Dot-grid texture ─────────────────────────────────────────────────────
      Slightly blue-tinted so it harmonises with the dark sidebar. */
   .bg-dot-grid {
-    background-color: #EEF2FB;
+    background-color: #f9f9f9;
     background-image: radial-gradient(circle, rgb(99 110 176 / 0.22) 1px, transparent 1px);
     background-size: 22px 22px;
+  }
+
+  /* ── Kinetic gradient (signature brand gradient) ──────────────────────────
+     135° from primary #1800b0 → primary-container #2605ef */
+  .kinetic-gradient {
+    background: linear-gradient(135deg, #1800b0 0%, #2605ef 100%);
+  }
+
+  /* ── Glass panel (frosted floating element) ───────────────────────────── */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   /* ── Dark hero mesh ───────────────────────────────────────────────────────
@@ -75,6 +151,12 @@
       radial-gradient(ellipse 80% 55% at 60% -10%, rgb(38 5 239 / 0.28) 0%, transparent 65%),
       radial-gradient(ellipse 40% 30% at 100% 0%, rgb(24 25 125 / 0.5) 0%, transparent 60%),
       linear-gradient(160deg, #040B4D 0%, #030828 100%);
+  }
+
+  /* ── Kinetic hero section ─────────────────────────────────────────────────
+     Gradient hero block used on main dashboard — rounded corners, full bleed. */
+  .kinetic-hero {
+    background: linear-gradient(135deg, #1800b0 0%, #2605ef 100%);
   }
 
   /* ── Seamless edge — left bleed from sidebar into content ─────────────────
@@ -88,8 +170,8 @@
     position: absolute;
     inset: 0;
     right: auto;
-    width: 120px;
-    background: linear-gradient(to right, rgba(4, 11, 77, 0.055), transparent);
+    width: 200px;
+    background: linear-gradient(to right, rgba(4, 11, 77, 0.085), transparent);
     pointer-events: none;
     z-index: 0;
   }
@@ -104,6 +186,15 @@
      For admin table rows and list items that are clickable. */
   .row-interactive {
     @apply transition-colors duration-100 cursor-pointer hover:bg-slate-50/80;
+  }
+
+  /* ── Hide scrollbar but keep scroll functionality ───────────────────────
+     Used on overflow-x-auto containers like the admin sub-nav. */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 }
 

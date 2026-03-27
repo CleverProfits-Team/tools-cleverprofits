@@ -10,9 +10,12 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans:    ['var(--font-dm-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-syne)', 'var(--font-dm-sans)', 'ui-sans-serif', 'sans-serif'],
+        display: ['var(--font-inter)', 'ui-sans-serif', 'sans-serif'],
       },
       colors: {
+        // Kinetic Editor surface hierarchy
+        surface:     '#f9f9f9',
+        'surface-low': '#f4f3f3',
         // CleverProfits brand palette (from brand guidelines)
         cp: {
           'royal-blue':    '#040B4D',

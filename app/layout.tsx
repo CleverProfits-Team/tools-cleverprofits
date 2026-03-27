@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
-import { DM_Sans, Syne } from 'next/font/google'
+import { Inter, DM_Sans } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import './globals.css'
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+})
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm-sans',
   display: 'swap',
-})
-
-const syne = Syne({
-  subsets: ['latin'],
-  variable: '--font-syne',
-  display: 'swap',
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500'],
 })
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${dmSans.variable} ${syne.variable} font-sans h-full antialiased`}>
+      <body className={`${inter.variable} ${dmSans.variable} font-sans h-full antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
