@@ -18,17 +18,17 @@ function formatDate(iso: string) {
 }
 
 const STATUS_CONFIG: Record<ToolStatus, { label: string; dot: string; pill: string }> = {
-  DRAFT:    { label: 'Draft',    dot: 'bg-slate-300',   pill: 'bg-slate-100  text-slate-400   ring-1 ring-slate-400/20'   },
+  DRAFT:    { label: 'Draft',    dot: 'bg-[#94a3b8]',   pill: 'bg-[#f4f3f3]  text-[#94a3b8]  ring-1 ring-[#94a3b8]/20'  },
   ACTIVE:   { label: 'Active',   dot: 'bg-emerald-500', pill: 'bg-emerald-50  text-emerald-700 ring-1 ring-emerald-600/20' },
   PENDING:  { label: 'Pending',  dot: 'bg-amber-500',   pill: 'bg-amber-50   text-amber-700   ring-1 ring-amber-600/20'   },
-  ARCHIVED: { label: 'Archived', dot: 'bg-slate-400',   pill: 'bg-slate-100  text-slate-500   ring-1 ring-slate-500/20'   },
+  ARCHIVED: { label: 'Archived', dot: 'bg-[#64748b]',   pill: 'bg-[#f4f3f3]  text-[#64748b]  ring-1 ring-[#64748b]/20'  },
   REJECTED: { label: 'Rejected', dot: 'bg-red-500',     pill: 'bg-red-50     text-red-700     ring-1 ring-red-600/20'     },
 }
 
 function StatusPill({ status }: { status: ToolStatus }) {
   const { label, dot, pill } = STATUS_CONFIG[status]
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap', pill)}>
+    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium font-display whitespace-nowrap', pill)}>
       <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', dot)} aria-hidden />
       {label}
     </span>
@@ -57,8 +57,8 @@ export function AdminToolsList({ initialTools, teams }: Props) {
 
   const pendingCount = initialTools.filter((t) => t.status === 'PENDING').length
 
-  const thCls = 'px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'
-  const tdCls = 'px-4 py-3.5 text-sm text-slate-700 align-middle'
+  const thCls = 'px-4 py-3 text-left text-xs font-semibold font-display text-[#94a3b8] uppercase tracking-widest'
+  const tdCls = 'px-4 py-3.5 text-sm text-[#040B4D] align-middle'
 
   return (
     <div>
@@ -93,37 +93,37 @@ export function AdminToolsList({ initialTools, teams }: Props) {
         <button
           onClick={() => { setPendingOnly((v) => !v); if (!pendingOnly) setStatusFilter('ALL') }}
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
+            'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium font-display transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2',
             pendingOnly
               ? 'border-amber-300 bg-amber-50 text-amber-700'
-              : 'border-slate-200 text-slate-600 hover:bg-slate-50',
+              : 'border-[#e2e8f0] text-[#64748b] hover:bg-[#f4f3f3]',
           )}
         >
-          <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', pendingOnly ? 'bg-amber-500' : 'bg-slate-300')} aria-hidden />
+          <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', pendingOnly ? 'bg-amber-500' : 'bg-[#94a3b8]')} aria-hidden />
           Needs review
           {pendingCount > 0 && (
             <span className={cn(
               'rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none',
-              pendingOnly ? 'bg-amber-200 text-amber-800' : 'bg-slate-200 text-slate-600',
+              pendingOnly ? 'bg-amber-200 text-amber-800' : 'bg-[#f4f3f3] text-[#64748b]',
             )}>
               {pendingCount}
             </span>
           )}
         </button>
 
-        <span className="ml-auto text-xs text-slate-400">
+        <span className="ml-auto text-xs text-[#94a3b8]">
           {filtered.length} tool{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white py-16 text-center">
-          <p className="text-sm text-slate-400">No tools match the current filters.</p>
+        <div className="rounded-2xl border border-[#e2e8f0] bg-white py-16 text-center">
+          <p className="text-sm text-[#94a3b8]">No tools match the current filters.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-card">
+        <div className="overflow-x-auto rounded-2xl border border-[#e2e8f0] bg-white shadow-card">
           <table className="w-full text-left">
-            <thead className="border-b border-slate-200 bg-slate-50/60">
+            <thead className="border-b border-[#e2e8f0] bg-[#f4f3f3]/60">
               <tr>
                 <th className={thCls}>Tool</th>
                 <th className={thCls}>Owner</th>
@@ -133,16 +133,19 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                 <th className={thCls}></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#e2e8f0]/60">
               {filtered.map((tool) => {
                 const isPending = tool.status === 'PENDING'
                 return (
                   <tr
                     key={tool.id}
                     onClick={() => router.push(`/dashboard/admin/tools/${tool.id}`)}
+                    tabIndex={0}
+                    role="link"
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') router.push(`/dashboard/admin/tools/${tool.id}`) }}
                     className={cn(
-                      'transition-colors cursor-pointer',
-                      isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-slate-50',
+                      'transition-colors duration-150 cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2605EF]/30 outline-none',
+                      isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-[#f4f3f3]',
                     )}
                   >
                     {/* Left accent border via first cell */}
@@ -150,31 +153,33 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                       {isPending && (
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <Clock className="h-3 w-3 text-amber-500" aria-hidden />
-                          <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">Needs review</span>
+                          <span className="text-[10px] font-semibold font-display text-amber-600 uppercase tracking-wider">Needs review</span>
                         </div>
                       )}
-                      <div className="font-semibold text-[#040B4D]">{tool.name}</div>
-                      <div className="text-xs text-slate-400 font-mono mt-0.5">/{tool.slug}</div>
+                      <div className="font-semibold font-display text-[#040B4D]">{tool.name}</div>
+                      <div className="text-xs text-[#94a3b8] font-mono mt-0.5">/{tool.slug}</div>
                     </td>
                     <td className={tdCls}>
-                      <div className="font-medium text-slate-800">{tool.createdByName}</div>
-                      <div className="text-xs text-slate-400">{tool.createdByEmail}</div>
+                      <div className="font-medium text-[#040B4D]">{tool.createdByName}</div>
+                      <div className="text-xs text-[#94a3b8]">{tool.createdByEmail}</div>
                     </td>
-                    <td className={cn(tdCls, 'text-slate-500')}>{tool.team ?? <span className="text-slate-300">—</span>}</td>
+                    <td className={cn(tdCls, 'text-[#64748b]')}>{tool.team ?? <span className="text-[#94a3b8]">—</span>}</td>
                     <td className={tdCls}>
                       <StatusPill status={tool.status} />
                     </td>
-                    <td className={cn(tdCls, 'text-slate-400 hidden lg:table-cell whitespace-nowrap')}>
+                    <td className={cn(tdCls, 'text-[#94a3b8] hidden lg:table-cell whitespace-nowrap')}>
                       {formatDate(tool.createdAt)}
                     </td>
                     <td className={cn(tdCls, 'text-right')}>
                       <Link
                         href={`/dashboard/admin/tools/${tool.id}`}
+                        onClick={(e) => e.stopPropagation()}
                         className={cn(
-                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-150 whitespace-nowrap',
+                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium font-display transition-all duration-150 whitespace-nowrap min-h-[36px]',
+                          'focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2',
                           isPending
                             ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-xs hover:scale-[1.03] active:scale-95'
-                            : 'border border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300',
+                            : 'border border-[#e2e8f0] text-[#64748b] hover:bg-[#f4f3f3] hover:border-[#94a3b8]',
                         )}
                       >
                         {isPending ? 'Review' : 'View'}

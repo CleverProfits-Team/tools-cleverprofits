@@ -20,7 +20,7 @@ export default async function AdminInvitationsPage() {
     <div>
       <div className="mb-6">
         <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Invitations</h1>
-        <p className="text-sm text-slate-500 mt-1">Invite new team members and manage pending invitations.</p>
+        <p className="text-sm text-[#64748b] mt-1">Invite new team members and manage pending invitations.</p>
       </div>
       <AdminInvitationsList initialInvitations={invitations} />
     </div>

@@ -7,7 +7,7 @@ import { MyToolsList } from '@/components/dashboard/my-tools-list'
 import type { SerializedTool } from '@/types'
 
 export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'My Submissions' }
+export const metadata: Metadata = { title: 'My submissions' }
 
 export default async function MyToolsPage() {
   const session = await getServerSession(authOptions)
@@ -37,8 +37,8 @@ export default async function MyToolsPage() {
   return (
     <div className="animate-in">
       <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">My Submissions</h1>
-        <p className="text-sm text-slate-500 mt-1">Tools you&apos;ve registered on the platform</p>
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">My submissions</h1>
+        <p className="text-sm text-[#64748b] mt-1">Tools you&apos;ve registered on the platform</p>
       </div>
       <MyToolsList tools={rawTools.map(serialize)} drafts={rawDrafts.map(serialize)} />
     </div>

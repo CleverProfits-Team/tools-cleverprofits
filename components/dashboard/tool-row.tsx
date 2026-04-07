@@ -41,9 +41,9 @@ export function ToolRow({ tool }: ToolRowProps) {
     <div
       className={cn(
         'group relative flex items-center gap-3.5 px-4 py-3',
-        'border-b border-slate-50 last:border-b-0',
+        'border-b border-[#e2e8f0]/60 last:border-b-0',
         'transition-colors duration-150',
-        'hover:bg-slate-50/70',
+        'hover:bg-[#f4f3f3]',
       )}
     >
       {/* Left accent bar — grows from center on hover */}
@@ -71,16 +71,16 @@ export function ToolRow({ tool }: ToolRowProps) {
         <div className="flex items-baseline gap-2 flex-wrap">
           <Link
             href={`/tools/${tool.slug}`}
-            className="font-semibold text-[13px] text-[#040B4D] hover:text-[#2605EF] transition-colors leading-tight focus-ring rounded"
+            className="font-semibold text-[13px] text-[#040B4D] hover:text-[#2605EF] transition-colors leading-tight focus-ring rounded focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
           >
             {tool.name}
           </Link>
-          <span className="hidden sm:inline text-[10.5px] font-mono text-slate-300 leading-tight">
+          <span className="hidden sm:inline text-[10.5px] font-mono text-[#94a3b8] leading-tight">
             /{tool.slug}
           </span>
         </div>
         {tool.description && (
-          <p className="text-[11.5px] text-slate-400 mt-0.5 truncate max-w-lg">
+          <p className="text-[11.5px] text-[#64748b] mt-0.5 truncate max-w-lg">
             {tool.description}
           </p>
         )}
@@ -89,14 +89,14 @@ export function ToolRow({ tool }: ToolRowProps) {
       {/* Team + tags */}
       <div className="hidden lg:flex items-center gap-1.5 flex-shrink-0">
         {tool.team && (
-          <span className="rounded-full bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400">
+          <span className="rounded-full bg-[#f4f3f3] border border-[#e2e8f0] px-2 py-0.5 text-[10.5px] font-medium text-[#64748b]">
             {tool.team}
           </span>
         )}
         {(tool.tags ?? []).slice(0, 2).map((tag) => (
           <span
             key={tag.id}
-            className="rounded-full bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
+            className="rounded-full bg-[#f4f3f3] border border-[#e2e8f0] px-2 py-0.5 text-[10.5px] font-medium text-[#64748b]"
           >
             {tag.name}
           </span>
@@ -114,10 +114,11 @@ export function ToolRow({ tool }: ToolRowProps) {
           <a
             href={`/${tool.slug}`}
             className={cn(
-              'inline-flex items-center gap-1 rounded-lg px-3 py-1.5',
-              'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold shadow-xs',
+              'inline-flex items-center gap-1 rounded-lg px-3 py-1.5 min-h-[36px]',
+              'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold font-display shadow-xs',
               'transition-all duration-150 active:scale-95',
               'opacity-0 group-hover:opacity-100',
+              'focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 focus-visible:opacity-100',
             )}
             aria-label={`Launch ${tool.name}`}
           >
@@ -127,7 +128,7 @@ export function ToolRow({ tool }: ToolRowProps) {
         ) : (
           <Link
             href={`/tools/${tool.slug}`}
-            className="text-[11px] text-slate-400 hover:text-[#2605EF] transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap font-medium"
+            className="text-[11px] text-[#64748b] hover:text-[#2605EF] transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap font-medium focus-visible:opacity-100"
           >
             View →
           </Link>

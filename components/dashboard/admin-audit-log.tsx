@@ -30,20 +30,20 @@ interface Log {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ACTION_STYLES: Record<AuditAction, { label: string; className: string }> = {
-  TOOL_REGISTERED: { label: 'Registered',  className: 'bg-blue-100 text-blue-700' },
-  TOOL_APPROVED:   { label: 'Approved',    className: 'bg-emerald-100 text-emerald-700' },
-  TOOL_REJECTED:   { label: 'Rejected',    className: 'bg-red-100 text-red-700' },
-  TOOL_ARCHIVED:   { label: 'Archived',    className: 'bg-slate-100 text-slate-600' },
-  TOOL_RESTORED:   { label: 'Restored',    className: 'bg-violet-100 text-violet-700' },
+  TOOL_REGISTERED: { label: 'Registered',   className: 'bg-[#eeeeff] text-[#2605EF]' },
+  TOOL_APPROVED:   { label: 'Approved',     className: 'bg-emerald-100 text-emerald-700' },
+  TOOL_REJECTED:   { label: 'Rejected',     className: 'bg-red-100 text-red-700' },
+  TOOL_ARCHIVED:   { label: 'Archived',     className: 'bg-[#f4f3f3] text-[#64748b]' },
+  TOOL_RESTORED:   { label: 'Restored',     className: 'bg-violet-100 text-violet-700' },
   ROLE_CHANGED:    { label: 'Role changed', className: 'bg-amber-100 text-amber-700' },
-  USER_SUSPENDED:  { label: 'Suspended',   className: 'bg-red-100 text-red-700' },
-  USER_ACTIVATED:  { label: 'Activated',   className: 'bg-emerald-100 text-emerald-700' },
+  USER_SUSPENDED:  { label: 'Suspended',    className: 'bg-red-100 text-red-700' },
+  USER_ACTIVATED:  { label: 'Activated',    className: 'bg-emerald-100 text-emerald-700' },
 }
 
 function ActionBadge({ action }: { action: string }) {
-  const style = ACTION_STYLES[action as AuditAction] ?? { label: action, className: 'bg-slate-100 text-slate-600' }
+  const style = ACTION_STYLES[action as AuditAction] ?? { label: action, className: 'bg-[#f4f3f3] text-[#64748b]' }
   return (
-    <span className={cn('inline-block rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap', style.className)}>
+    <span className={cn('inline-block rounded-full px-2 py-0.5 text-xs font-medium font-display whitespace-nowrap', style.className)}>
       {style.label}
     </span>
   )
@@ -84,23 +84,23 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
     return true
   })
 
-  const thCls = 'px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider'
-  const tdCls = 'px-3 py-3 text-sm text-slate-700 align-top'
+  const thCls = 'px-3 py-2 text-left text-xs font-medium font-display text-[#94a3b8] uppercase tracking-widest'
+  const tdCls = 'px-3 py-3 text-sm text-[#040B4D] align-top'
 
   return (
     <div>
       {/* Filters */}
       <div className="flex flex-wrap gap-3 mb-5">
-        <div className="flex rounded-md border border-slate-200 overflow-hidden">
+        <div className="flex rounded-lg border border-[#e2e8f0] overflow-hidden">
           {CATEGORY_OPTIONS.map(({ value, label }) => (
             <button
               key={value}
               onClick={() => setCategory(value)}
               className={cn(
-                'px-3 py-1.5 text-xs font-medium transition-colors',
+                'px-3 py-1.5 text-xs font-medium font-display transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2605EF]/30',
                 category === value
                   ? 'bg-[#2605EF] text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50',
+                  : 'bg-white text-[#64748b] hover:bg-[#f4f3f3]',
               )}
             >
               {label}
@@ -112,19 +112,19 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search actor, tool, user…"
-          className="rounded-md border border-slate-200 px-3 py-1.5 text-sm flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-[#2605EF]"
+          className="rounded-lg border border-[#e2e8f0] px-3 py-1.5 text-sm text-[#040B4D] placeholder:text-[#94a3b8] flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-[#2605EF]/25 focus:border-[#2605EF]/60 transition-colors"
         />
-        <span className="self-center text-xs text-slate-400">
+        <span className="self-center text-xs text-[#94a3b8]">
           {filtered.length} event{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-sm text-slate-500 py-12 text-center">No events match your filters.</p>
+        <p className="text-sm text-[#64748b] py-12 text-center">No events match your filters.</p>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-slate-200">
+        <div className="overflow-x-auto rounded-xl border border-[#e2e8f0] shadow-card">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-[#f4f3f3]/60 border-b border-[#e2e8f0]">
               <tr>
                 <th className={thCls}>Time</th>
                 <th className={thCls}>Action</th>
@@ -133,10 +133,10 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
                 <th className={thCls}>Detail</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#e2e8f0]/60">
               {filtered.map((log) => (
-                <tr key={log.id} className="hover:bg-slate-50/50">
-                  <td className={cn(tdCls, 'whitespace-nowrap text-xs text-slate-400')}>
+                <tr key={log.id} className="hover:bg-[#f4f3f3]/50 transition-colors duration-150">
+                  <td className={cn(tdCls, 'whitespace-nowrap text-xs text-[#94a3b8]')}>
                     {formatDate(log.createdAt)}
                   </td>
                   <td className={tdCls}>
@@ -144,19 +144,19 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
                   </td>
                   <td className={tdCls}>
                     {log.toolName ? (
-                      <div className="font-medium text-slate-900">{log.toolName}</div>
+                      <div className="font-medium text-[#040B4D]">{log.toolName}</div>
                     ) : log.targetEmail ? (
-                      <div className="text-slate-600">{log.targetEmail}</div>
+                      <div className="text-[#64748b]">{log.targetEmail}</div>
                     ) : (
-                      <span className="text-slate-300">—</span>
+                      <span className="text-[#94a3b8]">—</span>
                     )}
                   </td>
                   <td className={tdCls}>
-                    <div className="text-slate-700">{log.actorName}</div>
-                    <div className="text-xs text-slate-400">{log.actorEmail}</div>
+                    <div className="text-[#040B4D]">{log.actorName}</div>
+                    <div className="text-xs text-[#94a3b8]">{log.actorEmail}</div>
                   </td>
-                  <td className={cn(tdCls, 'text-slate-500 max-w-xs')}>
-                    {log.detail ?? <span className="text-slate-300">—</span>}
+                  <td className={cn(tdCls, 'text-[#64748b] max-w-xs')}>
+                    {log.detail ?? <span className="text-[#94a3b8]">—</span>}
                   </td>
                 </tr>
               ))}

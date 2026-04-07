@@ -138,7 +138,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
               status === 'done'    && 'border-emerald-200 bg-emerald-50',
               status === 'active'  && 'border-[#2605EF]/25 bg-[#2605EF]/[0.04]',
               status === 'error'   && 'border-red-200 bg-red-50',
-              status === 'pending' && 'border-slate-100 bg-white',
+              status === 'pending' && 'border-[#e2e8f0] bg-white',
             )}>
               {/* Icon */}
               <div className={cn(
@@ -146,12 +146,12 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
                 status === 'done'    && 'bg-emerald-100',
                 status === 'active'  && 'bg-[#2605EF]/10',
                 status === 'error'   && 'bg-red-100',
-                status === 'pending' && 'bg-slate-100',
+                status === 'pending' && 'bg-[#f4f3f3]',
               )}>
                 {status === 'done'    && <Check className="h-3.5 w-3.5 text-emerald-600" />}
                 {status === 'active'  && <Loader2 className="h-3.5 w-3.5 text-[#2605EF] animate-spin" />}
                 {status === 'error'   && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
-                {status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />}
+                {status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-[#94a3b8]" />}
               </div>
 
               {/* Text */}
@@ -161,13 +161,13 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
                   status === 'done'    && 'text-emerald-700',
                   status === 'active'  && 'text-[#040B4D]',
                   status === 'error'   && 'text-red-700',
-                  status === 'pending' && 'text-slate-400',
+                  status === 'pending' && 'text-[#94a3b8]',
                 )}>
                   {step.label}
                 </p>
                 <p className={cn(
                   'text-xs',
-                  status === 'pending' ? 'text-slate-300' : 'text-slate-500',
+                  status === 'pending' ? 'text-[#e2e8f0]' : 'text-[#64748b]',
                 )}>
                   {step.detail}
                 </p>
@@ -199,7 +199,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
               Continue without AI
             </Button>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#94a3b8]">
             You can fill in the details manually on the next step.
           </p>
         </div>

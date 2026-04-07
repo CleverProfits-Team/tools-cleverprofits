@@ -15,7 +15,7 @@ type SlugState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid'
 
 function SlugStatus({ state, reason }: { state: SlugState; reason?: string }) {
   if (state === 'idle')      return null
-  if (state === 'checking')  return <span className="flex items-center gap-1 text-xs text-slate-400"><Loader2 className="h-3 w-3 animate-spin" />Checking…</span>
+  if (state === 'checking')  return <span className="flex items-center gap-1 text-xs text-[#94a3b8]"><Loader2 className="h-3 w-3 animate-spin" />Checking…</span>
   if (state === 'available') return <span className="flex items-center gap-1 text-xs text-emerald-600"><CheckCircle2 className="h-3 w-3" />Available</span>
   return <span className="flex items-center gap-1 text-xs text-red-500"><AlertCircle className="h-3 w-3" />{reason ?? 'Unavailable'}</span>
 }
@@ -119,7 +119,7 @@ export default function IdentifyPage() {
       }
       router.push(`/dashboard/register/ownership/${data.id}`)
     } catch {
-      setServerErr('Network error. Please check your connection.')
+      setServerErr('Network error. Check your connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -155,7 +155,7 @@ export default function IdentifyPage() {
             <SlugStatus state={slugState} reason={slugReason} />
           </div>
           <div className="flex items-center">
-            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
+            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-[#e2e8f0] rounded-l-md bg-[#f4f3f3] text-[#94a3b8] text-sm font-mono select-none">
               tools.cleverprofits.com/
             </span>
             <Input
@@ -175,7 +175,7 @@ export default function IdentifyPage() {
           </div>
           {errors.slug
             ? <p className="text-xs text-red-500 mt-1.5">{errors.slug}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">Auto-generated from name · lowercase, numbers, hyphens only</p>
+            : <p className="text-xs text-[#94a3b8] mt-1.5">Auto-generated from name · lowercase, numbers, hyphens only</p>
           }
         </div>
 
@@ -194,7 +194,7 @@ export default function IdentifyPage() {
           />
           {errors.url
             ? <p className="text-xs text-red-500 mt-1.5">{errors.url}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">The Railway (or any HTTPS) URL. Never exposed to end users.</p>
+            : <p className="text-xs text-[#94a3b8] mt-1.5">The Railway (or any HTTPS) URL. Never exposed to end users.</p>
           }
         </div>
 
@@ -213,7 +213,7 @@ export default function IdentifyPage() {
           />
           {errors.github
             ? <p className="text-xs text-red-500 mt-1.5">{errors.github}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">Used to read the README and tech stack for AI analysis.</p>
+            : <p className="text-xs text-[#94a3b8] mt-1.5">Used to read the README and tech stack for AI analysis.</p>
           }
         </div>
 
@@ -229,7 +229,7 @@ export default function IdentifyPage() {
           />
           {errors.description
             ? <p className="text-xs text-red-500 mt-1.5">{errors.description}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">2–3 sentences — the most important input for AI analysis.</p>
+            : <p className="text-xs text-[#94a3b8] mt-1.5">2–3 sentences — the most important input for AI analysis.</p>
           }
         </div>
 
@@ -240,7 +240,7 @@ export default function IdentifyPage() {
           </div>
         )}
 
-        <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#e2e8f0]">
           <Button type="submit" disabled={loading || slugState === 'checking'}>
             {loading && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {loading ? 'Creating…' : 'Continue'}
