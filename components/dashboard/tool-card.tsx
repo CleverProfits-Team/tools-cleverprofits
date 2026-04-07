@@ -42,7 +42,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         'group relative flex flex-col bg-white rounded-xl overflow-hidden',
         'border border-[#e2e8f0]/80 border-l-[3px]',
         'shadow-card transition-all duration-150 ease-out',
-        'hover:-translate-y-0.5',
+        'hover:-translate-y-1',
         'hover:shadow-card-hover',
         'hover:border-[#e2e8f0]',
         !isActive && 'opacity-80',
@@ -127,10 +127,10 @@ export function ToolCard({ tool }: ToolCardProps) {
               href={`/${tool.slug}`}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 flex-shrink-0 min-h-[36px]',
-                'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold font-display',
+                'bg-[#2605EF] hover:bg-[#1e04cc] active:bg-[#1803b3] text-white text-[11px] font-semibold font-display',
                 'shadow-xs transition-all duration-150 active:scale-[0.97]',
-                'group-hover:shadow-[0_0_0_3px_rgba(38,5,239,0.12)]',
-                'focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2',
+                'group-hover:shadow-[0_0_0_3px_rgba(38,5,239,0.15)]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2',
               )}
               aria-label={`Launch ${tool.name}`}
             >

@@ -72,7 +72,7 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
 
           <Link
             href="/dashboard/register"
-            className="inline-flex items-center gap-2 rounded-xl bg-white/[0.1] border border-white/[0.15] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.18] hover:border-white/25 transition-all duration-150 self-start sm:self-end flex-shrink-0 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#2605EF] border border-transparent px-4 py-2.5 text-sm font-semibold font-display text-white hover:bg-[#1e04cc] active:bg-[#1803b3] active:scale-[0.97] shadow-xs transition-all duration-150 self-start sm:self-end flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2"
           >
             <PlusCircle className="h-4 w-4" aria-hidden />
             Register Tool

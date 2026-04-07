@@ -81,7 +81,7 @@ export default async function InvitePage({ params }: { params: { token: string }
                 </p>
                 <Link
                   href="/api/auth/signout"
-                  className="inline-block rounded-md bg-amber-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-amber-700 transition-colors"
+                  className="inline-block rounded-lg bg-amber-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-amber-700 active:scale-[0.97] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
                 >
                   Sign out
                 </Link>
@@ -94,7 +94,7 @@ export default async function InvitePage({ params }: { params: { token: string }
                 </p>
                 <Link
                   href={`/api/auth/signin/google?callbackUrl=/dashboard`}
-                  className="block w-full text-center rounded-md bg-[#2605EF] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1e04cc] transition-colors"
+                  className="block w-full text-center rounded-lg bg-[#2605EF] px-4 py-2.5 text-sm font-semibold font-display text-white hover:bg-[#1e04cc] active:bg-[#1803b3] active:scale-[0.97] shadow-xs transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2"
                 >
                   Sign in with Google
                 </Link>

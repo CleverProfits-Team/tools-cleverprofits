@@ -115,10 +115,10 @@ export function ToolRow({ tool }: ToolRowProps) {
             href={`/${tool.slug}`}
             className={cn(
               'inline-flex items-center gap-1 rounded-lg px-3 py-1.5 min-h-[36px]',
-              'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold font-display shadow-xs',
-              'transition-all duration-150 active:scale-95',
+              'bg-[#2605EF] hover:bg-[#1e04cc] active:bg-[#1803b3] text-white text-[11px] font-semibold font-display shadow-xs',
+              'transition-all duration-150 active:scale-[0.97]',
               'opacity-0 group-hover:opacity-100',
-              'focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 focus-visible:opacity-100',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2 focus-visible:opacity-100',
             )}
             aria-label={`Launch ${tool.name}`}
           >
