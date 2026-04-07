@@ -41,7 +41,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
 
   if (!tool) {
     return (
-      <div className="max-w-md mx-auto py-16 flex items-center gap-2 text-slate-400">
+      <div className="max-w-md mx-auto py-16 flex items-center gap-2 text-[#94a3b8]">
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
         <span className="text-sm">Loading…</span>
       </div>
@@ -59,23 +59,23 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
       <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight mb-2">
         Tool submitted!
       </h1>
-      <p className="text-sm text-slate-500 mb-1">
-        <span className="font-semibold text-slate-700">{tool.name}</span> is now pending admin review.
+      <p className="text-sm text-[#64748b] mb-1">
+        <span className="font-semibold text-[#040B4D]">{tool.name}</span> is now pending admin review.
       </p>
-      <p className="text-sm text-slate-400 mb-8">
-        You&apos;ll see it go live in <span className="text-slate-500 font-medium">My Tools</span> once approved.
+      <p className="text-sm text-[#94a3b8] mb-8">
+        You&apos;ll see it go live in <span className="text-[#64748b] font-medium">My tools</span> once approved.
       </p>
 
       {/* ── Reserved URL pill ─────────────────────────────────────── */}
       {platformUrl && (
-        <div className="w-full flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 mb-8">
-          <ExternalLink className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" aria-hidden />
-          <span className="text-sm font-mono text-slate-700 flex-1 min-w-0 truncate">
+        <div className="w-full flex items-center gap-2 bg-[#f4f3f3] border border-[#e2e8f0] rounded-xl px-4 py-3 mb-8">
+          <ExternalLink className="h-3.5 w-3.5 text-[#94a3b8] flex-shrink-0" aria-hidden />
+          <span className="text-sm font-mono text-[#64748b] flex-1 min-w-0 truncate">
             {platformUrl}
           </span>
           <button
             onClick={copyUrl}
-            className="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors"
+            className="flex-shrink-0 text-[#94a3b8] hover:text-[#64748b] transition-colors"
             aria-label="Copy URL"
           >
             {copied
@@ -103,7 +103,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
         </Button>
         <Link
           href="/dashboard/register/identify"
-          className="text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors"
+          className="text-sm font-medium text-[#94a3b8] hover:text-[#64748b] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
         >
           Register another
         </Link>

@@ -146,7 +146,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
         <div className="flex items-center gap-2">
           <div className="relative flex-1 min-w-0 max-w-md">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94a3b8] pointer-events-none"
               aria-hidden
             />
             <Input
@@ -155,7 +155,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
               placeholder="Search tools, teams, or owners…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-9 h-10 text-sm placeholder:text-slate-400 transition-all"
+              className="pl-9 h-10 text-sm placeholder:text-[#94a3b8] transition-all"
               aria-label="Search tools"
             />
           </div>
@@ -163,10 +163,10 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           <button
             onClick={() => setFiltersOpen((v) => !v)}
             aria-expanded={filtersOpen}
-            className={`inline-flex items-center gap-2 h-10 px-3.5 rounded-lg border text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+            className={`inline-flex items-center gap-2 h-10 px-3.5 rounded-lg border text-sm font-medium font-display transition-colors duration-150 whitespace-nowrap flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 ${
               filtersOpen || activeFilterCount > 0
                 ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
-                : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
+                : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#94a3b8] hover:text-[#040B4D]'
             }`}
           >
             <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />
@@ -181,7 +181,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-slate-400 hover:text-slate-600 transition-colors whitespace-nowrap underline underline-offset-2 flex-shrink-0"
+              className="text-xs text-[#94a3b8] hover:text-[#64748b] transition-colors whitespace-nowrap underline underline-offset-2 flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
             >
               Clear
             </button>
@@ -229,10 +229,10 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
 
             <button
               onClick={() => setMineOnly((v) => !v)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-md text-xs font-medium font-display border transition-colors duration-150 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 ${
                 mineOnly
                   ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
-                  : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
+                  : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#94a3b8] hover:text-[#040B4D]'
               }`}
               aria-pressed={mineOnly}
             >
@@ -244,7 +244,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
 
       {/* ── Results count (filters active) ──────────────────────────── */}
       {hasFilters && (
-        <p className="text-xs text-slate-400 mb-4">
+        <p className="text-xs text-[#94a3b8] mb-4">
           {filtered.length === 0
             ? 'No tools match your filters'
             : `${filtered.length} of ${tools.length} tool${tools.length !== 1 ? 's' : ''}`}
@@ -261,14 +261,14 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
               {/* Section divider with embedded label */}
               <div className="flex items-center gap-3 mb-5">
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <div className="h-5 w-5 rounded-md bg-[#2605EF]/10 flex items-center justify-center">
+                  <div className="h-5 w-5 rounded-full bg-[#2605EF]/10 flex items-center justify-center">
                     <Zap className="h-3 w-3 text-[#2605EF]" aria-hidden />
                   </div>
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em]">
+                  <span className="text-[11px] font-bold font-display text-[#94a3b8] uppercase tracking-[0.14em]">
                     Ready to launch
                   </span>
                 </div>
-                <div className="flex-1 h-px bg-slate-100" />
+                <div className="flex-1 h-px bg-[#e2e8f0]" />
               </div>
 
               {/* Staggered card grid */}
@@ -291,17 +291,17 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
             <section>
               {/* Section divider with count badge */}
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em] flex-shrink-0">
+                <span className="text-[11px] font-bold font-display text-[#94a3b8] uppercase tracking-[0.14em] flex-shrink-0">
                   {featuredTools.length > 0 ? 'All tools' : 'Tools'}
                 </span>
-                <span className="inline-flex items-center justify-center h-4 min-w-[1rem] rounded-full bg-slate-100 text-[10px] font-bold text-slate-400 px-1 flex-shrink-0 tabular-nums">
+                <span className="inline-flex items-center justify-center h-4 min-w-[1rem] rounded-full bg-[#f4f3f3] text-[10px] font-bold text-[#94a3b8] px-1 flex-shrink-0 tabular-nums">
                   {listTools.length}
                 </span>
-                <div className="flex-1 h-px bg-slate-100" />
+                <div className="flex-1 h-px bg-[#e2e8f0]" />
               </div>
 
               {/* Premium unified panel */}
-              <div className="rounded-xl border border-slate-100 overflow-hidden bg-white shadow-[0_1px_4px_rgba(4,11,77,0.04)]">
+              <div className="rounded-xl border border-[#e2e8f0] overflow-hidden bg-white shadow-card">
                 {listTools.map((tool) => (
                   <ToolRow key={tool.id} tool={tool} />
                 ))}
@@ -313,29 +313,29 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
       ) : tools.length === 0 ? (
         /* Empty state — no tools at all */
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#eeeeff] to-[#d5d4ff] flex items-center justify-center mb-5 shadow-xs">
+          <div className="h-14 w-14 rounded-full bg-gradient-to-br from-[#eeeeff] to-[#d5d4ff] flex items-center justify-center mb-5 shadow-xs">
             <Wrench className="h-7 w-7 text-[#2605EF]" aria-hidden />
           </div>
           <h3 className="font-display font-bold text-[17px] text-[#040B4D] mb-2">
             Your toolkit is empty
           </h3>
-          <p className="text-sm text-slate-400 mb-6 max-w-xs leading-relaxed">
+          <p className="text-sm text-[#64748b] mb-6 max-w-xs leading-relaxed">
             Register your first internal tool and make it available to the CleverProfits team.
           </p>
           <Button asChild size="sm">
             <Link href="/dashboard/register">
               <PlusCircle className="h-3.5 w-3.5" aria-hidden />
-              Register Tool
+              Register tool
             </Link>
           </Button>
         </div>
       ) : (
         /* Empty state — filters returned nothing */
         <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="text-sm text-slate-500 mb-2">No tools match your filters.</p>
+          <p className="text-sm text-[#64748b] mb-2">No tools match your filters.</p>
           <button
             onClick={clearFilters}
-            className="text-sm text-[#2605EF] hover:text-[#1e04cc] underline underline-offset-2 transition-colors"
+            className="text-sm text-[#2605EF] hover:text-[#1e04cc] underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
           >
             Clear all filters
           </button>

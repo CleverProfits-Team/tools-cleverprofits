@@ -104,15 +104,15 @@ function SummaryCard({
   color: string
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
+    <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-5">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</p>
-        <div className={`h-8 w-8 rounded-lg flex items-center justify-center ${color}`}>
+        <p className="text-xs font-semibold font-display text-[#94a3b8] uppercase tracking-widest">{label}</p>
+        <div className={`h-8 w-8 rounded-full flex items-center justify-center ${color}`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <p className="text-3xl font-bold text-slate-900 tabular-nums">{value}</p>
-      <p className="text-xs text-slate-400 mt-1">{description}</p>
+      <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">{value}</p>
+      <p className="text-xs text-[#94a3b8] mt-1">{description}</p>
     </div>
   )
 }
@@ -125,20 +125,20 @@ function DistributionBar({
   colorClass: string
 }) {
   if (rows.length === 0) {
-    return <p className="text-sm text-slate-400 py-4 text-center">No data yet</p>
+    return <p className="text-sm text-[#94a3b8] py-4 text-center">No data yet</p>
   }
   return (
     <div className="space-y-2.5">
       {rows.map(({ name, count }) => (
         <div key={name} className="flex items-center gap-3">
-          <span className="text-sm text-slate-700 capitalize w-36 flex-shrink-0 truncate">{name}</span>
-          <div className="flex-1 bg-slate-100 rounded-full h-2">
+          <span className="text-sm text-[#64748b] capitalize w-36 flex-shrink-0 truncate">{name}</span>
+          <div className="flex-1 bg-[#f4f3f3] rounded-full h-2">
             <div
               className={`h-2 rounded-full ${colorClass}`}
               style={{ width: `${Math.round((count / maxCount) * 100)}%` }}
             />
           </div>
-          <span className="text-xs text-slate-400 w-6 text-right tabular-nums">{count}</span>
+          <span className="text-xs text-[#94a3b8] w-6 text-right tabular-nums">{count}</span>
         </div>
       ))}
     </div>
@@ -159,7 +159,7 @@ export default async function InsightsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Insights</h1>
-        <p className="text-sm text-slate-500 mt-1">Organizational intelligence — tool health, usage patterns, and gaps.</p>
+        <p className="text-sm text-[#64748b] mt-1">Organizational intelligence — tool health, usage patterns, and gaps.</p>
       </div>
 
       {/* Summary cards */}
@@ -179,7 +179,7 @@ export default async function InsightsPage() {
           color="bg-orange-50 text-orange-500"
         />
         <SummaryCard
-          label="Overlap Clusters"
+          label="Overlap clusters"
           value={overlapClusters.length}
           description="AI-flagged duplicates"
           icon={Layers}
@@ -190,61 +190,61 @@ export default async function InsightsPage() {
           value={frameworkRows.length}
           description="distinct tech detected"
           icon={Cpu}
-          color="bg-blue-50 text-blue-500"
+          color="bg-[#eeeeff] text-[#2605EF]"
         />
       </div>
 
       {/* Category + Framework distributions */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <GitBranch className="h-4 w-4 text-slate-400" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-900">Tool Categories</h2>
+            <GitBranch className="h-4 w-4 text-[#94a3b8]" aria-hidden />
+            <h2 className="text-sm font-semibold font-display text-[#040B4D]">Tool categories</h2>
           </div>
           <DistributionBar rows={categoryRows} maxCount={maxCategoryCount} colorClass="bg-[#2605EF]" />
         </div>
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <Cpu className="h-4 w-4 text-slate-400" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-900">Frameworks & Tech</h2>
+            <Cpu className="h-4 w-4 text-[#94a3b8]" aria-hidden />
+            <h2 className="text-sm font-semibold font-display text-[#040B4D]">Frameworks &amp; tech</h2>
           </div>
           <DistributionBar rows={frameworkRows} maxCount={maxFrameworkCount} colorClass="bg-violet-500" />
         </div>
       </div>
 
       {/* Abandoned tools */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+      <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-6">
         <div className="flex items-center gap-2 mb-1">
           <TrendingDown className="h-4 w-4 text-amber-500" aria-hidden />
-          <h2 className="text-sm font-semibold text-slate-900">Abandoned Tools</h2>
+          <h2 className="text-sm font-semibold font-display text-[#040B4D]">Abandoned tools</h2>
           {abandonedTools.length > 0 && (
             <span className="ml-auto text-xs text-amber-600 font-medium bg-amber-50 rounded-full px-2 py-0.5">
               {abandonedTools.length} tools
             </span>
           )}
         </div>
-        <p className="text-xs text-slate-400 mb-4">Active tools with no proxy hits in the last 30 days</p>
+        <p className="text-xs text-[#94a3b8] mb-4">Active tools with no proxy hits in the last 30 days</p>
 
         {abandonedTools.length === 0 ? (
-          <p className="text-sm text-slate-400 py-4 text-center">All active tools have recent activity.</p>
+          <p className="text-sm text-[#94a3b8] py-4 text-center">All active tools have recent activity.</p>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-[#e2e8f0]/60">
             {abandonedTools.map((tool) => (
               <div key={tool.id} className="py-3 flex items-center gap-4">
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/dashboard/admin/tools/${tool.id}`}
-                    className="text-sm font-medium text-slate-800 hover:text-[#2605EF] hover:underline"
+                    className="text-sm font-semibold font-display text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
                   >
                     {tool.name}
                   </Link>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-[#94a3b8] mt-0.5">
                     {tool.team ? `Team: ${tool.team}` : 'No team'} · {tool.createdByName} · since {formatDate(tool.createdAt)}
                   </p>
                 </div>
                 <Link
                   href={`/dashboard/admin/tools/${tool.id}`}
-                  className="text-xs font-medium text-slate-400 hover:text-[#2605EF] flex-shrink-0"
+                  className="text-xs font-medium text-[#94a3b8] hover:text-[#2605EF] transition-colors flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
                 >
                   Review →
                 </Link>
@@ -255,29 +255,29 @@ export default async function InsightsPage() {
       </div>
 
       {/* Ownerless tools */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+      <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-6">
         <div className="flex items-center gap-2 mb-1">
           <Users className="h-4 w-4 text-orange-500" aria-hidden />
-          <h2 className="text-sm font-semibold text-slate-900">Ownerless Tools</h2>
+          <h2 className="text-sm font-semibold font-display text-[#040B4D]">Ownerless tools</h2>
           {ownerlessTools.length > 0 && (
             <span className="ml-auto text-xs text-orange-600 font-medium bg-orange-50 rounded-full px-2 py-0.5">
               {ownerlessTools.length} tools
             </span>
           )}
         </div>
-        <p className="text-xs text-slate-400 mb-4">Active or pending tools with no team assigned</p>
+        <p className="text-xs text-[#94a3b8] mb-4">Active or pending tools with no team assigned</p>
 
         {ownerlessTools.length === 0 ? (
-          <p className="text-sm text-slate-400 py-4 text-center">All tools have a team assigned.</p>
+          <p className="text-sm text-[#94a3b8] py-4 text-center">All tools have a team assigned.</p>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-[#e2e8f0]/60">
             {ownerlessTools.map((tool) => (
               <div key={tool.id} className="py-3 flex items-center gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/dashboard/admin/tools/${tool.id}`}
-                      className="text-sm font-medium text-slate-800 hover:text-[#2605EF] hover:underline"
+                      className="text-sm font-semibold font-display text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
                     >
                       {tool.name}
                     </Link>
@@ -287,13 +287,13 @@ export default async function InsightsPage() {
                       {tool.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-[#94a3b8] mt-0.5">
                     {tool.createdByName} ({tool.createdByEmail})
                   </p>
                 </div>
                 <Link
                   href={`/dashboard/tools/${tool.id}/edit`}
-                  className="text-xs font-medium text-[#2605EF] hover:underline flex-shrink-0"
+                  className="text-xs font-medium text-[#2605EF] hover:underline flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
                 >
                   Assign team →
                 </Link>
@@ -305,30 +305,30 @@ export default async function InsightsPage() {
 
       {/* Overlap clusters */}
       {overlapClusters.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-6">
           <div className="flex items-center gap-2 mb-1">
             <AlertTriangle className="h-4 w-4 text-violet-500" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-900">Potential Overlap Clusters</h2>
+            <h2 className="text-sm font-semibold font-display text-[#040B4D]">Potential overlap clusters</h2>
             <span className="ml-auto text-xs text-violet-600 font-medium bg-violet-50 rounded-full px-2 py-0.5">
               {overlapClusters.length} tools
             </span>
           </div>
-          <p className="text-xs text-slate-400 mb-4">Tools that AI flagged as potentially duplicating existing tools</p>
-          <div className="divide-y divide-slate-100">
+          <p className="text-xs text-[#94a3b8] mb-4">Tools that AI flagged as potentially duplicating existing tools</p>
+          <div className="divide-y divide-[#e2e8f0]/60">
             {overlapClusters.map((tool) => (
               <div key={tool.id} className="py-3">
                 <div className="flex items-center gap-3 mb-1">
                   <Link
                     href={`/dashboard/admin/tools/${tool.id}`}
-                    className="text-sm font-medium text-slate-800 hover:text-[#2605EF] hover:underline"
+                    className="text-sm font-semibold font-display text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
                   >
                     {tool.name}
                   </Link>
-                  <span className="text-xs text-slate-400">may overlap with:</span>
+                  <span className="text-xs text-[#94a3b8]">may overlap with:</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {tool.overlaps.map((name, i) => (
-                    <span key={i} className="text-xs bg-violet-50 text-violet-700 rounded-md px-2 py-0.5 font-medium">
+                    <span key={i} className="text-xs bg-violet-50 text-violet-700 rounded-full px-2 py-0.5 font-medium">
                       {name}
                     </span>
                   ))}

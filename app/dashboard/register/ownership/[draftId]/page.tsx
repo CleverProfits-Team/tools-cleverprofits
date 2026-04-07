@@ -34,12 +34,12 @@ function SectionDivider({ label, icon: Icon }: { label: string; icon: React.Elem
   return (
     <div className="flex items-center gap-3 pt-1">
       <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="h-5 w-5 rounded-md bg-slate-100 flex items-center justify-center">
-          <Icon className="h-3 w-3 text-slate-500" aria-hidden />
+        <div className="h-5 w-5 rounded-full bg-[#f4f3f3] flex items-center justify-center">
+          <Icon className="h-3 w-3 text-[#94a3b8]" aria-hidden />
         </div>
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.12em]">{label}</span>
+        <span className="text-[11px] font-bold font-display text-[#94a3b8] uppercase tracking-[0.12em]">{label}</span>
       </div>
-      <div className="flex-1 h-px bg-slate-100" />
+      <div className="flex-1 h-px bg-[#e2e8f0]" />
     </div>
   )
 }
@@ -128,7 +128,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
       }
       router.push(`/dashboard/register/analyzing/${draftId}`)
     } catch {
-      setServerErr('Network error. Please try again.')
+      setServerErr('Network error. Check your connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -148,10 +148,10 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
       )}
 
       {draft && (
-        <div className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 mb-6">
+        <div className="flex items-center gap-3 rounded-xl bg-[#f4f3f3] border border-[#e2e8f0] px-4 py-3 mb-6">
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[#040B4D] truncate">{draft.name}</p>
-            <p className="text-xs text-slate-400 font-mono truncate">{draft.externalUrl}</p>
+            <p className="text-xs text-[#94a3b8] font-mono truncate">{draft.externalUrl}</p>
           </div>
           <ExternalLink className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" aria-hidden />
         </div>
@@ -162,7 +162,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
         {/* ── Product owner ──────────────────────────────────────────── */}
         <div className="space-y-4">
           <SectionDivider label="Product owner" icon={User} />
-          <p className="text-xs text-slate-400 -mt-1">
+          <p className="text-xs text-[#94a3b8] -mt-1">
             The person responsible for this tool's direction and purpose. Pre-filled with your account — edit if someone else owns it.
           </p>
           <div className="grid grid-cols-2 gap-4">
@@ -196,15 +196,15 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
         {/* ── Maintainer ─────────────────────────────────────────────── */}
         <div className="space-y-4">
           <SectionDivider label="Maintainer" icon={Wrench} />
-          <p className="text-xs text-slate-400 -mt-1">
+          <p className="text-xs text-[#94a3b8] -mt-1">
             The person responsible for keeping this tool running and up to date.{' '}
-            <span className="text-slate-300">Optional — leave blank if the owner maintains it.</span>
+            <span className="text-[#e2e8f0]">Optional — leave blank if the owner maintains it.</span>
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="maintainerName">
                 Name{' '}
-                <span className="font-normal text-slate-400">(optional)</span>
+                <span className="font-normal text-[#94a3b8]">(optional)</span>
               </Label>
               <Input
                 id="maintainerName"
@@ -217,7 +217,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
             <div>
               <Label htmlFor="maintainerEmail">
                 Email{' '}
-                <span className="font-normal text-slate-400">(optional)</span>
+                <span className="font-normal text-[#94a3b8]">(optional)</span>
               </Label>
               <Input
                 id="maintainerEmail"
@@ -256,7 +256,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
             <div>
               <Label htmlFor="team">
                 Team{' '}
-                <span className="font-normal text-slate-400">(optional)</span>
+                <span className="font-normal text-[#94a3b8]">(optional)</span>
               </Label>
               <Input
                 id="team"
@@ -274,7 +274,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
           'flex items-start gap-3 rounded-xl border p-4 cursor-pointer transition-all duration-150',
           isExp
             ? 'border-amber-300 bg-amber-50'
-            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50',
+            : 'border-[#e2e8f0] bg-white hover:border-[#94a3b8] hover:bg-[#f4f3f3]/50',
         )}>
           <input
             type="checkbox"
@@ -283,10 +283,10 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
             className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#2605EF] focus:ring-[#2605EF]/25 cursor-pointer"
           />
           <div>
-            <p className={cn('text-sm font-semibold', isExp ? 'text-amber-700' : 'text-slate-700')}>
+            <p className={cn('text-sm font-semibold', isExp ? 'text-amber-700' : 'text-[#040B4D]')}>
               Mark as experimental
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-[#64748b] mt-0.5">
               Experimental tools are clearly labeled. Use this for prototypes or tools still in development.
             </p>
           </div>
@@ -299,7 +299,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
           </div>
         )}
 
-        <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#e2e8f0]">
           <Button type="submit" disabled={loading}>
             {loading && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {loading ? 'Saving…' : 'Continue to analysis'}

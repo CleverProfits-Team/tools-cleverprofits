@@ -48,7 +48,7 @@ interface FullDraft {
 function confidenceLabel(v: number): { text: string; color: string } {
   if (v >= 0.8) return { text: 'High',   color: 'text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200' }
   if (v >= 0.5) return { text: 'Medium', color: 'text-amber-700   bg-amber-50   ring-1 ring-amber-200'   }
-  return              { text: 'Low',    color: 'text-slate-500   bg-slate-100  ring-1 ring-slate-200'   }
+  return              { text: 'Low',    color: 'text-[#64748b]  bg-[#f4f3f3]  ring-1 ring-[#e2e8f0]'   }
 }
 
 function parseOverlapWarnings(raw: unknown): string[] {
@@ -59,8 +59,8 @@ function parseOverlapWarnings(raw: unknown): string[] {
 function SectionDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3 pt-2">
-      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</span>
-      <div className="flex-1 h-px bg-slate-100" />
+      <span className="text-xs font-semibold font-display uppercase tracking-wider text-[#94a3b8]">{label}</span>
+      <div className="flex-1 h-px bg-[#e2e8f0]" />
     </div>
   )
 }
@@ -85,19 +85,19 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
 
   return (
     <div className={cn(
-      'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5',
-      'focus-within:ring-2 focus-within:ring-[#d5d4ff] focus-within:border-[#2605EF] transition-colors',
+      'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-[#e2e8f0] bg-white px-2.5 py-1.5',
+      'focus-within:ring-2 focus-within:ring-[#2605EF]/25 focus-within:border-[#2605EF]/60 transition-colors',
     )}>
       {tags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+          className="inline-flex items-center gap-1 rounded-full bg-[#f4f3f3] px-2 py-0.5 text-xs font-medium text-[#64748b]"
         >
           {tag}
           <button
             type="button"
             onClick={() => onRemove(tag)}
-            className="text-slate-400 hover:text-slate-700 transition-colors"
+            className="text-[#94a3b8] hover:text-[#64748b] transition-colors"
             aria-label={`Remove ${tag}`}
           >
             <X className="h-2.5 w-2.5" aria-hidden />
@@ -115,7 +115,7 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
           }}
           onBlur={() => { if (inputValue.trim()) commit(inputValue) }}
           placeholder={tags.length === 0 ? 'Add tags… (Enter or comma)' : ''}
-          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-slate-300 py-0.5"
+          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[#94a3b8] py-0.5"
         />
       )}
     </div>
@@ -232,7 +232,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
 
       router.push(`/dashboard/register/success/${draftId}`)
     } catch {
-      setServerErr('Network error. Please try again.')
+      setServerErr('Network error. Check your connection and try again.')
     } finally {
       setSubmitting(false)
     }
@@ -242,7 +242,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
   if (loading) {
     return (
       <WizardShell currentStep={4} title="Review your tool" maxWidth="max-w-2xl">
-        <div className="flex items-center gap-2 text-slate-400 py-6">
+        <div className="flex items-center gap-2 text-[#94a3b8] py-6">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
           <span className="text-sm">Loading analysis results…</span>
         </div>
@@ -287,15 +287,15 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               </span>
             )}
             {aiCategory && (
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 capitalize">
+              <span className="rounded-full bg-[#f4f3f3] px-2 py-0.5 text-[11px] font-medium text-[#64748b] capitalize">
                 {aiCategory}
               </span>
             )}
             {aiFrameworkGuess && (
-              <span className="text-xs text-slate-500">{aiFrameworkGuess}</span>
+              <span className="text-xs text-[#64748b]">{aiFrameworkGuess}</span>
             )}
             {aiTechStack && aiTechStack !== aiFrameworkGuess && (
-              <span className="text-xs text-slate-400">{aiTechStack}</span>
+              <span className="text-xs text-[#94a3b8]">{aiTechStack}</span>
             )}
           </div>
         )}
@@ -335,7 +335,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <div>
             <Label htmlFor="summary">
               Summary{' '}
-              <span className="font-normal text-slate-400">(one sentence)</span>
+              <span className="font-normal text-[#94a3b8]">(one sentence)</span>
             </Label>
             <Input
               id="summary"
@@ -364,10 +364,10 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <SectionDivider label="Ownership" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Owner */}
-            <div className="rounded-lg border border-slate-200 p-3.5 space-y-3">
+            <div className="rounded-lg border border-[#e2e8f0] p-3.5 space-y-3">
               <div className="flex items-center gap-2">
-                <User className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Product owner</p>
+                <User className="h-3.5 w-3.5 text-[#94a3b8]" aria-hidden />
+                <p className="text-[11px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider">Product owner</p>
               </div>
               <div className="space-y-2">
                 <div>
@@ -396,15 +396,15 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               </div>
             </div>
             {/* Maintainer */}
-            <div className="rounded-lg border border-slate-200 p-3.5 space-y-3">
+            <div className="rounded-lg border border-[#e2e8f0] p-3.5 space-y-3">
               <div className="flex items-center gap-2">
-                <Wrench className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Maintainer</p>
+                <Wrench className="h-3.5 w-3.5 text-[#94a3b8]" aria-hidden />
+                <p className="text-[11px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider">Maintainer</p>
               </div>
               <div className="space-y-2">
                 <div>
                   <Label htmlFor="review-maintainerName" className="text-xs">
-                    Name <span className="font-normal text-slate-300">(optional)</span>
+                    Name <span className="font-normal text-[#94a3b8]">(optional)</span>
                   </Label>
                   <Input
                     id="review-maintainerName"
@@ -417,7 +417,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
                 </div>
                 <div>
                   <Label htmlFor="review-maintainerEmail" className="text-xs">
-                    Email <span className="font-normal text-slate-300">(optional)</span>
+                    Email <span className="font-normal text-[#94a3b8]">(optional)</span>
                   </Label>
                   <Input
                     id="review-maintainerEmail"
@@ -440,15 +440,15 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
             <SectionDivider label="AI Insights" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {aiObjective && (
-                <div className="rounded-lg bg-slate-50 border border-slate-200 px-3.5 py-3">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Objective</p>
-                  <p className="text-sm text-slate-700">{aiObjective}</p>
+                <div className="rounded-lg bg-[#f4f3f3] border border-[#e2e8f0] px-3.5 py-3">
+                  <p className="text-[10px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider mb-1">Objective</p>
+                  <p className="text-sm text-[#64748b]">{aiObjective}</p>
                 </div>
               )}
               {aiSuggestedUsers && (
-                <div className="rounded-lg bg-slate-50 border border-slate-200 px-3.5 py-3">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">For</p>
-                  <p className="text-sm text-slate-700">{aiSuggestedUsers}</p>
+                <div className="rounded-lg bg-[#f4f3f3] border border-[#e2e8f0] px-3.5 py-3">
+                  <p className="text-[10px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider mb-1">For</p>
+                  <p className="text-sm text-[#64748b]">{aiSuggestedUsers}</p>
                 </div>
               )}
             </div>
@@ -467,7 +467,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onAdd={(tag) => setTags((prev) => [...prev, tag])}
               onRemove={(tag) => setTags((prev) => prev.filter((t) => t !== tag))}
             />
-            <p className="text-xs text-slate-400 mt-1.5">
+            <p className="text-xs text-[#94a3b8] mt-1.5">
               Up to 10 tags. Press Enter or comma to add.
             </p>
           </div>
@@ -479,7 +479,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <div>
             <Label htmlFor="notes">
               Internal notes{' '}
-              <span className="font-normal text-slate-400">(optional)</span>
+              <span className="font-normal text-[#94a3b8]">(optional)</span>
             </Label>
             <Textarea
               id="notes"
@@ -488,7 +488,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
             />
-            <p className="text-xs text-slate-400 mt-1.5">Visible to platform admins only.</p>
+            <p className="text-xs text-[#94a3b8] mt-1.5">Visible to platform admins only.</p>
           </div>
         </div>
 
@@ -501,7 +501,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
         )}
 
         {/* ── Actions ──────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#e2e8f0]">
           <Button type="submit" disabled={submitting}>
             {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {submitting ? 'Submitting…' : 'Submit for review'}

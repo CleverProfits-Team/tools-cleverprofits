@@ -15,13 +15,13 @@ export function AdminSubNav({ pendingCount }: Props) {
     { href: '/dashboard/admin/tools',       label: 'Tools',       badge: pendingCount > 0 ? pendingCount : undefined },
     { href: '/dashboard/admin/users',       label: 'Users' },
     { href: '/dashboard/admin/invitations', label: 'Invitations' },
-    { href: '/dashboard/admin/audit',       label: 'Audit Log' },
+    { href: '/dashboard/admin/audit',       label: 'Audit log' },
     { href: '/dashboard/admin/analytics',   label: 'Analytics' },
     { href: '/dashboard/admin/insights',    label: 'Insights' },
   ]
 
   return (
-    <div className="flex gap-1 border-b border-slate-200 mb-6">
+    <div className="flex gap-1 border-b border-[#e2e8f0] mb-6">
       {tabs.map(({ href, label, badge }) => {
         const isActive = pathname.startsWith(href)
         return (
@@ -29,10 +29,10 @@ export function AdminSubNav({ pendingCount }: Props) {
             key={href}
             href={href}
             className={cn(
-              'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors',
+              'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium font-display border-b-2 -mb-px transition-colors duration-150',
               isActive
                 ? 'border-[#2605EF] text-[#2605EF]'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300',
+                : 'border-transparent text-[#64748b] hover:text-[#040B4D] hover:border-[#e2e8f0]',
             )}
           >
             {label}

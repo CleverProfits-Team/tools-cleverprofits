@@ -54,7 +54,7 @@
 
   body {
     height: 100%;
-    @apply bg-[#f9f9f9] text-[#1a1c1c];
+    @apply bg-[#f9f9f9] text-[#040B4D];
   }
 
   /* ── Typography system ────────────────────────────────────────────────────

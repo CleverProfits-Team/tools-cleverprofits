@@ -17,9 +17,9 @@ const buttonVariants = cva(
         primary:
           'bg-[#2605EF] text-white shadow-xs hover:bg-[#1e04cc] active:bg-[#1803b3]',
         secondary:
-          'bg-white text-slate-700 border border-slate-200 shadow-xs hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100',
+          'bg-white text-[#040B4D] border border-[#e2e8f0] shadow-xs hover:bg-[#f4f3f3] hover:border-[#cbd5e1] active:bg-[#e7e7e7]',
         ghost:
-          'text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200',
+          'text-[#64748b] hover:bg-[#f4f3f3] hover:text-[#040B4D] active:bg-[#e2e8f0]',
         destructive:
           'bg-red-600 text-white shadow-xs hover:bg-red-700 active:bg-red-800',
         link:

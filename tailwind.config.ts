@@ -20,11 +20,17 @@ const config: Config = {
         cp: {
           'royal-blue':    '#040B4D',
           'electric-blue': '#2605EF',
+          'mid-navy':      '#18197D',
           'dark-navy':     '#18197D',
           'navy':          '#1508AC',
           'navy-black':    '#0F0038',
           'grey':          '#D6D6D6',
           'light-grey':    '#E7E7E7',
+          'bg':            '#EEF2FB',
+          'surface-sub':   '#f4f3f3',
+          'border':        '#e2e8f0',
+          'text-muted':    '#94a3b8',
+          'text-secondary': '#64748b',
         },
         // Keep brand scale for backwards compat (now maps to CP electric blue)
         brand: {

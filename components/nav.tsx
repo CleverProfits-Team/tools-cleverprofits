@@ -18,7 +18,7 @@ const NAV_LINKS = [
 
 const ROLE_STYLES: Record<string, string> = {
   SUPER_ADMIN: 'bg-violet-100 text-violet-700',
-  ADMIN:       'bg-blue-100   text-blue-700',
+  ADMIN:       'bg-[#2605EF]/10 text-[#2605EF]',
   BUILDER:     'bg-amber-100  text-amber-700',
   VIEWER:      'bg-slate-100  text-slate-600',
 }

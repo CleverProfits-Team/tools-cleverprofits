@@ -36,18 +36,18 @@ export function WizardShell({
             <div key={step.id} className="flex items-start">
               <div className="flex flex-col items-center">
                 <div className={cn(
-                  'h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200',
+                  'h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold font-display transition-all duration-200',
                   done   && 'bg-[#2605EF] text-white',
                   active && 'bg-[#040B4D] text-white ring-4 ring-[#040B4D]/10',
-                  !done && !active && 'bg-slate-100 text-slate-400',
+                  !done && !active && 'bg-[#f4f3f3] text-[#94a3b8]',
                 )}>
                   {done ? <Check className="h-3.5 w-3.5" /> : step.id}
                 </div>
                 <span className={cn(
-                  'mt-1.5 text-[11px] font-semibold whitespace-nowrap',
+                  'mt-1.5 text-[11px] font-semibold font-display whitespace-nowrap',
                   done   && 'text-[#2605EF]',
                   active && 'text-[#040B4D]',
-                  !done && !active && 'text-slate-400',
+                  !done && !active && 'text-[#94a3b8]',
                 )}>
                   {step.label}
                 </span>
@@ -55,7 +55,7 @@ export function WizardShell({
               {i < STEPS.length - 1 && (
                 <div className={cn(
                   'mt-3.5 h-px w-10 sm:w-16 mx-3 transition-colors duration-200',
-                  done ? 'bg-[#2605EF]' : 'bg-slate-200',
+                  done ? 'bg-[#2605EF]' : 'bg-[#e2e8f0]',
                 )} />
               )}
             </div>
@@ -69,7 +69,7 @@ export function WizardShell({
           {title}
         </h1>
         {subtitle && (
-          <p className="text-sm text-slate-500 mt-1.5">{subtitle}</p>
+          <p className="text-sm text-[#64748b] mt-1.5">{subtitle}</p>
         )}
       </div>
 
