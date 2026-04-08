@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import {
-  Wrench, LogOut, PlusCircle, LayoutDashboard, ClipboardList,
+  LogOut, PlusCircle, LayoutDashboard, ClipboardList,
   ShieldCheck, Users, Mail, FileText, BarChart2, Sparkles,
   Menu, X,
 } from 'lucide-react'
@@ -27,7 +27,7 @@ const INTELLIGENCE_LINKS = [
   { href: '/dashboard/admin/analytics', label: 'Analytics',  icon: BarChart2 },
 ]
 
-const GOVERNANCE_LINKS: { href: string; label: string; icon: typeof Wrench; hasBadge?: true }[] = [
+const GOVERNANCE_LINKS: { href: string; label: string; icon: typeof ShieldCheck; hasBadge?: true }[] = [
   { href: '/dashboard/admin/tools',       label: 'Reviews',     icon: ShieldCheck, hasBadge: true },
   { href: '/dashboard/admin/users',       label: 'Users',        icon: Users    },
   { href: '/dashboard/admin/invitations', label: 'Invitations',  icon: Mail     },
@@ -310,17 +310,13 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   }, [])
 
   const Logo = () => (
-    <Link href="/dashboard" className="flex items-center gap-2.5 group">
-      <div className="h-8 w-8 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors flex-shrink-0">
-        <Wrench className="h-4 w-4 text-white" aria-hidden />
+    <Link href="/dashboard" className="flex items-center gap-3 group">
+      <div className="h-8 w-8 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:bg-[#1e04cc] transition-colors">
+        <span className="text-white font-bold text-sm select-none font-display">CP</span>
       </div>
       <div className="leading-none">
-        <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none">
-          CleverProfits
-        </p>
-        <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none">
-          Tools
-        </p>
+        <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none">CleverProfits</p>
+        <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none">Tools</p>
       </div>
     </Link>
   )

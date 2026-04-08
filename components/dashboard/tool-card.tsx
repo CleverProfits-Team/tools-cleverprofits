@@ -81,7 +81,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         {/* Name */}
         <Link
           href={`/tools/${tool.slug}`}
-          className="font-display font-bold text-[15.5px] leading-snug text-[#040B4D] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+          className="font-display font-semibold text-base leading-snug text-[#040B4D] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
         >
           {tool.name}
         </Link>

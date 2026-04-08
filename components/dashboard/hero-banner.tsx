@@ -58,11 +58,11 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             {firstName && (
-              <p className="text-white/40 text-[11px] font-medium uppercase tracking-[0.12em] mb-1.5">
+              <p className="text-xs font-display font-semibold tracking-widest uppercase text-[#2605EF] mb-1.5">
                 Welcome back, {firstName}
               </p>
             )}
-            <h1 className="font-display font-bold text-[28px] text-white tracking-tight leading-none">
+            <h1 className="font-display font-bold text-4xl text-white tracking-tight leading-none">
               Your tools
             </h1>
             <p className="text-white/45 text-sm mt-1.5">
@@ -83,28 +83,28 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         {totalCount > 0 && (
           <div className="flex items-stretch mt-7 pt-5 border-t border-white/[0.08]">
             <div className="pr-7">
-              <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
+              <p className="font-display font-bold text-5xl text-white tabular-nums leading-none">
                 {activeCount}
               </p>
-              <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Active</p>
+              <p className="text-xs font-display font-semibold tracking-widest uppercase text-white/50 mt-2">Active</p>
             </div>
 
-            <div className="w-px bg-white/[0.1] self-stretch" />
+            <div className="w-px bg-white/10 self-stretch" />
 
             <div className="px-7">
-              <p className={`text-[26px] font-display font-bold tabular-nums leading-none ${pendingCount > 0 ? 'text-amber-400' : 'text-white'}`}>
+              <p className={`font-display font-bold text-5xl tabular-nums leading-none ${pendingCount > 0 ? 'text-amber-400' : 'text-white'}`}>
                 {pendingCount}
               </p>
-              <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Pending</p>
+              <p className="text-xs font-display font-semibold tracking-widest uppercase text-white/50 mt-2">Pending</p>
             </div>
 
-            <div className="w-px bg-white/[0.1] self-stretch" />
+            <div className="w-px bg-white/10 self-stretch" />
 
             <div className="pl-7">
-              <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
+              <p className="font-display font-bold text-5xl text-white tabular-nums leading-none">
                 {totalCount}
               </p>
-              <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Total</p>
+              <p className="text-xs font-display font-semibold tracking-widest uppercase text-white/50 mt-2">Total</p>
             </div>
           </div>
         )}

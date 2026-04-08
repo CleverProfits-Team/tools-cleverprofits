@@ -8,6 +8,19 @@ import { StatusBadge } from '@/components/ui/badge'
 import type { SerializedTool } from '@/types'
 import type { AnalysisStatus, ToolStatus } from '@prisma/client'
 
+const PALETTE = [
+  '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#f43f5e',
+  '#0ea5e9', '#f97316', '#14b8a6', '#ec4899', '#6366f1',
+]
+
+function getAccentHex(name: string): string {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) | 0
+  }
+  return PALETTE[Math.abs(hash) % PALETTE.length]
+}
+
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', {
     month: 'short', day: 'numeric', year: 'numeric',
@@ -164,27 +177,32 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
             {filtered.length === 0 && (
               <p className="text-sm text-[#64748b] py-8 text-center">No {filter.toLowerCase()} tools.</p>
             )}
-            {filtered.map((tool) => (
+            {filtered.map((tool) => {
+              const accentHex = getAccentHex(tool.name)
+              return (
               <div
                 key={tool.id}
                 className={cn(
-                  'rounded-2xl border bg-white p-5 shadow-card transition-colors',
+                  'rounded-xl border bg-white p-5 shadow-card transition-colors border-l-[3px]',
                   tool.status === 'REJECTED' ? 'border-red-200' : 'border-[#e2e8f0]',
                 )}
+                style={{ borderLeftColor: accentHex }}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-0.5">
                       <h3 className="font-semibold font-display text-[#040B4D]">{tool.name}</h3>
-                      <StatusBadge status={tool.status} />
                     </div>
                     <p className="text-xs font-mono text-[#94a3b8] mt-0.5">{tool.slug}</p>
                     {tool.description && (
                       <p className="text-sm text-[#64748b] mt-2 line-clamp-2">{tool.description}</p>
                     )}
                   </div>
-                  <div className="flex-shrink-0 text-xs text-[#94a3b8] whitespace-nowrap">
-                    {formatDate(tool.createdAt)}
+                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                    <StatusBadge status={tool.status} />
+                    <span className="text-xs text-[#94a3b8] whitespace-nowrap">
+                      {formatDate(tool.createdAt)}
+                    </span>
                   </div>
                 </div>
 

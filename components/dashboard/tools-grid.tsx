@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
-import { Search, SlidersHorizontal, Wrench, Zap } from 'lucide-react'
+import { Search, SlidersHorizontal, Wrench, Zap, SearchX } from 'lucide-react'
 import { ToolCard } from '@/components/dashboard/tool-card'
 import { ToolRow } from '@/components/dashboard/tool-row'
 import { Input } from '@/components/ui/input'
@@ -264,7 +264,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
                   <div className="h-5 w-5 rounded-full bg-[#2605EF]/10 flex items-center justify-center">
                     <Zap className="h-3 w-3 text-[#2605EF]" aria-hidden />
                   </div>
-                  <span className="text-[11px] font-bold font-display text-[#94a3b8] uppercase tracking-[0.14em]">
+                  <span className="font-display font-semibold text-xs tracking-widest uppercase text-[#040B4D]/50">
                     Ready to launch
                   </span>
                 </div>
@@ -291,10 +291,10 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
             <section>
               {/* Section divider with count badge */}
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-[11px] font-bold font-display text-[#94a3b8] uppercase tracking-[0.14em] flex-shrink-0">
+                <span className="font-display font-semibold text-xs tracking-widest uppercase text-[#040B4D]/50 flex-shrink-0">
                   {featuredTools.length > 0 ? 'All tools' : 'Tools'}
                 </span>
-                <span className="inline-flex items-center justify-center h-4 min-w-[1rem] rounded-full bg-[#f4f3f3] text-[10px] font-bold text-[#94a3b8] px-1 flex-shrink-0 tabular-nums">
+                <span className="ml-0.5 inline-flex items-center justify-center rounded-full bg-[#2605EF]/10 text-[#2605EF] text-xs font-display font-semibold px-2 py-0.5 flex-shrink-0 tabular-nums">
                   {listTools.length}
                 </span>
                 <div className="flex-1 h-px bg-[#e2e8f0]" />
@@ -331,14 +331,13 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
         </div>
       ) : (
         /* Empty state — filters returned nothing */
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <p className="text-sm text-[#64748b] mb-2">No tools match your filters.</p>
-          <button
-            onClick={clearFilters}
-            className="text-sm text-[#2605EF] hover:text-[#1e04cc] underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
-          >
-            Clear all filters
-          </button>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="h-12 w-12 rounded-full bg-[#f4f3f3] flex items-center justify-center mb-4">
+            <SearchX className="h-5 w-5 text-[#94a3b8]" aria-hidden />
+          </div>
+          <p className="font-display font-semibold text-[#040B4D] text-sm mb-1">No tools found</p>
+          <p className="text-xs text-[#94a3b8] font-sans mb-4">Try adjusting your filters or search terms</p>
+          <Button size="sm" onClick={clearFilters}>Clear filters</Button>
         </div>
       )}
     </div>

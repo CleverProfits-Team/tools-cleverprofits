@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowRight, Clock } from 'lucide-react'
+import { ArrowRight, Clock, SearchX } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Select } from '@/components/ui/select'
 import type { SerializedTool } from '@/types'
@@ -57,7 +57,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
 
   const pendingCount = initialTools.filter((t) => t.status === 'PENDING').length
 
-  const thCls = 'px-4 py-3 text-left text-xs font-semibold font-display text-[#94a3b8] uppercase tracking-widest'
+  const thCls = 'px-4 py-3 text-left text-xs font-display font-semibold tracking-widest uppercase text-[#040B4D]/50 border-b border-[#e2e8f0] pb-3'
   const tdCls = 'px-4 py-3.5 text-sm text-[#040B4D] align-middle'
 
   return (
@@ -117,8 +117,12 @@ export function AdminToolsList({ initialTools, teams }: Props) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-[#e2e8f0] bg-white py-16 text-center">
-          <p className="text-sm text-[#94a3b8]">No tools match the current filters.</p>
+        <div className="rounded-2xl border border-[#e2e8f0] bg-white flex flex-col items-center justify-center py-20 text-center">
+          <div className="h-12 w-12 rounded-full bg-[#f4f3f3] flex items-center justify-center mb-4">
+            <SearchX className="h-5 w-5 text-[#94a3b8]" aria-hidden />
+          </div>
+          <p className="font-display font-semibold text-[#040B4D] text-sm mb-1">No tools found</p>
+          <p className="text-xs text-[#94a3b8] font-sans">Try adjusting your filters</p>
         </div>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-[#e2e8f0] bg-white shadow-card">

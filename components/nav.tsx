@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import {
-  Wrench, LogOut, PlusCircle, LayoutDashboard,
+  LogOut, PlusCircle, LayoutDashboard,
   ShieldAlert, ClipboardList, ChevronDown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -87,14 +87,14 @@ export function Nav({ pendingCount = 0 }: NavProps) {
 
           {/* ── Brand + nav ──────────────────────────────────────────── */}
           <div className="flex items-center gap-6 min-w-0">
-            <Link href="/dashboard" className="flex items-center gap-2.5 flex-shrink-0 group">
-              <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors">
-                <Wrench className="h-3.5 w-3.5 text-white" aria-hidden />
+            <Link href="/dashboard" className="flex items-center gap-3 flex-shrink-0 group">
+              <div className="h-7 w-7 rounded-full bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors flex-shrink-0">
+                <span className="text-white font-bold text-xs select-none font-display">CP</span>
               </div>
-              <span className="font-display font-bold text-sm tracking-tight hidden sm:block text-white">
-                CleverProfits{' '}
-                <span className="text-white/50 font-normal">Tools</span>
-              </span>
+              <div className="leading-none hidden sm:block">
+                <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none">CleverProfits</p>
+                <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none">Tools</p>
+              </div>
             </Link>
 
             <nav className="hidden sm:flex items-center gap-0.5" aria-label="Main">
