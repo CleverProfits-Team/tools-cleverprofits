@@ -11,10 +11,20 @@
     "db:migrate": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prepare": "husky"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
@@ -46,7 +56,10 @@
     "autoprefixer": "^10.4.19",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.35",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
     "postcss": "^8.4.39",
+    "prettier": "^3.8.2",
     "prisma": "^5.16.0",
     "typescript": "^5.5.3"
   }
