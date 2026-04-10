@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ArrowRight, Clock, SearchX } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Select } from '@/components/ui/select'
+import { StatusBadge } from '@/components/ui/badge'
 import type { SerializedTool } from '@/types'
 import type { ToolStatus } from '@prisma/client'
 
@@ -15,24 +16,6 @@ function formatDate(iso: string) {
     day: 'numeric',
     year: 'numeric',
   })
-}
-
-const STATUS_CONFIG: Record<ToolStatus, { label: string; dot: string; pill: string }> = {
-  DRAFT:    { label: 'Draft',    dot: 'bg-[#94a3b8]',   pill: 'bg-[#f4f3f3]  text-[#94a3b8]  ring-1 ring-[#94a3b8]/20'  },
-  ACTIVE:   { label: 'Active',   dot: 'bg-emerald-500', pill: 'bg-emerald-50  text-emerald-700 ring-1 ring-emerald-600/20' },
-  PENDING:  { label: 'Pending',  dot: 'bg-amber-500',   pill: 'bg-amber-50   text-amber-700   ring-1 ring-amber-600/20'   },
-  ARCHIVED: { label: 'Archived', dot: 'bg-[#64748b]',   pill: 'bg-[#f4f3f3]  text-[#64748b]  ring-1 ring-[#64748b]/20'  },
-  REJECTED: { label: 'Rejected', dot: 'bg-red-500',     pill: 'bg-red-50     text-red-700     ring-1 ring-red-600/20'     },
-}
-
-function StatusPill({ status }: { status: ToolStatus }) {
-  const { label, dot, pill } = STATUS_CONFIG[status]
-  return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium font-display whitespace-nowrap', pill)}>
-      <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', dot)} aria-hidden />
-      {label}
-    </span>
-  )
 }
 
 interface Props {
@@ -121,8 +104,8 @@ export function AdminToolsList({ initialTools, teams }: Props) {
           <div className="h-12 w-12 rounded-full bg-[#f4f3f3] flex items-center justify-center mb-4">
             <SearchX className="h-5 w-5 text-[#94a3b8]" aria-hidden />
           </div>
-          <p className="font-display font-semibold text-[#040B4D] text-sm mb-1">No tools found</p>
-          <p className="text-xs text-[#94a3b8] font-sans">Try adjusting your filters</p>
+          <p className="font-display font-semibold text-[#040B4D] text-sm mb-1">No tools match your filters</p>
+          <p className="text-xs text-[#94a3b8] font-sans">Adjust the filters above or clear them to see all tools</p>
         </div>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-[#e2e8f0] bg-white shadow-card">
@@ -161,7 +144,6 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                         </div>
                       )}
                       <div className="font-semibold font-display text-[#040B4D]">{tool.name}</div>
-                      <div className="text-xs text-[#94a3b8] font-mono mt-0.5">/{tool.slug}</div>
                     </td>
                     <td className={tdCls}>
                       <div className="font-medium text-[#040B4D]">{tool.createdByName}</div>
@@ -169,7 +151,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                     </td>
                     <td className={cn(tdCls, 'text-[#64748b]')}>{tool.team ?? <span className="text-[#94a3b8]">—</span>}</td>
                     <td className={tdCls}>
-                      <StatusPill status={tool.status} />
+                      <StatusBadge status={tool.status} />
                     </td>
                     <td className={cn(tdCls, 'text-[#94a3b8] hidden lg:table-cell whitespace-nowrap')}>
                       {formatDate(tool.createdAt)}

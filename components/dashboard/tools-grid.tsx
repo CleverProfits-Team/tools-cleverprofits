@@ -17,6 +17,7 @@ interface ToolsGridProps {
   tools: SerializedTool[]
   teams: string[]
   currentUserEmail: string
+  favoriteIds?: string[]
 }
 
 const STATUS_OPTIONS = [
@@ -35,7 +36,7 @@ const ACCESS_OPTIONS = [
 
 const FEATURED_COUNT = 3
 
-export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
+export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: ToolsGridProps) {
   const router       = useRouter()
   const pathname     = usePathname()
   const searchParams = useSearchParams()
@@ -279,7 +280,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
                     className="animate-in"
                     style={{ animationDelay: `${i * 55}ms` }}
                   >
-                    <ToolCard tool={tool} />
+                    <ToolCard tool={tool} isFavorited={favoriteIds.includes(tool.id)} />
                   </div>
                 ))}
               </div>
@@ -303,7 +304,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
               {/* Premium unified panel */}
               <div className="rounded-xl border border-[#e2e8f0] overflow-hidden bg-white shadow-card">
                 {listTools.map((tool) => (
-                  <ToolRow key={tool.id} tool={tool} />
+                  <ToolRow key={tool.id} tool={tool} isFavorited={favoriteIds.includes(tool.id)} />
                 ))}
               </div>
             </section>

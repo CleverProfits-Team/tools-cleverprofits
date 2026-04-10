@@ -202,6 +202,21 @@ model ToolVersion {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Favorite
+// Per-user tool bookmarks for quick access.
+// ─────────────────────────────────────────────────────────────────────────────
+model Favorite {
+  id        String   @id @default(cuid())
+  userEmail String
+  toolId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userEmail, toolId])
+  @@index([userEmail])
+  @@map("favorites")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // AuditLog
 // Immutable record of every significant action on the platform.
 // ─────────────────────────────────────────────────────────────────────────────

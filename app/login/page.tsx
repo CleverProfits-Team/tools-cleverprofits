@@ -64,13 +64,11 @@ function LoginContent() {
 
         {/* ── Logotype ─────────────────────────────────────────────────── */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-10 w-10 rounded-xl bg-[#040B4D] flex items-center justify-center flex-shrink-0 shadow-sm">
-            <span className="text-white font-display font-bold text-base tracking-tight select-none">
-              CP
-            </span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/cp-logo-circle.png" alt="CleverProfits" className="h-10 w-10 object-contain flex-shrink-0" />
           <div className="leading-none">
-            <p className="font-display font-bold text-[#040B4D] text-sm tracking-tight">CleverProfits</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/cp-logo-wordmark.png" alt="CleverProfits" className="h-4 object-contain" />
             <p className="text-[11px] text-slate-400 mt-0.5 tracking-widest uppercase">
               Tools Platform
             </p>
@@ -210,16 +208,6 @@ function GoogleLogo() {
 export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-hero-mesh px-4 relative overflow-hidden">
-      {/* Dot-grid texture */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.06]"
-        style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize: '22px 22px' }}
-        aria-hidden
-      />
-      {/* Decorative circles — echo the bubble language */}
-      <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
-      <div className="absolute -bottom-24 -left-24 w-[360px] h-[360px] rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
-      <div className="absolute top-1/3 right-1/4 w-[200px] h-[200px] rounded-full border border-white/[0.035] pointer-events-none" aria-hidden />
       <Suspense fallback={<LoginSkeleton />}>
         <LoginContent />
       </Suspense>

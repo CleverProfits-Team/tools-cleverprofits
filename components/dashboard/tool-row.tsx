@@ -1,40 +1,33 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Activity } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/badge'
+import { FavoriteButton } from '@/components/ui/favorite-button'
 import { cn } from '@/lib/utils'
+import { getToolAccent } from '@/lib/colors'
 import type { SerializedTool } from '@/types'
 
-// Shared accent palette — mirrors tool-card.tsx
-const PALETTE = [
-  { bg: 'bg-blue-500',    hex: '#3b82f6' },
-  { bg: 'bg-violet-500',  hex: '#8b5cf6' },
-  { bg: 'bg-emerald-500', hex: '#10b981' },
-  { bg: 'bg-amber-500',   hex: '#f59e0b' },
-  { bg: 'bg-rose-500',    hex: '#f43f5e' },
-  { bg: 'bg-sky-500',     hex: '#0ea5e9' },
-  { bg: 'bg-orange-500',  hex: '#f97316' },
-  { bg: 'bg-teal-500',    hex: '#14b8a6' },
-  { bg: 'bg-pink-500',    hex: '#ec4899' },
-  { bg: 'bg-indigo-500',  hex: '#6366f1' },
-]
-
-function getAccent(name: string) {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = (hash * 31 + name.charCodeAt(i)) | 0
-  }
-  return PALETTE[Math.abs(hash) % PALETTE.length]
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime()
+  const minutes = Math.floor(diff / 60000)
+  if (minutes < 1) return 'just now'
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days < 7) return `${days}d ago`
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 interface ToolRowProps {
   tool: SerializedTool
+  isFavorited?: boolean
 }
 
-export function ToolRow({ tool }: ToolRowProps) {
+export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
   const isActive = tool.status === 'ACTIVE'
-  const accent   = getAccent(tool.name)
+  const accent   = getToolAccent(tool.name)
   const initial  = tool.name.charAt(0).toUpperCase()
 
   return (
@@ -66,19 +59,16 @@ export function ToolRow({ tool }: ToolRowProps) {
         {initial}
       </div>
 
+      <FavoriteButton toolId={tool.id} initialFavorited={isFavorited} className="flex-shrink-0" />
+
       {/* Name + description */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2 flex-wrap">
-          <Link
-            href={`/tools/${tool.slug}`}
-            className="font-semibold text-[13px] text-[#040B4D] hover:text-[#2605EF] transition-colors leading-tight focus-ring rounded focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
-          >
-            {tool.name}
-          </Link>
-          <span className="hidden sm:inline text-[10.5px] font-mono text-[#94a3b8] leading-tight">
-            /{tool.slug}
-          </span>
-        </div>
+        <Link
+          href={`/tools/${tool.slug}`}
+          className="font-semibold text-[13px] text-[#040B4D] hover:text-[#2605EF] transition-colors leading-tight focus-ring rounded focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
+        >
+          {tool.name}
+        </Link>
         {tool.description && (
           <p className="text-[11.5px] text-[#64748b] mt-0.5 truncate max-w-lg">
             {tool.description}
@@ -102,6 +92,14 @@ export function ToolRow({ tool }: ToolRowProps) {
           </span>
         ))}
       </div>
+
+      {/* Last accessed */}
+      {tool.lastAccessedAt && (
+        <div className="hidden md:flex items-center gap-1 text-[11px] text-[#94a3b8] flex-shrink-0" title={`Last used ${timeAgo(tool.lastAccessedAt)}`}>
+          <Activity className="h-3 w-3" aria-hidden />
+          <span>{timeAgo(tool.lastAccessedAt)}</span>
+        </div>
+      )}
 
       {/* Status */}
       <div className="flex-shrink-0 hidden sm:block">

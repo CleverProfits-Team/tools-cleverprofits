@@ -19,6 +19,10 @@ export type SerializedTool = Omit<Tool, 'createdAt' | 'updatedAt'> & {
   createdAt: string
   updatedAt: string
   tags: Pick<Tag, 'id' | 'name'>[]
+  /** Last proxy hit timestamp (ISO string) — optional, enriched on dashboard */
+  lastAccessedAt?: string | null
+  /** Total proxy hits in last 7 days — optional, enriched on dashboard */
+  recentHitCount?: number
 }
 
 export type SerializedUser = Omit<User, 'createdAt' | 'updatedAt'> & {

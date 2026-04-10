@@ -12,7 +12,7 @@
   --cp-navy-black: #0F0038;
 
   /* Surfaces */
-  --cp-bg:          #f9f9f9;
+  --cp-bg:          #EEF2FB;
   --cp-surface:     #FFFFFF;
   --cp-surface-sub: #f4f3f3;
 
@@ -54,7 +54,7 @@
 
   body {
     height: 100%;
-    @apply bg-[#f9f9f9] text-[#040B4D];
+    @apply bg-[#EEF2FB] text-[#040B4D];
   }
 
   /* ── Typography system ────────────────────────────────────────────────────
@@ -102,16 +102,6 @@
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* ── Bubble rise animation ────────────────────────────────────────────────── */
-@keyframes bubble-rise {
-  0%   { transform: translateY(0)     translateX(0px)  scale(1);    opacity: 0;    }
-  8%   { opacity: 1; }
-  40%  { transform: translateY(-35vh) translateX(10px) scale(1.04); }
-  70%  { transform: translateY(-65vh) translateX(-8px) scale(0.98); }
-  92%  { opacity: 0.5; }
-  100% { transform: translateY(-96vh) translateX(4px)  scale(0.9);  opacity: 0;    }
-}
-
 @layer components {
   /* Reusable focus ring utility */
   .focus-ring {
@@ -123,25 +113,10 @@
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* ── Dot-grid texture ─────────────────────────────────────────────────────
-     Slightly blue-tinted so it harmonises with the dark sidebar. */
-  .bg-dot-grid {
-    background-color: #f9f9f9;
-    background-image: radial-gradient(circle, rgb(99 110 176 / 0.22) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
-
   /* ── Kinetic gradient (signature brand gradient) ──────────────────────────
      135° from primary #1800b0 → primary-container #2605ef */
   .kinetic-gradient {
     background: linear-gradient(135deg, #1800b0 0%, #2605ef 100%);
-  }
-
-  /* ── Glass panel (frosted floating element) ───────────────────────────── */
-  .glass-panel {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   /* ── Dark hero mesh ───────────────────────────────────────────────────────

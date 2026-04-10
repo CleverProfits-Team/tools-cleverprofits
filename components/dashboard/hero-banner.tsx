@@ -1,6 +1,5 @@
 'use client'
 
-import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { PlusCircle } from 'lucide-react'
 
@@ -12,47 +11,10 @@ interface HeroBannerProps {
 }
 
 export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }: HeroBannerProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [mouse, setMouse] = useState({ x: -1000, y: -1000 })
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-  }
-
-  function handleMouseLeave() {
-    setMouse({ x: -1000, y: -1000 })
-  }
-
   return (
     <div
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-8 bg-hero-mesh relative overflow-hidden"
     >
-      {/* Dot-grid overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.07]"
-        style={{
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',
-          backgroundSize: '22px 22px',
-        }}
-        aria-hidden
-      />
-      {/* Decorative circle outlines — echo the bubble language */}
-      <div className="absolute -top-20 right-8 w-72 h-72 rounded-full border border-white/[0.05] pointer-events-none" aria-hidden />
-      <div className="absolute -bottom-16 right-1/4 w-52 h-52 rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
-      <div className="absolute top-4 right-1/3 w-36 h-36 rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
-
-      {/* Mouse spotlight */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(500px circle at ${mouse.x}px ${mouse.y}px, rgba(99,60,255,0.22), rgba(38,5,239,0.06) 40%, transparent 65%)`,
-        }}
-        aria-hidden
-      />
 
       <div className="relative px-4 sm:px-6 lg:px-8 pt-9 pb-7">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

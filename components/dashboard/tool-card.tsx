@@ -1,39 +1,33 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowUpRight, User } from 'lucide-react'
+import { ArrowUpRight, User, Activity } from 'lucide-react'
 import { StatusBadge, AccessBadge, Badge } from '@/components/ui/badge'
+import { FavoriteButton } from '@/components/ui/favorite-button'
 import { cn } from '@/lib/utils'
+import { getToolAccent } from '@/lib/colors'
 import type { SerializedTool } from '@/types'
 
-const PALETTE = [
-  { bg: 'bg-blue-500',    hex: '#3b82f6' },
-  { bg: 'bg-violet-500',  hex: '#8b5cf6' },
-  { bg: 'bg-emerald-500', hex: '#10b981' },
-  { bg: 'bg-amber-500',   hex: '#f59e0b' },
-  { bg: 'bg-rose-500',    hex: '#f43f5e' },
-  { bg: 'bg-sky-500',     hex: '#0ea5e9' },
-  { bg: 'bg-orange-500',  hex: '#f97316' },
-  { bg: 'bg-teal-500',    hex: '#14b8a6' },
-  { bg: 'bg-pink-500',    hex: '#ec4899' },
-  { bg: 'bg-indigo-500',  hex: '#6366f1' },
-]
-
-function getAccent(name: string) {
-  let hash = 0
-  for (let i = 0; i < name.length; i++) {
-    hash = (hash * 31 + name.charCodeAt(i)) | 0
-  }
-  return PALETTE[Math.abs(hash) % PALETTE.length]
+function timeAgo(iso: string): string {
+  const diff = Date.now() - new Date(iso).getTime()
+  const minutes = Math.floor(diff / 60000)
+  if (minutes < 1) return 'just now'
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days < 7) return `${days}d ago`
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 interface ToolCardProps {
   tool: SerializedTool
+  isFavorited?: boolean
 }
 
-export function ToolCard({ tool }: ToolCardProps) {
+export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
   const isActive = tool.status === 'ACTIVE'
-  const accent   = getAccent(tool.name)
+  const accent   = getToolAccent(tool.name)
   const initial  = tool.name.charAt(0).toUpperCase()
 
   return (
@@ -61,7 +55,7 @@ export function ToolCard({ tool }: ToolCardProps) {
       {/* Body */}
       <div className="relative flex flex-col flex-1 p-5 pt-4">
 
-        {/* Icon + status */}
+        {/* Icon + status + favorite */}
         <div className="flex items-start justify-between mb-4">
           <div
             className={cn(
@@ -75,21 +69,19 @@ export function ToolCard({ tool }: ToolCardProps) {
           >
             {initial}
           </div>
-          <StatusBadge status={tool.status} />
+          <div className="flex items-center gap-1">
+            <FavoriteButton toolId={tool.id} initialFavorited={isFavorited} />
+            <StatusBadge status={tool.status} />
+          </div>
         </div>
 
         {/* Name */}
         <Link
           href={`/tools/${tool.slug}`}
-          className="font-display font-semibold text-base leading-snug text-[#040B4D] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+          className="font-display font-semibold text-base leading-snug text-[#040B4D] hover:text-[#2605EF] transition-colors mb-3 line-clamp-2 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
         >
           {tool.name}
         </Link>
-
-        {/* Slug */}
-        <p className="text-[11px] font-mono text-[#94a3b8] mb-3 tracking-wide">
-          /{tool.slug}
-        </p>
 
         {/* Description */}
         <p
@@ -117,9 +109,17 @@ export function ToolCard({ tool }: ToolCardProps) {
 
         {/* Footer */}
         <div className="mt-auto pt-3.5 border-t border-[#e2e8f0]/60 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 text-[11px] text-[#94a3b8] min-w-0">
-            <User className="h-3 w-3 flex-shrink-0" aria-hidden />
-            <span className="truncate">{tool.createdByName}</span>
+          <div className="flex items-center gap-3 text-[11px] text-[#94a3b8] min-w-0">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <User className="h-3 w-3 flex-shrink-0" aria-hidden />
+              <span className="truncate">{tool.createdByName}</span>
+            </div>
+            {tool.lastAccessedAt && (
+              <div className="flex items-center gap-1 flex-shrink-0" title={`Last used ${timeAgo(tool.lastAccessedAt)}`}>
+                <Activity className="h-3 w-3" aria-hidden />
+                <span>{timeAgo(tool.lastAccessedAt)}</span>
+              </div>
+            )}
           </div>
 
           {isActive ? (

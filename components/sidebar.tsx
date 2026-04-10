@@ -7,7 +7,7 @@ import { signOut, useSession } from 'next-auth/react'
 import {
   LogOut, PlusCircle, LayoutDashboard, ClipboardList,
   ShieldCheck, Users, Mail, FileText, BarChart2, Sparkles,
-  Menu, X,
+  Menu, X, Search,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -68,7 +68,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
         href={href}
         onClick={onClick}
         className={cn(
-          'group flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-[13px] transition-all duration-150 relative',
+          'group flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-[13px] transition-all duration-150 relative',
           isActive
             ? 'bg-white/[0.11] text-white font-medium'
             : 'text-white/60 hover:text-white hover:bg-white/[0.07]',
@@ -196,6 +196,21 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
         )}
       </nav>
 
+      {/* ── Cmd+K hint ────────────────────────────────────────── */}
+      <div className="px-3.5 pb-2">
+        <button
+          onClick={() => {
+            const event = new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true })
+            window.dispatchEvent(event)
+          }}
+          className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] transition-colors text-white/30 hover:text-white/50"
+        >
+          <Search className="h-3.5 w-3.5" aria-hidden />
+          <span className="text-[12px] flex-1 text-left">Search tools...</span>
+          <kbd className="text-[10px] bg-white/[0.08] rounded px-1.5 py-0.5 font-medium">⌘K</kbd>
+        </button>
+      </div>
+
       {/* ── User profile ────────────────────────────────────── */}
       {session?.user && (
         <div className="border-t border-white/[0.06] p-2.5">
@@ -248,27 +263,9 @@ interface SidebarProps {
   pendingCount?: number
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Bubble definitions — static so no hydration mismatch
-// ─────────────────────────────────────────────────────────────────────────────
-
-const BUBBLES = [
-  { id: 1, size: 56,  left: '14%',  bottom: '-60px', delay: 0,   duration: 13 },
-  { id: 2, size: 32,  left: '68%',  bottom: '-40px', delay: 2.5, duration: 9  },
-  { id: 3, size: 80,  left: '38%',  bottom: '-80px', delay: 5,   duration: 16 },
-  { id: 4, size: 24,  left: '82%',  bottom: '-30px', delay: 1.2, duration: 10 },
-  { id: 5, size: 48,  left: '22%',  bottom: '-50px', delay: 7,   duration: 12 },
-  { id: 6, size: 38,  left: '55%',  bottom: '-45px', delay: 3.8, duration: 11 },
-  { id: 7, size: 65,  left: '8%',   bottom: '-65px', delay: 9,   duration: 15 },
-  { id: 8, size: 28,  left: '73%',  bottom: '-35px', delay: 6,   duration: 8  },
-  { id: 9, size: 44,  left: '45%',  bottom: '-55px', delay: 11,  duration: 14 },
-]
-
 export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   const [mobileOpen,  setMobileOpen]  = useState(false)
   const [sidebarWidth, setSidebarWidth] = useState(252)
-  const [mouse, setMouse] = useState({ x: -1000, y: -1000 })
-
   const asideRef    = useRef<HTMLElement>(null)
   const isDragging  = useRef(false)
   const dragStartX  = useRef(0)
@@ -278,13 +275,6 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
 
   const initials = (session?.user?.name ?? 'U')
     .split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()
-
-  // ── Spotlight ──────────────────────────────────────────────────────────────
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-  }, [])
-  const handleMouseLeave = useCallback(() => setMouse({ x: -1000, y: -1000 }), [])
 
   // ── Resize ─────────────────────────────────────────────────────────────────
   const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
@@ -310,13 +300,13 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   }, [])
 
   const Logo = () => (
-    <Link href="/dashboard" className="flex items-center gap-3 group">
-      <div className="h-8 w-8 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:bg-[#1e04cc] transition-colors">
-        <span className="text-white font-bold text-sm select-none font-display">CP</span>
-      </div>
-      <div className="leading-none">
-        <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none">CleverProfits</p>
-        <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none">Tools</p>
+    <Link href="/dashboard" className="flex items-center gap-2.5 group">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/cp-logo-circle.png" alt="CleverProfits" className="w-8 h-8 object-contain flex-shrink-0" />
+      <div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/cp-logo-wordmark-white.png" alt="CleverProfits" className="h-4 object-contain" />
+        <p className="text-[10px] text-white/40 tracking-widest uppercase mt-0.5">Tools</p>
       </div>
     </Link>
   )
@@ -326,40 +316,9 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
       {/* ── Desktop sidebar ───────────────────────────── */}
       <aside
         ref={asideRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
         style={{ width: sidebarWidth }}
         className="hidden md:flex flex-col sticky top-0 h-screen flex-shrink-0 bg-[#040B4D] border-r border-white/[0.05] overflow-hidden relative"
       >
-        {/* Floating bubbles */}
-        {BUBBLES.map((b) => (
-          <div
-            key={b.id}
-            aria-hidden
-            style={{
-              position:        'absolute',
-              width:           b.size,
-              height:          b.size,
-              left:            b.left,
-              bottom:          b.bottom,
-              borderRadius:    '50%',
-              background:      'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.12), rgba(255,255,255,0.02) 55%, transparent 70%)',
-              border:          '1px solid rgba(255,255,255,0.07)',
-              animation:       `bubble-rise ${b.duration}s ${b.delay}s infinite ease-in-out`,
-              pointerEvents:   'none',
-            }}
-          />
-        ))}
-
-        {/* Mouse spotlight */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(320px circle at ${mouse.x}px ${mouse.y}px, rgba(99,60,255,0.22), rgba(38,5,239,0.06) 50%, transparent 70%)`,
-          }}
-        />
-
         {/* Logo */}
         <div className="h-[52px] flex items-center px-4 border-b border-white/[0.06] flex-shrink-0 relative z-10">
           <Logo />

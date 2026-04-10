@@ -1,6 +1,7 @@
 'use client'
 
 import { SessionProvider } from 'next-auth/react'
+import { ToastProvider } from '@/components/ui/toast'
 
 /**
  * Client-side provider tree.
@@ -10,5 +11,9 @@ import { SessionProvider } from 'next-auth/react'
  * Rendered once in app/layout.tsx.
  */
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <SessionProvider>{children}</SessionProvider>
+  return (
+    <SessionProvider>
+      <ToastProvider>{children}</ToastProvider>
+    </SessionProvider>
+  )
 }
