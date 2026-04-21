@@ -20,11 +20,7 @@ export const metadata: Metadata = {
  * server-side check as defense-in-depth. Any page under /dashboard will
  * immediately redirect to /login if the session is missing.
  */
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -43,12 +39,10 @@ export default async function DashboardLayout({
   ])
 
   return (
-    <div className="md:flex min-h-screen bg-[#EEF2FB]">
+    <div className="md:flex min-h-screen bg-[#F8F8FC]">
       <Sidebar pendingCount={pendingCount} />
       <div className="flex-1 min-w-0">
-        <main className="px-4 sm:px-6 lg:px-8 py-8 min-h-screen relative">
-          {children}
-        </main>
+        <main className="px-4 sm:px-6 lg:px-8 py-8 min-h-screen relative">{children}</main>
       </div>
       <CommandPalette tools={paletteTools} />
     </div>

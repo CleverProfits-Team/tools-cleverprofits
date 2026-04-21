@@ -12,7 +12,7 @@
   --cp-navy-black: #0f0038;
 
   /* Surfaces */
-  --cp-bg: #eef2fb;
+  --cp-bg: #f8f8fc;
   --cp-surface: #ffffff;
   --cp-surface-sub: #fafafa;
 
@@ -54,20 +54,20 @@
 
   body {
     height: 100%;
-    @apply bg-[#EEF2FB] text-[#040B4D];
+    @apply bg-[#F8F8FC] text-[#040B4D];
   }
 
   /* ── Typography system ────────────────────────────────────────────────────
-     Headers: Inter — tight tracking at display sizes
-     Body:    DM Sans — regular weight only, never 500+ (bleeds into Inter)
-     Labels:  Inter — holds up better than DM Sans at 11-12px */
+     Headers: Space Grotesk — tight tracking at display sizes
+     Body:    Inter — all body copy and UI text
+     Labels:  Space Grotesk Bold — holds up well at 11px with 0.1em tracking */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: var(--font-inter), ui-sans-serif, sans-serif;
+    font-family: var(--font-display), ui-sans-serif, sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -76,10 +76,10 @@
   label,
   th,
   .ui-label {
-    font-family: var(--font-inter), ui-sans-serif, sans-serif;
-    font-weight: 500;
-    font-size: 0.75rem;
-    letter-spacing: 0.03em;
+    font-family: var(--font-display), ui-sans-serif, sans-serif;
+    font-weight: 700;
+    font-size: 0.688rem;
+    letter-spacing: 0.1em;
   }
 
   /* Smooth focus outlines everywhere */

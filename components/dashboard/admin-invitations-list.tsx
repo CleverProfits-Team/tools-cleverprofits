@@ -81,7 +81,7 @@ export function AdminInvitationsList({ initialInvitations }: Props) {
   }
 
   const thCls =
-    'px-3 py-2 text-left text-xs font-medium font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest'
+    'px-5 py-4 text-left text-[10px] font-bold font-display text-white uppercase tracking-[0.10em]'
   const tdCls = 'px-3 py-3 text-sm text-[#040B4D] align-middle'
 
   if (invitations.length === 0) {
@@ -91,7 +91,7 @@ export function AdminInvitationsList({ initialInvitations }: Props) {
   return (
     <div className="overflow-x-auto rounded-2xl border border-[#E7E7E7] shadow-card">
       <table className="w-full text-left">
-        <thead className="bg-[#FAFAFA]/60 border-b border-[#E7E7E7]">
+        <thead className="bg-[#040B4D]">
           <tr>
             <th className={thCls}>Email</th>
             <th className={thCls}>Role</th>
@@ -107,7 +107,10 @@ export function AdminInvitationsList({ initialInvitations }: Props) {
             const isPending = inv.status === 'PENDING' && new Date(inv.expiresAt) >= new Date()
 
             return (
-              <tr key={inv.id} className="hover:bg-[#FAFAFA]/50 transition-colors duration-150">
+              <tr
+                key={inv.id}
+                className="hover:bg-[rgba(38,5,239,0.03)] transition-colors duration-150"
+              >
                 <td className={tdCls}>{inv.email}</td>
                 <td className={tdCls}>
                   <RoleBadge role={inv.role} />

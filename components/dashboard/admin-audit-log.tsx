@@ -104,7 +104,7 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
   })
 
   const thCls =
-    'px-3 py-2 text-left text-xs font-medium font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest'
+    'px-5 py-4 text-left text-[10px] font-bold font-display text-white uppercase tracking-[0.10em]'
   const tdCls = 'px-3 py-3 text-sm text-[#040B4D] align-top'
 
   return (
@@ -146,7 +146,7 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-[#E7E7E7] shadow-card">
           <table className="w-full text-left">
-            <thead className="bg-[#FAFAFA]/60 border-b border-[#E7E7E7]">
+            <thead className="bg-[#040B4D]">
               <tr>
                 <th className={thCls}>Time</th>
                 <th className={thCls}>Action</th>
@@ -157,7 +157,10 @@ export function AdminAuditLog({ logs }: { logs: Log[] }) {
             </thead>
             <tbody className="divide-y divide-[#E7E7E7]/60">
               {filtered.map((log) => (
-                <tr key={log.id} className="hover:bg-[#FAFAFA]/50 transition-colors duration-150">
+                <tr
+                  key={log.id}
+                  className="hover:bg-[rgba(38,5,239,0.03)] transition-colors duration-150"
+                >
                   <td className={cn(tdCls, 'whitespace-nowrap text-xs text-[rgba(4,11,77,0.40)]')}>
                     {formatDate(log.createdAt)}
                   </td>

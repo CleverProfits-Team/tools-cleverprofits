@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
-import { Inter, DM_Sans } from 'next/font/google'
+import { Space_Grotesk, Inter } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import './globals.css'
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-display',
   display: 'swap',
+  weight: ['400', '600', '700'],
 })
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-dm-sans',
+  variable: '--font-body',
   display: 'swap',
-  weight: ['400', '500'],
 })
 
 export const metadata: Metadata = {
@@ -25,14 +25,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`${inter.variable} ${dmSans.variable} font-sans h-full antialiased`}>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans h-full antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>

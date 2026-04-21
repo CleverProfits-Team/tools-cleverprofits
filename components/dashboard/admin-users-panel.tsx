@@ -156,7 +156,7 @@ export function AdminUsersPanel({ initialUsers, currentUserId, currentUserRole }
   }
 
   const thCls =
-    'px-3 py-2 text-left text-xs font-medium font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest'
+    'px-5 py-4 text-left text-[10px] font-bold font-display text-white uppercase tracking-[0.10em]'
   const tdCls = 'px-3 py-3 text-sm text-[#040B4D] align-top'
 
   return (
@@ -167,7 +167,7 @@ export function AdminUsersPanel({ initialUsers, currentUserId, currentUserRole }
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-[#E7E7E7] shadow-card">
           <table className="w-full text-left">
-            <thead className="bg-[#FAFAFA]/60 border-b border-[#E7E7E7]">
+            <thead className="bg-[#040B4D]">
               <tr>
                 <th className={thCls}>Name / Email</th>
                 <th className={thCls}>Role</th>
@@ -185,7 +185,7 @@ export function AdminUsersPanel({ initialUsers, currentUserId, currentUserRole }
                 return (
                   <tr
                     key={user.id}
-                    className="hover:bg-[#FAFAFA]/50 transition-colors duration-150"
+                    className="hover:bg-[rgba(38,5,239,0.03)] transition-colors duration-150"
                   >
                     <td className={tdCls}>
                       <div className="font-medium text-[#040B4D]">{user.name ?? '—'}</div>

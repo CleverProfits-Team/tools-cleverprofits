@@ -66,7 +66,7 @@ export default async function ToolInfoPage({
     : []
 
   return (
-    <div className="min-h-screen bg-[#EEF2FB]">
+    <div className="min-h-screen bg-[#F8F8FC]">
       <div className="max-w-2xl mx-auto px-4 py-12">
         {/* Back */}
         <div className="flex items-center justify-between mb-8">

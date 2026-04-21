@@ -34,7 +34,7 @@ export default async function EditToolPage({ params }: { params: { id: string } 
   }
 
   return (
-    <div className="min-h-screen bg-[#EEF2FB]">
+    <div className="min-h-screen bg-[#F8F8FC]">
       <div className="max-w-2xl mx-auto px-4 py-12">
         <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight mb-8">
           Edit tool

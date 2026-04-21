@@ -41,7 +41,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
   const pendingCount = initialTools.filter((t) => t.status === 'PENDING').length
 
   const thCls =
-    'px-4 py-3 text-left text-xs font-display font-semibold tracking-widest uppercase text-[#040B4D]/50 border-b border-[#E7E7E7] pb-3'
+    'px-5 py-4 text-left text-[10px] font-bold font-display text-white uppercase tracking-[0.10em]'
   const tdCls = 'px-4 py-3.5 text-sm text-[#040B4D] align-middle'
 
   return (
@@ -128,7 +128,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-[#E7E7E7] bg-white shadow-card">
           <table className="w-full text-left">
-            <thead className="border-b border-[#E7E7E7] bg-[#FAFAFA]/60">
+            <thead className="bg-[#040B4D]">
               <tr>
                 <th className={thCls}>Tool</th>
                 <th className={thCls}>Owner</th>
@@ -153,7 +153,9 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                     }}
                     className={cn(
                       'transition-colors duration-150 cursor-pointer focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2605EF]/30 outline-none',
-                      isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-[#FAFAFA]',
+                      isPending
+                        ? 'bg-amber-50/40 hover:bg-amber-50'
+                        : 'hover:bg-[rgba(38,5,239,0.03)]',
                     )}
                   >
                     {/* Left accent border via first cell */}

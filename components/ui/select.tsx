@@ -13,8 +13,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       <select
         ref={ref}
         className={cn(
-          'flex h-10 w-full appearance-none rounded-xl border-[1.5px] border-[#E7E7E7] bg-[#F4F4F4]',
-          'pl-4 pr-8 text-sm text-[#040B4D] font-sans',
+          'flex h-10 w-full appearance-none rounded-lg border-[1.5px] border-[#D6D6D6] bg-white',
+          'pl-4 pr-10 text-sm text-[#040B4D] font-sans',
           'transition-all duration-150',
           'hover:border-[#D6D6D6]',
           'focus:outline-none focus:border-[#2605EF] focus:shadow-[0_0_0_3px_rgba(38,5,239,0.10)]',

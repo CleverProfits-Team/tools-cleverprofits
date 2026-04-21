@@ -89,24 +89,24 @@ The product speaks as an **operational assistant** — not a technical tool.
 
 ### Surfaces
 
-- **Background**: `#EEF2FB` with subtle dot-grid texture
+- **Background**: `#F8F8FC` — brand-standard page background
 - **Sidebar**: `#040B4D` deep navy — the brand's "soul"
 - **Cards/panels**: white (`#FFFFFF`) with `rgba(4,11,77,x)` navy-tinted shadows
 - **Hero**: `bg-hero-mesh` — dark navy radial mesh, bleeds to the sidebar
 
 ### Typography — Tools Platform Spec
 
-- **Headers (h1–h6)**: **Inter** Bold — `letter-spacing: -0.02em`, `line-height: 1.2`
-- **Body / content**: **DM Sans** Regular (400 only — never 500+, bleeds into Inter territory)
-- **Small UI labels / table headers**: **Inter** Medium 500 — `font-size: 0.75rem`, `letter-spacing: 0.03em`
-- Note: aligned with brand design system — Inter for display/UI labels, DM Sans for body
+- **Headers (h1–h6)**: **Space Grotesk** Bold 700 — `letter-spacing: -0.02em`, `line-height: 1.2`
+- **Body / content**: **Inter** Regular 400 — all body copy, UI text, inputs
+- **Small UI labels / table headers**: **Space Grotesk** Bold 700 — `font-size: 0.688rem` (11px), `letter-spacing: 0.1em`
+- Note: aligned with canonical brand design system — Space Grotesk for display/headings, Inter for body
 - Scale principle: meaningful jumps between levels (skip steps, not increments)
 
 ### Color System
 
 - `#040B4D` — Royal Blue (primary surface, deepest brand)
 - `#2605EF` — Electric Blue (primary action, active states, accent)
-- `#EEF2FB` — Background (light, blue-tinted — not pure white)
+- `#F8F8FC` — Background (brand standard page background)
 - `#D5D4FF` — Brand 100 (soft highlight, selection states)
 - Per-tool accent colors: hashed from tool name → 10-color palette (blue, violet, emerald, amber, rose, sky, orange, teal, pink, indigo)
 - Functional: emerald (active), amber (pending), red (error/rejected), slate (archived)

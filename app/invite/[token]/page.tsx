@@ -31,7 +31,7 @@ export default async function InvitePage({ params }: { params: { token: string }
   const isInvalid = !invitation || invitation.status === 'USED' || invitation.expiresAt < new Date()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#EEF2FB] p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8F8FC] p-4">
       <div className="w-full max-w-md rounded-xl border border-[#E7E7E7] bg-white shadow-card p-8">
         {isInvalid ? (
           <>

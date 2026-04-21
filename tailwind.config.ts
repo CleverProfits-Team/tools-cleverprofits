@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-dm-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-inter)', 'ui-sans-serif', 'sans-serif'],
+        sans: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'ui-sans-serif', 'sans-serif'],
       },
       colors: {
         surface: '#FAFAFA',
@@ -24,7 +24,7 @@ const config: Config = {
           'navy-black': '#0F0038',
           grey: '#D6D6D6',
           'light-grey': '#E7E7E7',
-          bg: '#EEF2FB',
+          bg: '#F8F8FC',
           'surface-sub': '#FAFAFA',
           border: '#E7E7E7',
           'input-bg': '#F4F4F4',

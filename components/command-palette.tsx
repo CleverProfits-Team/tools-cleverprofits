@@ -181,7 +181,7 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedIndex(i)}
                       className={cn(
                         'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
-                        isSelected ? 'bg-[#EEF2FB]' : 'hover:bg-[#FAFAFA]',
+                        isSelected ? 'bg-[#F8F8FC]' : 'hover:bg-[#FAFAFA]',
                       )}
                     >
                       <div
@@ -231,7 +231,7 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={cn(
                         'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
-                        isSelected ? 'bg-[#EEF2FB]' : 'hover:bg-[#FAFAFA]',
+                        isSelected ? 'bg-[#F8F8FC]' : 'hover:bg-[#FAFAFA]',
                       )}
                     >
                       <div className="h-7 w-7 rounded-lg bg-[#FAFAFA] flex items-center justify-center flex-shrink-0">
