@@ -13,14 +13,18 @@ export default async function AdminInvitationsPage() {
     ...inv,
     createdAt: inv.createdAt.toISOString(),
     expiresAt: inv.expiresAt.toISOString(),
-    usedAt:    inv.usedAt?.toISOString() ?? null,
+    usedAt: inv.usedAt?.toISOString() ?? null,
   }))
 
   return (
     <div>
       <div className="mb-6">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Invitations</h1>
-        <p className="text-sm text-[#64748b] mt-1">Invite new team members and manage pending invitations.</p>
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
+          Invitations
+        </h1>
+        <p className="text-sm text-[rgba(4,11,77,0.55)] mt-1">
+          Invite new team members and manage pending invitations.
+        </p>
       </div>
       <AdminInvitationsList initialInvitations={invitations} />
     </div>

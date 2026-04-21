@@ -21,15 +21,15 @@ interface ToolsGridProps {
 }
 
 const STATUS_OPTIONS = [
-  { value: '',         label: 'All statuses' },
-  { value: 'ACTIVE',   label: 'Active' },
-  { value: 'PENDING',  label: 'Pending' },
+  { value: '', label: 'All statuses' },
+  { value: 'ACTIVE', label: 'Active' },
+  { value: 'PENDING', label: 'Pending' },
   { value: 'ARCHIVED', label: 'Archived' },
 ]
 
 const ACCESS_OPTIONS = [
-  { value: '',            label: 'All access levels' },
-  { value: 'INTERNAL',   label: 'Internal' },
+  { value: '', label: 'All access levels' },
+  { value: 'INTERNAL', label: 'Internal' },
   { value: 'RESTRICTED', label: 'Restricted' },
   { value: 'LEADERSHIP', label: 'Leadership' },
 ]
@@ -37,18 +37,18 @@ const ACCESS_OPTIONS = [
 const FEATURED_COUNT = 3
 
 export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: ToolsGridProps) {
-  const router       = useRouter()
-  const pathname     = usePathname()
+  const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
-  const searchRef    = useRef<HTMLInputElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
 
-  const [query,        setQuery]        = useState(() => searchParams.get('q')      ?? '')
-  const [teamFilter,   setTeamFilter]   = useState(() => searchParams.get('team')   ?? '')
+  const [query, setQuery] = useState(() => searchParams.get('q') ?? '')
+  const [teamFilter, setTeamFilter] = useState(() => searchParams.get('team') ?? '')
   const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? '')
   const [accessFilter, setAccessFilter] = useState(() => searchParams.get('access') ?? '')
-  const [tagFilter,    setTagFilter]    = useState(() => searchParams.get('tag')    ?? '')
-  const [mineOnly,     setMineOnly]     = useState(() => searchParams.get('mine') === 'true')
-  const [filtersOpen,  setFiltersOpen]  = useState(false)
+  const [tagFilter, setTagFilter] = useState(() => searchParams.get('tag') ?? '')
+  const [mineOnly, setMineOnly] = useState(() => searchParams.get('mine') === 'true')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const allTags = useMemo(() => {
     const names = new Set<string>()
@@ -56,27 +56,31 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
     return [...names].sort()
   }, [tools])
 
-  const tagOptions = useMemo(() => [
-    { value: '', label: 'All tags' },
-    ...allTags.map((t) => ({ value: t, label: t })),
-  ], [allTags])
+  const tagOptions = useMemo(
+    () => [{ value: '', label: 'All tags' }, ...allTags.map((t) => ({ value: t, label: t }))],
+    [allTags],
+  )
 
-  const syncUrl = useCallback((
-    q: string, team: string, status: string, access: string, tag: string, mine: boolean
-  ) => {
-    const params = new URLSearchParams()
-    if (q)      params.set('q',      q)
-    if (team)   params.set('team',   team)
-    if (status) params.set('status', status)
-    if (access) params.set('access', access)
-    if (tag)    params.set('tag',    tag)
-    if (mine)   params.set('mine',   'true')
-    const qs = params.toString()
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
-  }, [router, pathname])
+  const syncUrl = useCallback(
+    (q: string, team: string, status: string, access: string, tag: string, mine: boolean) => {
+      const params = new URLSearchParams()
+      if (q) params.set('q', q)
+      if (team) params.set('team', team)
+      if (status) params.set('status', status)
+      if (access) params.set('access', access)
+      if (tag) params.set('tag', tag)
+      if (mine) params.set('mine', 'true')
+      const qs = params.toString()
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false })
+    },
+    [router, pathname],
+  )
 
   useEffect(() => {
-    const t = setTimeout(() => syncUrl(query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly), 300)
+    const t = setTimeout(
+      () => syncUrl(query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly),
+      300,
+    )
     return () => clearTimeout(t)
   }, [query, teamFilter, statusFilter, accessFilter, tagFilter, mineOnly, syncUrl])
 
@@ -92,31 +96,44 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  const teamOptions = useMemo(() => [
-    { value: '', label: 'All teams' },
-    ...teams.map((t) => ({ value: t, label: t })),
-  ], [teams])
+  const teamOptions = useMemo(
+    () => [{ value: '', label: 'All teams' }, ...teams.map((t) => ({ value: t, label: t }))],
+    [teams],
+  )
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return tools.filter((t) => {
       if (q) {
-        const haystack = [t.name, t.slug, t.description ?? '', t.team ?? '', t.notes ?? '', t.createdByName]
+        const haystack = [
+          t.name,
+          t.slug,
+          t.description ?? '',
+          t.team ?? '',
+          t.notes ?? '',
+          t.createdByName,
+        ]
           .join(' ')
           .toLowerCase()
         if (!haystack.includes(q)) return false
       }
-      if (teamFilter   && t.team        !== teamFilter)                              return false
-      if (statusFilter && t.status      !== (statusFilter as ToolStatus))            return false
-      if (accessFilter && t.accessLevel !== (accessFilter as AccessLevel))           return false
-      if (tagFilter    && !(t.tags ?? []).some((tag) => tag.name === tagFilter))     return false
-      if (mineOnly     && t.createdByEmail !== currentUserEmail)                     return false
+      if (teamFilter && t.team !== teamFilter) return false
+      if (statusFilter && t.status !== (statusFilter as ToolStatus)) return false
+      if (accessFilter && t.accessLevel !== (accessFilter as AccessLevel)) return false
+      if (tagFilter && !(t.tags ?? []).some((tag) => tag.name === tagFilter)) return false
+      if (mineOnly && t.createdByEmail !== currentUserEmail) return false
       return true
     })
   }, [tools, query, teamFilter, statusFilter, accessFilter, mineOnly, currentUserEmail, tagFilter])
 
   const hasFilters = query || teamFilter || statusFilter || accessFilter || tagFilter || mineOnly
-  const activeFilterCount = [teamFilter, statusFilter, accessFilter, tagFilter, mineOnly ? 'mine' : ''].filter(Boolean).length
+  const activeFilterCount = [
+    teamFilter,
+    statusFilter,
+    accessFilter,
+    tagFilter,
+    mineOnly ? 'mine' : '',
+  ].filter(Boolean).length
 
   function clearFilters() {
     setQuery('')
@@ -147,7 +164,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
         <div className="flex items-center gap-2">
           <div className="relative flex-1 min-w-0 max-w-md">
             <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94a3b8] pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgba(4,11,77,0.40)] pointer-events-none"
               aria-hidden
             />
             <Input
@@ -156,7 +173,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
               placeholder="Search tools, teams, or owners…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-9 h-10 text-sm placeholder:text-[#94a3b8] transition-all"
+              className="pl-9 h-10 text-sm placeholder:text-[rgba(4,11,77,0.40)] transition-all"
               aria-label="Search tools"
             />
           </div>
@@ -167,7 +184,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
             className={`inline-flex items-center gap-2 h-10 px-3.5 rounded-lg border text-sm font-medium font-display transition-colors duration-150 whitespace-nowrap flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 ${
               filtersOpen || activeFilterCount > 0
                 ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
-                : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#94a3b8] hover:text-[#040B4D]'
+                : 'bg-white text-[rgba(4,11,77,0.55)] border-[#E7E7E7] hover:border-[rgba(4,11,77,0.40)] hover:text-[#040B4D]'
             }`}
           >
             <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />
@@ -182,7 +199,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-[#94a3b8] hover:text-[#64748b] transition-colors whitespace-nowrap underline underline-offset-2 flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+              className="text-xs text-[rgba(4,11,77,0.40)] hover:text-[rgba(4,11,77,0.55)] transition-colors whitespace-nowrap underline underline-offset-2 flex-shrink-0 focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
             >
               Clear
             </button>
@@ -233,7 +250,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
               className={`px-3 py-1.5 rounded-md text-xs font-medium font-display border transition-colors duration-150 whitespace-nowrap focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 ${
                 mineOnly
                   ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
-                  : 'bg-white text-[#64748b] border-[#e2e8f0] hover:border-[#94a3b8] hover:text-[#040B4D]'
+                  : 'bg-white text-[rgba(4,11,77,0.55)] border-[#E7E7E7] hover:border-[rgba(4,11,77,0.40)] hover:text-[#040B4D]'
               }`}
               aria-pressed={mineOnly}
             >
@@ -245,7 +262,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
 
       {/* ── Results count (filters active) ──────────────────────────── */}
       {hasFilters && (
-        <p className="text-xs text-[#94a3b8] mb-4">
+        <p className="text-xs text-[rgba(4,11,77,0.40)] mb-4">
           {filtered.length === 0
             ? 'No tools match your filters'
             : `${filtered.length} of ${tools.length} tool${tools.length !== 1 ? 's' : ''}`}
@@ -255,21 +272,15 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
       {/* ── Content ─────────────────────────────────────────────────── */}
       {filtered.length > 0 ? (
         <div className="space-y-8">
-
           {/* ── Featured: spotlight section ── */}
           {featuredTools.length > 0 && (
             <section>
               {/* Section divider with embedded label */}
               <div className="flex items-center gap-3 mb-5">
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <div className="h-5 w-5 rounded-full bg-[#2605EF]/10 flex items-center justify-center">
-                    <Zap className="h-3 w-3 text-[#2605EF]" aria-hidden />
-                  </div>
-                  <span className="font-display font-semibold text-xs tracking-widest uppercase text-[#040B4D]/50">
-                    Ready to launch
-                  </span>
-                </div>
-                <div className="flex-1 h-px bg-[#e2e8f0]" />
+                <span className="font-display font-semibold text-xs tracking-widest uppercase text-[#040B4D]/50 flex-shrink-0">
+                  Ready to launch
+                </span>
+                <div className="flex-1 h-px bg-[#E7E7E7]" />
               </div>
 
               {/* Staggered card grid */}
@@ -298,18 +309,17 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
                 <span className="ml-0.5 inline-flex items-center justify-center rounded-full bg-[#2605EF]/10 text-[#2605EF] text-xs font-display font-semibold px-2 py-0.5 flex-shrink-0 tabular-nums">
                   {listTools.length}
                 </span>
-                <div className="flex-1 h-px bg-[#e2e8f0]" />
+                <div className="flex-1 h-px bg-[#E7E7E7]" />
               </div>
 
               {/* Premium unified panel */}
-              <div className="rounded-xl border border-[#e2e8f0] overflow-hidden bg-white shadow-card">
+              <div className="rounded-2xl border border-[#E7E7E7] overflow-hidden bg-white shadow-card">
                 {listTools.map((tool) => (
                   <ToolRow key={tool.id} tool={tool} isFavorited={favoriteIds.includes(tool.id)} />
                 ))}
               </div>
             </section>
           )}
-
         </div>
       ) : tools.length === 0 ? (
         /* Empty state — no tools at all */
@@ -320,7 +330,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
           <h3 className="font-display font-bold text-[17px] text-[#040B4D] mb-2">
             Your toolkit is empty
           </h3>
-          <p className="text-sm text-[#64748b] mb-6 max-w-xs leading-relaxed">
+          <p className="text-sm text-[rgba(4,11,77,0.55)] mb-6 max-w-xs leading-relaxed">
             Register your first internal tool and make it available to the CleverProfits team.
           </p>
           <Button asChild size="sm">
@@ -333,12 +343,16 @@ export function ToolsGrid({ tools, teams, currentUserEmail, favoriteIds = [] }: 
       ) : (
         /* Empty state — filters returned nothing */
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="h-12 w-12 rounded-full bg-[#f4f3f3] flex items-center justify-center mb-4">
-            <SearchX className="h-5 w-5 text-[#94a3b8]" aria-hidden />
+          <div className="h-12 w-12 rounded-full bg-[#FAFAFA] flex items-center justify-center mb-4">
+            <SearchX className="h-5 w-5 text-[rgba(4,11,77,0.40)]" aria-hidden />
           </div>
           <p className="font-display font-semibold text-[#040B4D] text-sm mb-1">No tools found</p>
-          <p className="text-xs text-[#94a3b8] font-sans mb-4">Try adjusting your filters or search terms</p>
-          <Button size="sm" onClick={clearFilters}>Clear filters</Button>
+          <p className="text-xs text-[rgba(4,11,77,0.40)] font-sans mb-4">
+            Try adjusting your filters or search terms
+          </p>
+          <Button size="sm" onClick={clearFilters}>
+            Clear filters
+          </Button>
         </div>
       )}
     </div>

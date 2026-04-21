@@ -14,10 +14,10 @@ import { cn } from '@/lib/utils'
 type StepStatus = 'pending' | 'active' | 'done' | 'error'
 
 const STEP_META = [
-  { label: 'Connecting',      detail: 'Reaching the tool URL'              },
-  { label: 'Reading content', detail: 'Extracting page text and headings'  },
-  { label: 'AI analysis',     detail: 'Generating summary and metadata'    },
-  { label: 'Overlap check',   detail: 'Comparing with existing tools'      },
+  { label: 'Connecting', detail: 'Reaching the tool URL' },
+  { label: 'Reading content', detail: 'Extracting page text and headings' },
+  { label: 'AI analysis', detail: 'Generating summary and metadata' },
+  { label: 'Overlap check', detail: 'Comparing with existing tools' },
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,12 +26,17 @@ const STEP_META = [
 
 export default function AnalyzingPage({ params }: { params: { draftId: string } }) {
   const { draftId } = params
-  const router      = useRouter()
+  const router = useRouter()
 
-  const [statuses, setStatuses] = useState<StepStatus[]>(['active', 'pending', 'pending', 'pending'])
-  const [failed,   setFailed]   = useState(false)
-  const [errMsg,   setErrMsg]   = useState('')
-  const [run,      setRun]      = useState(0) // incrementing re-triggers the effect
+  const [statuses, setStatuses] = useState<StepStatus[]>([
+    'active',
+    'pending',
+    'pending',
+    'pending',
+  ])
+  const [failed, setFailed] = useState(false)
+  const [errMsg, setErrMsg] = useState('')
+  const [run, setRun] = useState(0) // incrementing re-triggers the effect
 
   // Stored so we can cancel pending timeouts / interval on complete or re-run
   const cleanupRef = useRef<(() => void) | null>(null)
@@ -42,7 +47,9 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
     let pollId: ReturnType<typeof setInterval>
 
     function after(fn: () => void, ms: number) {
-      const id = setTimeout(() => { if (alive) fn() }, ms)
+      const id = setTimeout(() => {
+        if (alive) fn()
+      }, ms)
       timeoutIds.push(id)
     }
 
@@ -61,14 +68,14 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
 
     // ── Fake progress for visual feedback ───────────────────────────────────
     after(() => setStatuses(['done', 'active', 'pending', 'pending']), 1500)
-    after(() => setStatuses(['done', 'done',   'active',  'pending']), 4000)
-    after(() => setStatuses(['done', 'done',   'done',    'active']),  8000)
+    after(() => setStatuses(['done', 'done', 'active', 'pending']), 4000)
+    after(() => setStatuses(['done', 'done', 'done', 'active']), 8000)
 
     // ── Polling ─────────────────────────────────────────────────────────────
     async function poll() {
       if (!alive) return
       try {
-        const res  = await fetch(`/api/tools/${draftId}/analysis-status`)
+        const res = await fetch(`/api/tools/${draftId}/analysis-status`)
         const data = await res.json()
         if (!alive) return
 
@@ -87,8 +94,8 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
           cancelAll()
           setStatuses((prev) => {
             const activeIdx = prev.findIndex((s) => s === 'active')
-            const errorAt   = activeIdx === -1 ? prev.filter((s) => s === 'done').length : activeIdx
-            return prev.map((s, i) => i < errorAt ? 'done' : i === errorAt ? 'error' : 'pending')
+            const errorAt = activeIdx === -1 ? prev.filter((s) => s === 'done').length : activeIdx
+            return prev.map((s, i) => (i < errorAt ? 'done' : i === errorAt ? 'error' : 'pending'))
           })
           setFailed(true)
           setErrMsg(data.analysisError ?? 'Analysis failed — see error above')
@@ -133,42 +140,55 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
         {STEP_META.map((step, i) => {
           const status = statuses[i]
           return (
-            <div key={i} className={cn(
-              'flex items-center gap-4 rounded-xl border px-4 py-3 transition-all duration-300',
-              status === 'done'    && 'border-emerald-200 bg-emerald-50',
-              status === 'active'  && 'border-[#2605EF]/25 bg-[#2605EF]/[0.04]',
-              status === 'error'   && 'border-red-200 bg-red-50',
-              status === 'pending' && 'border-[#e2e8f0] bg-white',
-            )}>
+            <div
+              key={i}
+              className={cn(
+                'flex items-center gap-4 rounded-xl border px-4 py-3 transition-all duration-300',
+                status === 'done' && 'border-emerald-200 bg-emerald-50',
+                status === 'active' && 'border-[#2605EF]/25 bg-[#2605EF]/[0.04]',
+                status === 'error' && 'border-red-200 bg-red-50',
+                status === 'pending' && 'border-[#E7E7E7] bg-white',
+              )}
+            >
               {/* Icon */}
-              <div className={cn(
-                'h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all',
-                status === 'done'    && 'bg-emerald-100',
-                status === 'active'  && 'bg-[#2605EF]/10',
-                status === 'error'   && 'bg-red-100',
-                status === 'pending' && 'bg-[#f4f3f3]',
-              )}>
-                {status === 'done'    && <Check className="h-3.5 w-3.5 text-emerald-600" />}
-                {status === 'active'  && <Loader2 className="h-3.5 w-3.5 text-[#2605EF] animate-spin" />}
-                {status === 'error'   && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
-                {status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-[#94a3b8]" />}
+              <div
+                className={cn(
+                  'h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all',
+                  status === 'done' && 'bg-emerald-100',
+                  status === 'active' && 'bg-[#2605EF]/10',
+                  status === 'error' && 'bg-red-100',
+                  status === 'pending' && 'bg-[#FAFAFA]',
+                )}
+              >
+                {status === 'done' && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                {status === 'active' && (
+                  <Loader2 className="h-3.5 w-3.5 text-[#2605EF] animate-spin" />
+                )}
+                {status === 'error' && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
+                {status === 'pending' && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[rgba(4,11,77,0.40)]" />
+                )}
               </div>
 
               {/* Text */}
               <div className="flex-1">
-                <p className={cn(
-                  'text-sm font-semibold leading-none mb-0.5',
-                  status === 'done'    && 'text-emerald-700',
-                  status === 'active'  && 'text-[#040B4D]',
-                  status === 'error'   && 'text-red-700',
-                  status === 'pending' && 'text-[#94a3b8]',
-                )}>
+                <p
+                  className={cn(
+                    'text-sm font-semibold leading-none mb-0.5',
+                    status === 'done' && 'text-emerald-700',
+                    status === 'active' && 'text-[#040B4D]',
+                    status === 'error' && 'text-red-700',
+                    status === 'pending' && 'text-[rgba(4,11,77,0.40)]',
+                  )}
+                >
                   {step.label}
                 </p>
-                <p className={cn(
-                  'text-xs',
-                  status === 'pending' ? 'text-[#e2e8f0]' : 'text-[#64748b]',
-                )}>
+                <p
+                  className={cn(
+                    'text-xs',
+                    status === 'pending' ? 'text-[#E7E7E7]' : 'text-[rgba(4,11,77,0.55)]',
+                  )}
+                >
                   {step.detail}
                 </p>
               </div>
@@ -199,7 +219,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
               Continue without AI
             </Button>
           </div>
-          <p className="text-xs text-[#94a3b8]">
+          <p className="text-xs text-[rgba(4,11,77,0.40)]">
             You can fill in the details manually on the next step.
           </p>
         </div>

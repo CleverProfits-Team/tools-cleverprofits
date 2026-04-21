@@ -21,12 +21,17 @@ function formatDate(iso: string) {
 function RoleBadge({ role }: { role: Role }) {
   const styles: Record<Role, string> = {
     SUPER_ADMIN: 'bg-violet-100 text-violet-700',
-    ADMIN:       'bg-[#eeeeff] text-[#2605EF]',
-    BUILDER:     'bg-amber-100 text-amber-700',
-    VIEWER:      'bg-[#f4f3f3] text-[#64748b]',
+    ADMIN: 'bg-[#eeeeff] text-[#2605EF]',
+    BUILDER: 'bg-amber-100 text-amber-700',
+    VIEWER: 'bg-[#FAFAFA] text-[rgba(4,11,77,0.55)]',
   }
   return (
-    <span className={cn('inline-block rounded-full px-2 py-0.5 text-xs font-medium font-display', styles[role])}>
+    <span
+      className={cn(
+        'inline-block rounded-full px-2 py-0.5 text-xs font-medium font-display',
+        styles[role],
+      )}
+    >
       {role.replace('_', ' ')}
     </span>
   )
@@ -34,7 +39,7 @@ function RoleBadge({ role }: { role: Role }) {
 
 function displayStatus(inv: SerializedInvitation): { label: string; className: string } {
   if (inv.status === 'USED') {
-    return { label: 'Used', className: 'bg-[#f4f3f3] text-[#64748b]' }
+    return { label: 'Used', className: 'bg-[#FAFAFA] text-[rgba(4,11,77,0.55)]' }
   }
   if (new Date(inv.expiresAt) < new Date()) {
     return { label: 'Expired', className: 'bg-red-100 text-red-700' }
@@ -52,8 +57,8 @@ interface Props {
 
 export function AdminInvitationsList({ initialInvitations }: Props) {
   const [invitations, setInvitations] = useState<SerializedInvitation[]>(initialInvitations)
-  const [copiedId, setCopiedId]       = useState<string | null>(null)
-  const [revoking, setRevoking]       = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [revoking, setRevoking] = useState<string | null>(null)
 
   async function handleCopy(inv: SerializedInvitation) {
     const url = `${window.location.origin}/invite/${inv.token}`
@@ -75,19 +80,18 @@ export function AdminInvitationsList({ initialInvitations }: Props) {
     }
   }
 
-  const thCls = 'px-3 py-2 text-left text-xs font-medium font-display text-[#94a3b8] uppercase tracking-widest'
+  const thCls =
+    'px-3 py-2 text-left text-xs font-medium font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest'
   const tdCls = 'px-3 py-3 text-sm text-[#040B4D] align-middle'
 
   if (invitations.length === 0) {
-    return (
-      <p className="text-sm text-[#64748b] py-12 text-center">No invitations yet</p>
-    )
+    return <p className="text-sm text-[rgba(4,11,77,0.55)] py-12 text-center">No invitations yet</p>
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[#e2e8f0] shadow-card">
+    <div className="overflow-x-auto rounded-2xl border border-[#E7E7E7] shadow-card">
       <table className="w-full text-left">
-        <thead className="bg-[#f4f3f3]/60 border-b border-[#e2e8f0]">
+        <thead className="bg-[#FAFAFA]/60 border-b border-[#E7E7E7]">
           <tr>
             <th className={thCls}>Email</th>
             <th className={thCls}>Role</th>
@@ -97,17 +101,24 @@ export function AdminInvitationsList({ initialInvitations }: Props) {
             <th className={thCls}>Actions</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#e2e8f0]/60">
+        <tbody className="divide-y divide-[#E7E7E7]/60">
           {invitations.map((inv) => {
             const { label, className } = displayStatus(inv)
             const isPending = inv.status === 'PENDING' && new Date(inv.expiresAt) >= new Date()
 
             return (
-              <tr key={inv.id} className="hover:bg-[#f4f3f3]/50 transition-colors duration-150">
+              <tr key={inv.id} className="hover:bg-[#FAFAFA]/50 transition-colors duration-150">
                 <td className={tdCls}>{inv.email}</td>
-                <td className={tdCls}><RoleBadge role={inv.role} /></td>
                 <td className={tdCls}>
-                  <span className={cn('inline-block rounded-full px-2 py-0.5 text-xs font-medium font-display', className)}>
+                  <RoleBadge role={inv.role} />
+                </td>
+                <td className={tdCls}>
+                  <span
+                    className={cn(
+                      'inline-block rounded-full px-2 py-0.5 text-xs font-medium font-display',
+                      className,
+                    )}
+                  >
                     {label}
                   </span>
                 </td>
@@ -118,27 +129,29 @@ export function AdminInvitationsList({ initialInvitations }: Props) {
                     {isPending && (
                       <button
                         onClick={() => handleCopy(inv)}
-                        className="rounded-lg border border-[#e2e8f0] p-1.5 text-[#64748b] hover:bg-[#f4f3f3] hover:text-[#040B4D] transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
+                        className="rounded-lg border border-[#E7E7E7] p-1.5 text-[rgba(4,11,77,0.55)] hover:bg-[#FAFAFA] hover:text-[#040B4D] transition-colors min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
                         aria-label="Copy invite link"
                         title="Copy invite link"
                       >
-                        {copiedId === inv.id
-                          ? <Check className="h-3.5 w-3.5 text-emerald-600" />
-                          : <Copy className="h-3.5 w-3.5" />}
+                        {copiedId === inv.id ? (
+                          <Check className="h-3.5 w-3.5 text-emerald-600" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5" />
+                        )}
                       </button>
                     )}
                     {isPending && (
                       <button
                         onClick={() => handleRevoke(inv.id)}
                         disabled={revoking === inv.id}
-                        className="rounded-lg border border-[#e2e8f0] p-1.5 text-[#64748b] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors disabled:opacity-50 min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-red-500/30 focus-visible:ring-offset-2"
+                        className="rounded-lg border border-[#E7E7E7] p-1.5 text-[rgba(4,11,77,0.55)] hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors disabled:opacity-50 min-h-[36px] min-w-[36px] flex items-center justify-center focus-visible:ring-2 focus-visible:ring-red-500/30 focus-visible:ring-offset-2"
                         aria-label="Revoke invitation"
                         title="Revoke invitation"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     )}
-                    {!isPending && <span className="text-xs text-[#94a3b8]">—</span>}
+                    {!isPending && <span className="text-xs text-[rgba(4,11,77,0.40)]">—</span>}
                   </div>
                 </td>
               </tr>

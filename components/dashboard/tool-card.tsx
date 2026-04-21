@@ -27,18 +27,18 @@ interface ToolCardProps {
 
 export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
   const isActive = tool.status === 'ACTIVE'
-  const accent   = getToolAccent(tool.name)
-  const initial  = tool.name.charAt(0).toUpperCase()
+  const accent = getToolAccent(tool.name)
+  const initial = tool.name.charAt(0).toUpperCase()
 
   return (
     <article
       className={cn(
-        'group relative flex flex-col bg-white rounded-xl overflow-hidden',
-        'border border-[#e2e8f0]/80 border-l-[3px]',
+        'group relative flex flex-col bg-white rounded-2xl overflow-hidden',
+        'border border-[#E7E7E7]/80 border-l-[3px]',
         'shadow-card transition-all duration-150 ease-out',
         'hover:-translate-y-1',
         'hover:shadow-card-hover',
-        'hover:border-[#e2e8f0]',
+        'hover:border-[#E7E7E7]',
         !isActive && 'opacity-80',
       )}
       style={{ borderLeftColor: accent.hex }}
@@ -54,7 +54,6 @@ export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
 
       {/* Body */}
       <div className="relative flex flex-col flex-1 p-5 pt-4">
-
         {/* Icon + status + favorite */}
         <div className="flex items-start justify-between mb-4">
           <div
@@ -87,7 +86,7 @@ export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
         <p
           className={cn(
             'text-[12.5px] leading-relaxed line-clamp-2 mb-4 flex-1 font-sans',
-            tool.description ? 'text-[#64748b]' : 'text-[#94a3b8] italic',
+            tool.description ? 'text-[rgba(4,11,77,0.55)]' : 'text-[rgba(4,11,77,0.40)] italic',
           )}
         >
           {tool.description ?? 'No description provided'}
@@ -100,7 +99,7 @@ export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
           {(tool.tags ?? []).map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center rounded bg-[#f4f3f3] border border-[#e2e8f0] px-2 py-0.5 text-[10.5px] font-medium text-[#64748b]"
+              className="inline-flex items-center rounded bg-[#FAFAFA] border border-[#E7E7E7] px-2 py-0.5 text-[10.5px] font-medium text-[rgba(4,11,77,0.55)]"
             >
               {tag.name}
             </span>
@@ -108,14 +107,17 @@ export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
         </div>
 
         {/* Footer */}
-        <div className="mt-auto pt-3.5 border-t border-[#e2e8f0]/60 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-3 text-[11px] text-[#94a3b8] min-w-0">
+        <div className="mt-auto pt-3.5 border-t border-[#E7E7E7]/60 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 text-[11px] text-[rgba(4,11,77,0.40)] min-w-0">
             <div className="flex items-center gap-1.5 min-w-0">
               <User className="h-3 w-3 flex-shrink-0" aria-hidden />
               <span className="truncate">{tool.createdByName}</span>
             </div>
             {tool.lastAccessedAt && (
-              <div className="flex items-center gap-1 flex-shrink-0" title={`Last used ${timeAgo(tool.lastAccessedAt)}`}>
+              <div
+                className="flex items-center gap-1 flex-shrink-0"
+                title={`Last used ${timeAgo(tool.lastAccessedAt)}`}
+              >
                 <Activity className="h-3 w-3" aria-hidden />
                 <span>{timeAgo(tool.lastAccessedAt)}</span>
               </div>
@@ -126,7 +128,7 @@ export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
             <a
               href={`/${tool.slug}`}
               className={cn(
-                'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 flex-shrink-0 min-h-[36px]',
+                'inline-flex items-center gap-1.5 rounded-[20px] px-3.5 py-1.5 flex-shrink-0 min-h-[36px]',
                 'bg-[#2605EF] hover:bg-[#1e04cc] active:bg-[#1803b3] text-white text-[11px] font-semibold font-display',
                 'shadow-xs transition-all duration-150 active:scale-[0.97]',
                 'group-hover:shadow-[0_0_0_3px_rgba(38,5,239,0.15)]',
@@ -140,7 +142,7 @@ export function ToolCard({ tool, isFavorited = false }: ToolCardProps) {
           ) : (
             <Link
               href={`/tools/${tool.slug}`}
-              className="text-[11px] text-[#64748b] hover:text-[#2605EF] transition-colors flex-shrink-0 font-medium focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+              className="text-[11px] text-[rgba(4,11,77,0.55)] hover:text-[#2605EF] transition-colors flex-shrink-0 font-medium focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
             >
               View →
             </Link>

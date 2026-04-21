@@ -12,14 +12,14 @@ export default async function EditToolPage({ params }: { params: { id: string } 
   if (!session?.user?.email) redirect('/login')
 
   const tool = await prisma.tool.findUnique({
-    where:   { id: params.id },
+    where: { id: params.id },
     include: { tags: { select: { id: true, name: true } } },
   })
   if (!tool) notFound()
 
-  const role     = session.user.role as string
-  const isAdmin  = role === 'ADMIN' || role === 'SUPER_ADMIN'
-  const isOwner  = tool.createdByEmail === session.user.email
+  const role = session.user.role as string
+  const isAdmin = role === 'ADMIN' || role === 'SUPER_ADMIN'
+  const isOwner = tool.createdByEmail === session.user.email
 
   if (!isAdmin && !isOwner) redirect('/dashboard')
 
@@ -36,8 +36,10 @@ export default async function EditToolPage({ params }: { params: { id: string } 
   return (
     <div className="min-h-screen bg-[#EEF2FB]">
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight mb-8">Edit tool</h1>
-        <div className="rounded-xl border border-[#e2e8f0] bg-white shadow-card p-6 sm:p-8">
+        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight mb-8">
+          Edit tool
+        </h1>
+        <div className="rounded-xl border border-[#E7E7E7] bg-white shadow-card p-6 sm:p-8">
           <EditToolForm tool={serialized} isAdmin={isAdmin} />
         </div>
       </div>

@@ -18,19 +18,19 @@ import { cn } from '@/lib/utils'
 type SlugState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid'
 
 interface FormValues {
-  name:        string
-  slug:        string
+  name: string
+  slug: string
   externalUrl: string
   description: string
-  team:        string
+  team: string
   accessLevel: string
-  notes:       string
-  tags:        string[]
+  notes: string
+  tags: string[]
 }
 
 interface FieldErrors {
-  name?:        string
-  slug?:        string
+  name?: string
+  slug?: string
   externalUrl?: string
   accessLevel?: string
 }
@@ -40,8 +40,8 @@ interface FieldErrors {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const ACCESS_OPTIONS = [
-  { value: '',            label: 'Select access level…' },
-  { value: 'INTERNAL',   label: 'Internal — all employees' },
+  { value: '', label: 'Select access level…' },
+  { value: 'INTERNAL', label: 'Internal — all employees' },
   { value: 'RESTRICTED', label: 'Restricted — specific teams' },
   { value: 'LEADERSHIP', label: 'Leadership — exec only' },
 ]
@@ -51,7 +51,7 @@ function SlugStatus({ state, reason }: { state: SlugState; reason?: string }) {
 
   if (state === 'checking') {
     return (
-      <span className="flex items-center gap-1 text-xs text-[#94a3b8]">
+      <span className="flex items-center gap-1 text-xs text-[rgba(4,11,77,0.40)]">
         <Loader2 className="h-3 w-3 animate-spin" aria-hidden />
         Checking…
       </span>
@@ -81,37 +81,37 @@ export function RegisterToolForm() {
   const router = useRouter()
 
   const [values, setValues] = useState<FormValues>({
-    name:        '',
-    slug:        '',
+    name: '',
+    slug: '',
     externalUrl: '',
     description: '',
-    team:        '',
+    team: '',
     accessLevel: '',
-    notes:       '',
-    tags:        [],
+    notes: '',
+    tags: [],
   })
   const [tagInput, setTagInput] = useState('')
-  const [fieldErrors,  setFieldErrors]  = useState<FieldErrors>({})
-  const [slugState,    setSlugState]    = useState<SlugState>('idle')
-  const [slugReason,   setSlugReason]   = useState<string>()
-  const [slugEdited,   setSlugEdited]   = useState(false) // true once user manually edits slug
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [slugState, setSlugState] = useState<SlugState>('idle')
+  const [slugReason, setSlugReason] = useState<string>()
+  const [slugEdited, setSlugEdited] = useState(false) // true once user manually edits slug
 
-  const [submitting,   setSubmitting]   = useState(false)
-  const [serverError,  setServerError]  = useState<string>()
+  const [submitting, setSubmitting] = useState(false)
+  const [serverError, setServerError] = useState<string>()
 
   // Success state
   const [registeredSlug, setRegisteredSlug] = useState<string>()
-  const [copied,         setCopied]         = useState(false)
+  const [copied, setCopied] = useState(false)
 
   const debounceRef = useRef<ReturnType<typeof setTimeout>>()
-  const abortRef    = useRef<AbortController>()
+  const abortRef = useRef<AbortController>()
 
   // ── Auto-generate slug from name ────────────────────────────────────────
   useEffect(() => {
     if (!slugEdited) {
       setValues((v) => ({ ...v, slug: nameToSlug(v.name) }))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.name])
 
   // ── Debounced slug availability check ───────────────────────────────────
@@ -131,10 +131,9 @@ export function RegisterToolForm() {
       abortRef.current = ctrl
 
       try {
-        const res = await fetch(
-          `/api/tools/check-slug?slug=${encodeURIComponent(slug)}`,
-          { signal: ctrl.signal },
-        )
+        const res = await fetch(`/api/tools/check-slug?slug=${encodeURIComponent(slug)}`, {
+          signal: ctrl.signal,
+        })
         if (!res.ok) throw new Error('Request failed')
         const data: { available: boolean; reason?: string } = await res.json()
         setSlugState(data.available ? 'available' : 'taken')
@@ -165,10 +164,10 @@ export function RegisterToolForm() {
   function validate(): boolean {
     const errors: FieldErrors = {}
 
-    if (!values.name.trim())        errors.name        = 'Name is required'
-    if (!values.slug.trim())        errors.slug        = 'Slug is required'
+    if (!values.name.trim()) errors.name = 'Name is required'
+    if (!values.slug.trim()) errors.slug = 'Slug is required'
     if (!values.externalUrl.trim()) errors.externalUrl = 'External URL is required'
-    if (!values.accessLevel)        errors.accessLevel = 'Access level is required'
+    if (!values.accessLevel) errors.accessLevel = 'Access level is required'
 
     if (values.externalUrl && !values.externalUrl.startsWith('https://')) {
       errors.externalUrl = 'URL must start with https://'
@@ -195,14 +194,14 @@ export function RegisterToolForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name:        values.name.trim(),
-          slug:        values.slug.trim(),
+          name: values.name.trim(),
+          slug: values.slug.trim(),
           externalUrl: values.externalUrl.trim(),
           description: values.description.trim() || undefined,
-          team:        values.team.trim()         || undefined,
+          team: values.team.trim() || undefined,
           accessLevel: values.accessLevel,
-          notes:       values.notes.trim()        || undefined,
-          tags:        values.tags,
+          notes: values.notes.trim() || undefined,
+          tags: values.tags,
         }),
       })
 
@@ -245,24 +244,29 @@ export function RegisterToolForm() {
           <CheckCircle2 className="h-6 w-6 text-emerald-600" aria-hidden />
         </div>
         <h2 className="text-lg font-semibold font-display text-[#040B4D] mb-1">Tool registered</h2>
-        <p className="text-sm text-[#64748b] mb-6">
+        <p className="text-sm text-[rgba(4,11,77,0.55)] mb-6">
           It&apos;s pending review. Once approved, it will be accessible at:
         </p>
 
         {/* URL pill */}
-        <div className="flex items-center gap-2 w-full bg-[#f4f3f3] border border-[#e2e8f0] rounded-lg px-3 py-2 mb-6">
-          <ExternalLink className="h-3.5 w-3.5 text-[#94a3b8] flex-shrink-0" aria-hidden />
+        <div className="flex items-center gap-2 w-full bg-[#F4F4F4] border border-[#E7E7E7] rounded-lg px-3 py-2 mb-6">
+          <ExternalLink
+            className="h-3.5 w-3.5 text-[rgba(4,11,77,0.40)] flex-shrink-0"
+            aria-hidden
+          />
           <span className="text-sm font-mono text-[#040B4D] flex-1 min-w-0 truncate">
             {internalUrl}
           </span>
           <button
             onClick={copyUrl}
-            className="flex-shrink-0 text-[#94a3b8] hover:text-[#64748b] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+            className="flex-shrink-0 text-[rgba(4,11,77,0.40)] hover:text-[rgba(4,11,77,0.55)] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
             aria-label="Copy URL"
           >
-            {copied
-              ? <Check className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
-              : <Copy className="h-3.5 w-3.5" aria-hidden />}
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
+            ) : (
+              <Copy className="h-3.5 w-3.5" aria-hidden />
+            )}
           </button>
         </div>
 
@@ -273,7 +277,16 @@ export function RegisterToolForm() {
           <Button
             onClick={() => {
               setRegisteredSlug(undefined)
-              setValues({ name: '', slug: '', externalUrl: '', description: '', team: '', accessLevel: '', notes: '', tags: [] })
+              setValues({
+                name: '',
+                slug: '',
+                externalUrl: '',
+                description: '',
+                team: '',
+                accessLevel: '',
+                notes: '',
+                tags: [],
+              })
               setSlugEdited(false)
               setSlugState('idle')
             }}
@@ -288,14 +301,15 @@ export function RegisterToolForm() {
   // ── Form ─────────────────────────────────────────────────────────────────
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-8 max-w-xl">
-
       {/* ── Section 1: Identity ─────────────────────────────────────── */}
       <div className="space-y-5">
         <SectionHeader label="Identity" />
 
         {/* Name */}
         <div>
-          <Label htmlFor="name">Tool name <span className="text-red-500">*</span></Label>
+          <Label htmlFor="name">
+            Tool name <span className="text-red-500">*</span>
+          </Label>
           <Input
             id="name"
             placeholder="e.g. Revenue Dashboard"
@@ -317,7 +331,7 @@ export function RegisterToolForm() {
             <SlugStatus state={slugState} reason={slugReason} />
           </div>
           <div className="flex items-center">
-            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-[#e2e8f0] rounded-l-lg bg-[#f4f3f3] text-[#94a3b8] text-sm font-mono select-none">
+            <span className="flex-shrink-0 h-10 px-3 flex items-center border border-r-0 border-[#E7E7E7] rounded-l-xl bg-[#F4F4F4] text-[rgba(4,11,77,0.40)] text-sm font-mono select-none">
               tools.cleverprofits.com/
             </span>
             <Input
@@ -329,14 +343,15 @@ export function RegisterToolForm() {
               className={cn(
                 'rounded-l-none font-mono',
                 slugState === 'available' && 'border-emerald-300 focus-visible:ring-emerald-300',
-                (slugState === 'taken' || slugState === 'invalid') && 'border-red-300 focus-visible:ring-red-300',
+                (slugState === 'taken' || slugState === 'invalid') &&
+                  'border-red-300 focus-visible:ring-red-300',
               )}
               autoComplete="off"
               spellCheck={false}
             />
           </div>
           {!fieldErrors.slug && (
-            <p className="text-xs text-[#94a3b8] mt-1.5">
+            <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1.5">
               Auto-generated from name · lowercase letters, numbers, hyphens only
             </p>
           )}
@@ -362,7 +377,7 @@ export function RegisterToolForm() {
             autoComplete="off"
             spellCheck={false}
           />
-          <p className="text-xs text-[#94a3b8] mt-1.5">
+          <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1.5">
             Proxied server-side — the Railway URL is never exposed to users.
           </p>
           {fieldErrors.externalUrl && <FieldError>{fieldErrors.externalUrl}</FieldError>}
@@ -389,7 +404,12 @@ export function RegisterToolForm() {
           </div>
 
           <div>
-            <Label htmlFor="team">Team <span className="text-[#94a3b8] font-normal normal-case tracking-normal">(optional)</span></Label>
+            <Label htmlFor="team">
+              Team{' '}
+              <span className="text-[rgba(4,11,77,0.40)] font-normal normal-case tracking-normal">
+                (optional)
+              </span>
+            </Label>
             <Input
               id="team"
               placeholder="Finance, Ops…"
@@ -425,7 +445,7 @@ export function RegisterToolForm() {
             onChange={set('notes')}
             rows={3}
           />
-          <p className="text-xs text-[#94a3b8] mt-1.5">
+          <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1.5">
             Visible to platform admins only.
           </p>
         </div>
@@ -457,19 +477,12 @@ export function RegisterToolForm() {
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-1 border-t border-[#e2e8f0]">
-        <Button
-          type="submit"
-          disabled={submitting || slugState === 'checking'}
-        >
+      <div className="flex items-center gap-3 pt-1 border-t border-[#E7E7E7]">
+        <Button type="submit" disabled={submitting || slugState === 'checking'}>
           {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />}
           {submitting ? 'Registering…' : 'Register tool'}
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => router.push('/dashboard')}
-        >
+        <Button type="button" variant="ghost" onClick={() => router.push('/dashboard')}>
           Cancel
         </Button>
       </div>
@@ -482,11 +495,15 @@ export function RegisterToolForm() {
 function SectionHeader({ label, note }: { label: string; note?: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs font-semibold font-display uppercase tracking-wider text-[#94a3b8]">
+      <span className="text-xs font-semibold font-display uppercase tracking-wider text-[rgba(4,11,77,0.40)]">
         {label}
-        {note && <span className="font-normal normal-case tracking-normal ml-1 text-[#94a3b8]/60">· {note}</span>}
+        {note && (
+          <span className="font-normal normal-case tracking-normal ml-1 text-[rgba(4,11,77,0.40)]/60">
+            · {note}
+          </span>
+        )}
       </span>
-      <div className="flex-1 h-px bg-[#e2e8f0]" />
+      <div className="flex-1 h-px bg-[#E7E7E7]" />
     </div>
   )
 }
@@ -496,11 +513,11 @@ function FieldError({ children }: { children: React.ReactNode }) {
 }
 
 interface TagInputProps {
-  tags:          string[]
-  inputValue:    string
+  tags: string[]
+  inputValue: string
   onInputChange: (val: string) => void
-  onAdd:         (tag: string) => void
-  onRemove:      (tag: string) => void
+  onAdd: (tag: string) => void
+  onRemove: (tag: string) => void
 }
 
 function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInputProps) {
@@ -512,20 +529,22 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
   return (
     <div>
       <Label>Tags</Label>
-      <div className={cn(
-        'flex flex-wrap gap-1.5 min-h-9 w-full rounded-lg border border-[#e2e8f0] bg-white px-2.5 py-1.5',
-        'focus-within:ring-2 focus-within:ring-[#2605EF]/25 focus-within:border-[#2605EF]/60 transition-colors',
-      )}>
+      <div
+        className={cn(
+          'flex flex-wrap gap-1.5 min-h-[40px] w-full rounded-xl border-[1.5px] border-[#E7E7E7] bg-[#F4F4F4] px-2.5 py-1.5',
+          'focus-within:border-[#2605EF] focus-within:shadow-[0_0_0_3px_rgba(38,5,239,0.10)] transition-all',
+        )}
+      >
         {tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 rounded-full bg-[#f4f3f3] px-2 py-0.5 text-xs font-medium font-display text-[#040B4D]"
+            className="inline-flex items-center gap-1 rounded-full bg-[#FAFAFA] px-2 py-0.5 text-xs font-medium font-display text-[#040B4D]"
           >
             {tag}
             <button
               type="button"
               onClick={() => onRemove(tag)}
-              className="text-[#94a3b8] hover:text-[#040B4D] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-1 rounded-full"
+              className="text-[rgba(4,11,77,0.40)] hover:text-[#040B4D] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-1 rounded-full"
               aria-label={`Remove tag ${tag}`}
             >
               <X className="h-2.5 w-2.5" aria-hidden />
@@ -545,13 +564,15 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
                 onRemove(tags[tags.length - 1])
               }
             }}
-            onBlur={() => { if (inputValue.trim()) commitTag(inputValue) }}
+            onBlur={() => {
+              if (inputValue.trim()) commitTag(inputValue)
+            }}
             placeholder={tags.length === 0 ? 'Add tags… (Enter or comma to confirm)' : ''}
-            className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[#94a3b8] py-0.5 text-[#040B4D]"
+            className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[rgba(4,11,77,0.40)] py-0.5 text-[#040B4D]"
           />
         )}
       </div>
-      <p className="text-xs text-[#94a3b8] mt-1.5">
+      <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1.5">
         Up to 10 tags. Press Enter or comma to add.
       </p>
     </div>

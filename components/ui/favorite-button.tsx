@@ -44,16 +44,13 @@ export function FavoriteButton({ toolId, initialFavorited, className }: Favorite
         'p-1 rounded transition-colors duration-150 flex-shrink-0',
         favorited
           ? 'text-amber-400 hover:text-amber-500'
-          : 'text-[#94a3b8]/40 hover:text-amber-400',
+          : 'text-[rgba(4,11,77,0.20)] hover:text-amber-400',
         className,
       )}
       aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
       title={favorited ? 'Remove from favorites' : 'Add to favorites'}
     >
-      <Star
-        className={cn('h-4 w-4', favorited && 'fill-current')}
-        aria-hidden
-      />
+      <Star className={cn('h-4 w-4', favorited && 'fill-current')} aria-hidden />
     </button>
   )
 }

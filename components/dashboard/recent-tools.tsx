@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowUpRight, Clock } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getToolAccent } from '@/lib/colors'
 
@@ -29,15 +29,10 @@ export function RecentTools({ tools }: { tools: RecentTool[] }) {
   return (
     <section className="mb-8">
       <div className="flex items-center gap-3 mb-3">
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <div className="h-5 w-5 rounded-full bg-[#040B4D]/8 flex items-center justify-center">
-            <Clock className="h-3 w-3 text-[#040B4D]/50" aria-hidden />
-          </div>
-          <span className="font-display font-semibold text-xs tracking-widest uppercase text-[#040B4D]/50">
-            Recently used
-          </span>
-        </div>
-        <div className="flex-1 h-px bg-[#e2e8f0]" />
+        <span className="font-display font-semibold text-xs tracking-widest uppercase text-[#040B4D]/50 flex-shrink-0">
+          Recently used
+        </span>
+        <div className="flex-1 h-px bg-[#E7E7E7]" />
       </div>
 
       <div className="flex gap-3 overflow-x-auto scrollbar-none pb-1">
@@ -50,7 +45,7 @@ export function RecentTools({ tools }: { tools: RecentTool[] }) {
               key={tool.id}
               href={`/${tool.slug}`}
               className={cn(
-                'group flex items-center gap-3 bg-white rounded-xl border border-[#e2e8f0]/80',
+                'group flex items-center gap-3 bg-white rounded-xl border border-[#E7E7E7]/80',
                 'px-4 py-3 min-w-[200px] max-w-[260px] flex-shrink-0',
                 'shadow-[0_1px_4px_0_rgba(4,11,77,0.06)]',
                 'hover:-translate-y-0.5 hover:shadow-[0_4px_16px_-2px_rgba(4,11,77,0.10)]',
@@ -71,10 +66,12 @@ export function RecentTools({ tools }: { tools: RecentTool[] }) {
                 <p className="font-display font-semibold text-[13px] text-[#040B4D] truncate leading-tight">
                   {tool.name}
                 </p>
-                <p className="text-[11px] text-[#94a3b8] mt-0.5">{timeAgo(tool.lastAccessedAt)}</p>
+                <p className="text-[11px] text-[rgba(4,11,77,0.40)] mt-0.5">
+                  {timeAgo(tool.lastAccessedAt)}
+                </p>
               </div>
               <ArrowUpRight
-                className="h-3.5 w-3.5 text-[#94a3b8] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                className="h-3.5 w-3.5 text-[rgba(4,11,77,0.40)] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
                 aria-hidden
               />
             </a>

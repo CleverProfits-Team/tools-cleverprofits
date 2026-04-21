@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  Loader2, AlertCircle, AlertTriangle, Sparkles, X, User, Wrench,
-} from 'lucide-react'
+import { Loader2, AlertCircle, AlertTriangle, Sparkles, X, User, Wrench } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -17,28 +15,28 @@ import { cn } from '@/lib/utils'
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface FullDraft {
-  id:               string
-  name:             string
-  externalUrl:      string
-  description:      string | null
-  notes:            string | null
-  team:             string | null
-  ownerName:        string | null
-  ownerEmail:       string | null
-  maintainerName:   string | null
-  maintainerEmail:  string | null
-  analysisStatus:   string
-  aiTitle:          string | null
-  aiSummary:        string | null
-  aiDescription:    string | null
-  aiObjective:      string | null
+  id: string
+  name: string
+  externalUrl: string
+  description: string | null
+  notes: string | null
+  team: string | null
+  ownerName: string | null
+  ownerEmail: string | null
+  maintainerName: string | null
+  maintainerEmail: string | null
+  analysisStatus: string
+  aiTitle: string | null
+  aiSummary: string | null
+  aiDescription: string | null
+  aiObjective: string | null
   aiSuggestedUsers: string | null
-  aiCategory:       string | null
-  aiTechStack:      string | null
+  aiCategory: string | null
+  aiTechStack: string | null
   aiFrameworkGuess: string | null
-  aiConfidence:     number | null
+  aiConfidence: number | null
   aiOverlapWarnings: unknown
-  tags:             { id: string; name: string }[]
+  tags: { id: string; name: string }[]
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -46,9 +44,11 @@ interface FullDraft {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function confidenceLabel(v: number): { text: string; color: string } {
-  if (v >= 0.8) return { text: 'High',   color: 'text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200' }
-  if (v >= 0.5) return { text: 'Medium', color: 'text-amber-700   bg-amber-50   ring-1 ring-amber-200'   }
-  return              { text: 'Low',    color: 'text-[#64748b]  bg-[#f4f3f3]  ring-1 ring-[#e2e8f0]'   }
+  if (v >= 0.8)
+    return { text: 'High', color: 'text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200' }
+  if (v >= 0.5)
+    return { text: 'Medium', color: 'text-amber-700   bg-amber-50   ring-1 ring-amber-200' }
+  return { text: 'Low', color: 'text-[rgba(4,11,77,0.55)]  bg-[#FAFAFA]  ring-1 ring-[#E7E7E7]' }
 }
 
 function parseOverlapWarnings(raw: unknown): string[] {
@@ -59,8 +59,10 @@ function parseOverlapWarnings(raw: unknown): string[] {
 function SectionDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3 pt-2">
-      <span className="text-xs font-semibold font-display uppercase tracking-wider text-[#94a3b8]">{label}</span>
-      <div className="flex-1 h-px bg-[#e2e8f0]" />
+      <span className="text-xs font-semibold font-display uppercase tracking-wider text-[rgba(4,11,77,0.40)]">
+        {label}
+      </span>
+      <div className="flex-1 h-px bg-[#E7E7E7]" />
     </div>
   )
 }
@@ -70,11 +72,11 @@ function SectionDivider({ label }: { label: string }) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface TagInputProps {
-  tags:          string[]
-  inputValue:    string
+  tags: string[]
+  inputValue: string
   onInputChange: (val: string) => void
-  onAdd:         (tag: string) => void
-  onRemove:      (tag: string) => void
+  onAdd: (tag: string) => void
+  onRemove: (tag: string) => void
 }
 
 function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInputProps) {
@@ -84,20 +86,22 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
   }
 
   return (
-    <div className={cn(
-      'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-[#e2e8f0] bg-white px-2.5 py-1.5',
-      'focus-within:ring-2 focus-within:ring-[#2605EF]/25 focus-within:border-[#2605EF]/60 transition-colors',
-    )}>
+    <div
+      className={cn(
+        'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-[#E7E7E7] bg-white px-2.5 py-1.5',
+        'focus-within:ring-2 focus-within:ring-[#2605EF]/25 focus-within:border-[#2605EF]/60 transition-colors',
+      )}
+    >
       {tags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 rounded-full bg-[#f4f3f3] px-2 py-0.5 text-xs font-medium text-[#64748b]"
+          className="inline-flex items-center gap-1 rounded-full bg-[#FAFAFA] px-2 py-0.5 text-xs font-medium text-[rgba(4,11,77,0.55)]"
         >
           {tag}
           <button
             type="button"
             onClick={() => onRemove(tag)}
-            className="text-[#94a3b8] hover:text-[#64748b] transition-colors"
+            className="text-[rgba(4,11,77,0.40)] hover:text-[rgba(4,11,77,0.55)] transition-colors"
             aria-label={`Remove ${tag}`}
           >
             <X className="h-2.5 w-2.5" aria-hidden />
@@ -110,12 +114,17 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
           value={inputValue}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); commit(inputValue) }
-            else if (e.key === 'Backspace' && !inputValue && tags.length > 0) onRemove(tags[tags.length - 1])
+            if (e.key === 'Enter' || e.key === ',') {
+              e.preventDefault()
+              commit(inputValue)
+            } else if (e.key === 'Backspace' && !inputValue && tags.length > 0)
+              onRemove(tags[tags.length - 1])
           }}
-          onBlur={() => { if (inputValue.trim()) commit(inputValue) }}
+          onBlur={() => {
+            if (inputValue.trim()) commit(inputValue)
+          }}
           placeholder={tags.length === 0 ? 'Add tags… (Enter or comma)' : ''}
-          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[#94a3b8] py-0.5"
+          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[rgba(4,11,77,0.40)] py-0.5"
         />
       )}
     </div>
@@ -128,55 +137,58 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
 
 export default function ReviewPage({ params }: { params: { draftId: string } }) {
   const { draftId } = params
-  const router      = useRouter()
+  const router = useRouter()
 
   // Load state
-  const [loading,  setLoading]  = useState(true)
-  const [loadErr,  setLoadErr]  = useState('')
+  const [loading, setLoading] = useState(true)
+  const [loadErr, setLoadErr] = useState('')
 
   // Form state
-  const [name,            setName]            = useState('')
-  const [summary,         setSummary]         = useState('')
-  const [description,     setDescription]     = useState('')
-  const [notes,           setNotes]           = useState('')
-  const [ownerName,       setOwnerName]       = useState('')
-  const [ownerEmail,      setOwnerEmail]      = useState('')
-  const [maintainerName,  setMaintainerName]  = useState('')
+  const [name, setName] = useState('')
+  const [summary, setSummary] = useState('')
+  const [description, setDescription] = useState('')
+  const [notes, setNotes] = useState('')
+  const [ownerName, setOwnerName] = useState('')
+  const [ownerEmail, setOwnerEmail] = useState('')
+  const [maintainerName, setMaintainerName] = useState('')
   const [maintainerEmail, setMaintainerEmail] = useState('')
-  const [tags,            setTags]            = useState<string[]>([])
-  const [tagInput,        setTagInput]        = useState('')
+  const [tags, setTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState('')
 
   // AI metadata (display only)
-  const [aiCategory,       setAiCategory]       = useState<string | null>(null)
-  const [aiTechStack,      setAiTechStack]       = useState<string | null>(null)
-  const [aiFrameworkGuess, setAiFrameworkGuess]  = useState<string | null>(null)
-  const [aiSuggestedUsers, setAiSuggestedUsers]  = useState<string | null>(null)
-  const [aiObjective,      setAiObjective]       = useState<string | null>(null)
-  const [aiConfidence,     setAiConfidence]      = useState<number | null>(null)
-  const [overlapWarnings,  setOverlapWarnings]   = useState<string[]>([])
-  const [hasAi,            setHasAi]             = useState(false)
+  const [aiCategory, setAiCategory] = useState<string | null>(null)
+  const [aiTechStack, setAiTechStack] = useState<string | null>(null)
+  const [aiFrameworkGuess, setAiFrameworkGuess] = useState<string | null>(null)
+  const [aiSuggestedUsers, setAiSuggestedUsers] = useState<string | null>(null)
+  const [aiObjective, setAiObjective] = useState<string | null>(null)
+  const [aiConfidence, setAiConfidence] = useState<number | null>(null)
+  const [overlapWarnings, setOverlapWarnings] = useState<string[]>([])
+  const [hasAi, setHasAi] = useState(false)
 
   // Submit state
   const [submitting, setSubmitting] = useState(false)
-  const [serverErr,  setServerErr]  = useState('')
+  const [serverErr, setServerErr] = useState('')
 
   useEffect(() => {
     fetch(`/api/tools/${draftId}`)
       .then((r) => r.json())
       .then((d: FullDraft) => {
-        if ('error' in d) { setLoadErr((d as { error: string }).error); return }
+        if ('error' in d) {
+          setLoadErr((d as { error: string }).error)
+          return
+        }
 
         const hasAnalysis = d.analysisStatus === 'ANALYSIS_COMPLETE'
         setHasAi(hasAnalysis)
 
         // Pre-fill form — AI suggestions take precedence over draft defaults
-        setName(d.aiTitle        || d.name        || '')
-        setSummary(d.aiSummary   || '')
+        setName(d.aiTitle || d.name || '')
+        setSummary(d.aiSummary || '')
         setDescription(d.aiDescription || d.description || '')
-        setNotes(d.notes         || '')
-        setOwnerName(d.ownerName         || '')
-        setOwnerEmail(d.ownerEmail       || '')
-        setMaintainerName(d.maintainerName   || '')
+        setNotes(d.notes || '')
+        setOwnerName(d.ownerName || '')
+        setOwnerEmail(d.ownerEmail || '')
+        setMaintainerName(d.maintainerName || '')
         setMaintainerEmail(d.maintainerEmail || '')
         setTags(d.tags?.map((t) => t.name) ?? [])
 
@@ -195,24 +207,27 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim()) { setServerErr('Tool name is required'); return }
+    if (!name.trim()) {
+      setServerErr('Tool name is required')
+      return
+    }
 
     setSubmitting(true)
     setServerErr('')
     try {
       // Save edits to draft
       const patchRes = await fetch(`/api/tools/${draftId}/draft`, {
-        method:  'PATCH',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name:            name.trim(),
-          description:     description.trim() || '',
-          notes:           notes.trim()       || '',
+          name: name.trim(),
+          description: description.trim() || '',
+          notes: notes.trim() || '',
           tags,
-          aiSummary:       summary.trim()     || '',
-          ownerName:       ownerName.trim()       || '',
-          ownerEmail:      ownerEmail.trim()      || '',
-          maintainerName:  maintainerName.trim()  || '',
+          aiSummary: summary.trim() || '',
+          ownerName: ownerName.trim() || '',
+          ownerEmail: ownerEmail.trim() || '',
+          maintainerName: maintainerName.trim() || '',
           maintainerEmail: maintainerEmail.trim() || '',
         }),
       })
@@ -242,7 +257,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
   if (loading) {
     return (
       <WizardShell currentStep={4} title="Review your tool" maxWidth="max-w-2xl">
-        <div className="flex items-center gap-2 text-[#94a3b8] py-6">
+        <div className="flex items-center gap-2 text-[rgba(4,11,77,0.40)] py-6">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
           <span className="text-sm">Loading analysis results…</span>
         </div>
@@ -268,34 +283,36 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
     <WizardShell
       currentStep={4}
       title="Review & submit"
-      subtitle={hasAi
-        ? 'AI has pre-filled the details below. Review, edit if needed, then submit for approval.'
-        : 'Fill in the details below and submit your tool for admin approval.'
+      subtitle={
+        hasAi
+          ? 'AI has pre-filled the details below. Review, edit if needed, then submit for approval.'
+          : 'Fill in the details below and submit your tool for admin approval.'
       }
       maxWidth="max-w-2xl"
     >
       <form onSubmit={handleSubmit} noValidate className="space-y-8">
-
         {/* ── AI metadata bar ─────────────────────────────────────────── */}
         {hasAi && (
           <div className="rounded-xl border border-[#2605EF]/15 bg-[#2605EF]/[0.03] px-4 py-3 flex flex-wrap items-center gap-3">
             <Sparkles className="h-3.5 w-3.5 text-[#2605EF] flex-shrink-0" aria-hidden />
             <span className="text-xs font-semibold text-[#2605EF]">AI analysis complete</span>
             {conf && (
-              <span className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold', conf.color)}>
+              <span
+                className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold', conf.color)}
+              >
                 {conf.text} confidence
               </span>
             )}
             {aiCategory && (
-              <span className="rounded-full bg-[#f4f3f3] px-2 py-0.5 text-[11px] font-medium text-[#64748b] capitalize">
+              <span className="rounded-full bg-[#FAFAFA] px-2 py-0.5 text-[11px] font-medium text-[rgba(4,11,77,0.55)] capitalize">
                 {aiCategory}
               </span>
             )}
             {aiFrameworkGuess && (
-              <span className="text-xs text-[#64748b]">{aiFrameworkGuess}</span>
+              <span className="text-xs text-[rgba(4,11,77,0.55)]">{aiFrameworkGuess}</span>
             )}
             {aiTechStack && aiTechStack !== aiFrameworkGuess && (
-              <span className="text-xs text-[#94a3b8]">{aiTechStack}</span>
+              <span className="text-xs text-[rgba(4,11,77,0.40)]">{aiTechStack}</span>
             )}
           </div>
         )}
@@ -308,7 +325,8 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               <p className="text-sm font-semibold text-amber-800">Possible overlap detected</p>
             </div>
             <p className="text-xs text-amber-700">
-              This tool may overlap with: {overlapWarnings.join(', ')}. Consider checking those tools before submitting.
+              This tool may overlap with: {overlapWarnings.join(', ')}. Consider checking those
+              tools before submitting.
             </p>
           </div>
         )}
@@ -334,8 +352,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           {/* Summary */}
           <div>
             <Label htmlFor="summary">
-              Summary{' '}
-              <span className="font-normal text-[#94a3b8]">(one sentence)</span>
+              Summary <span className="font-normal text-[rgba(4,11,77,0.40)]">(one sentence)</span>
             </Label>
             <Input
               id="summary"
@@ -364,14 +381,18 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <SectionDivider label="Ownership" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Owner */}
-            <div className="rounded-lg border border-[#e2e8f0] p-3.5 space-y-3">
+            <div className="rounded-lg border border-[#E7E7E7] p-3.5 space-y-3">
               <div className="flex items-center gap-2">
-                <User className="h-3.5 w-3.5 text-[#94a3b8]" aria-hidden />
-                <p className="text-[11px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider">Product owner</p>
+                <User className="h-3.5 w-3.5 text-[rgba(4,11,77,0.40)]" aria-hidden />
+                <p className="text-[11px] font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-wider">
+                  Product owner
+                </p>
               </div>
               <div className="space-y-2">
                 <div>
-                  <Label htmlFor="review-ownerName" className="text-xs">Name</Label>
+                  <Label htmlFor="review-ownerName" className="text-xs">
+                    Name
+                  </Label>
                   <Input
                     id="review-ownerName"
                     placeholder="Full name"
@@ -382,7 +403,9 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
                   />
                 </div>
                 <div>
-                  <Label htmlFor="review-ownerEmail" className="text-xs">Email</Label>
+                  <Label htmlFor="review-ownerEmail" className="text-xs">
+                    Email
+                  </Label>
                   <Input
                     id="review-ownerEmail"
                     type="email"
@@ -396,15 +419,17 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               </div>
             </div>
             {/* Maintainer */}
-            <div className="rounded-lg border border-[#e2e8f0] p-3.5 space-y-3">
+            <div className="rounded-lg border border-[#E7E7E7] p-3.5 space-y-3">
               <div className="flex items-center gap-2">
-                <Wrench className="h-3.5 w-3.5 text-[#94a3b8]" aria-hidden />
-                <p className="text-[11px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider">Maintainer</p>
+                <Wrench className="h-3.5 w-3.5 text-[rgba(4,11,77,0.40)]" aria-hidden />
+                <p className="text-[11px] font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-wider">
+                  Maintainer
+                </p>
               </div>
               <div className="space-y-2">
                 <div>
                   <Label htmlFor="review-maintainerName" className="text-xs">
-                    Name <span className="font-normal text-[#94a3b8]">(optional)</span>
+                    Name <span className="font-normal text-[rgba(4,11,77,0.40)]">(optional)</span>
                   </Label>
                   <Input
                     id="review-maintainerName"
@@ -417,7 +442,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
                 </div>
                 <div>
                   <Label htmlFor="review-maintainerEmail" className="text-xs">
-                    Email <span className="font-normal text-[#94a3b8]">(optional)</span>
+                    Email <span className="font-normal text-[rgba(4,11,77,0.40)]">(optional)</span>
                   </Label>
                   <Input
                     id="review-maintainerEmail"
@@ -440,15 +465,19 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
             <SectionDivider label="AI Insights" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {aiObjective && (
-                <div className="rounded-lg bg-[#f4f3f3] border border-[#e2e8f0] px-3.5 py-3">
-                  <p className="text-[10px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider mb-1">Objective</p>
-                  <p className="text-sm text-[#64748b]">{aiObjective}</p>
+                <div className="rounded-lg bg-[#FAFAFA] border border-[#E7E7E7] px-3.5 py-3">
+                  <p className="text-[10px] font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-wider mb-1">
+                    Objective
+                  </p>
+                  <p className="text-sm text-[rgba(4,11,77,0.55)]">{aiObjective}</p>
                 </div>
               )}
               {aiSuggestedUsers && (
-                <div className="rounded-lg bg-[#f4f3f3] border border-[#e2e8f0] px-3.5 py-3">
-                  <p className="text-[10px] font-semibold font-display text-[#94a3b8] uppercase tracking-wider mb-1">For</p>
-                  <p className="text-sm text-[#64748b]">{aiSuggestedUsers}</p>
+                <div className="rounded-lg bg-[#FAFAFA] border border-[#E7E7E7] px-3.5 py-3">
+                  <p className="text-[10px] font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-wider mb-1">
+                    For
+                  </p>
+                  <p className="text-sm text-[rgba(4,11,77,0.55)]">{aiSuggestedUsers}</p>
                 </div>
               )}
             </div>
@@ -467,7 +496,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onAdd={(tag) => setTags((prev) => [...prev, tag])}
               onRemove={(tag) => setTags((prev) => prev.filter((t) => t !== tag))}
             />
-            <p className="text-xs text-[#94a3b8] mt-1.5">
+            <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1.5">
               Up to 10 tags. Press Enter or comma to add.
             </p>
           </div>
@@ -479,7 +508,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <div>
             <Label htmlFor="notes">
               Internal notes{' '}
-              <span className="font-normal text-[#94a3b8]">(optional)</span>
+              <span className="font-normal text-[rgba(4,11,77,0.40)]">(optional)</span>
             </Label>
             <Textarea
               id="notes"
@@ -488,7 +517,9 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
             />
-            <p className="text-xs text-[#94a3b8] mt-1.5">Visible to platform admins only.</p>
+            <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1.5">
+              Visible to platform admins only.
+            </p>
           </div>
         </div>
 
@@ -501,16 +532,12 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
         )}
 
         {/* ── Actions ──────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-3 pt-1 border-t border-[#e2e8f0]">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#E7E7E7]">
           <Button type="submit" disabled={submitting}>
             {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {submitting ? 'Submitting…' : 'Submit for review'}
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => router.back()}
-          >
+          <Button type="button" variant="ghost" onClick={() => router.back()}>
             Back
           </Button>
         </div>

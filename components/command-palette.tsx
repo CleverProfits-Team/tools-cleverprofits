@@ -19,9 +19,14 @@ interface CommandPaletteProps {
 }
 
 const STATIC_COMMANDS = [
-  { id: 'nav-dashboard',  label: 'Go to Dashboard',     href: '/dashboard',          icon: LayoutDashboard },
-  { id: 'nav-my-tools',   label: 'Go to My Tools',      href: '/dashboard/my-tools', icon: ClipboardList   },
-  { id: 'nav-register',   label: 'Register a new tool', href: '/dashboard/register', icon: PlusCircle      },
+  { id: 'nav-dashboard', label: 'Go to Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { id: 'nav-my-tools', label: 'Go to My Tools', href: '/dashboard/my-tools', icon: ClipboardList },
+  {
+    id: 'nav-register',
+    label: 'Register a new tool',
+    href: '/dashboard/register',
+    icon: PlusCircle,
+  },
 ]
 
 export function CommandPalette({ tools }: CommandPaletteProps) {
@@ -58,10 +63,12 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
 
   const filteredTools = useMemo(() => {
     if (!q) return tools.filter((t) => t.status === 'ACTIVE').slice(0, 5)
-    return tools.filter((t) => {
-      const haystack = `${t.name} ${t.team ?? ''}`.toLowerCase()
-      return haystack.includes(q)
-    }).slice(0, 8)
+    return tools
+      .filter((t) => {
+        const haystack = `${t.name} ${t.team ?? ''}`.toLowerCase()
+        return haystack.includes(q)
+      })
+      .slice(0, 8)
   }, [tools, q])
 
   const filteredCommands = useMemo(() => {
@@ -71,10 +78,13 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
 
   const totalResults = filteredTools.length + filteredCommands.length
 
-  const navigate = useCallback((href: string) => {
-    setOpen(false)
-    router.push(href)
-  }, [router])
+  const navigate = useCallback(
+    (href: string) => {
+      setOpen(false)
+      router.push(href)
+    },
+    [router],
+  )
 
   const executeSelected = useCallback(() => {
     if (selectedIndex < filteredTools.length) {
@@ -124,21 +134,24 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
 
       {/* Palette */}
       <div className="fixed inset-x-0 top-[15vh] z-50 flex justify-center px-4">
-        <div className="w-full max-w-lg bg-white rounded-2xl shadow-[0_24px_64px_-16px_rgba(4,11,77,0.25)] border border-[#e2e8f0] overflow-hidden">
+        <div className="w-full max-w-lg bg-white rounded-2xl shadow-[0_24px_64px_-16px_rgba(4,11,77,0.25)] border border-[#E7E7E7] overflow-hidden">
           {/* Search input */}
-          <div className="flex items-center gap-3 px-4 border-b border-[#e2e8f0]">
-            <Search className="h-4 w-4 text-[#94a3b8] flex-shrink-0" aria-hidden />
+          <div className="flex items-center gap-3 px-4 border-b border-[#E7E7E7]">
+            <Search className="h-4 w-4 text-[rgba(4,11,77,0.40)] flex-shrink-0" aria-hidden />
             <input
               ref={inputRef}
               type="text"
               placeholder="Search tools or jump to..."
               value={query}
-              onChange={(e) => { setQuery(e.target.value); setSelectedIndex(0) }}
+              onChange={(e) => {
+                setQuery(e.target.value)
+                setSelectedIndex(0)
+              }}
               onKeyDown={handleKeyDown}
-              className="flex-1 h-12 text-sm text-[#040B4D] placeholder:text-[#94a3b8] bg-transparent outline-none"
+              className="flex-1 h-12 text-sm text-[#040B4D] placeholder:text-[rgba(4,11,77,0.40)] bg-transparent outline-none"
               aria-label="Command palette search"
             />
-            <kbd className="hidden sm:inline-flex items-center rounded border border-[#e2e8f0] bg-[#f4f3f3] px-1.5 py-0.5 text-[10px] font-medium text-[#94a3b8]">
+            <kbd className="hidden sm:inline-flex items-center rounded border border-[#E7E7E7] bg-[#FAFAFA] px-1.5 py-0.5 text-[10px] font-medium text-[rgba(4,11,77,0.40)]">
               ESC
             </kbd>
           </div>
@@ -148,7 +161,7 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
             {/* Tools section */}
             {filteredTools.length > 0 && (
               <div>
-                <p className="px-4 py-1.5 text-[10px] font-semibold tracking-widest uppercase text-[#94a3b8]">
+                <p className="px-4 py-1.5 text-[10px] font-semibold tracking-widest uppercase text-[rgba(4,11,77,0.40)]">
                   Tools
                 </p>
                 {filteredTools.map((tool, i) => {
@@ -168,7 +181,7 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedIndex(i)}
                       className={cn(
                         'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
-                        isSelected ? 'bg-[#EEF2FB]' : 'hover:bg-[#f4f3f3]',
+                        isSelected ? 'bg-[#EEF2FB]' : 'hover:bg-[#FAFAFA]',
                       )}
                     >
                       <div
@@ -182,10 +195,17 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-[#040B4D] truncate">{tool.name}</p>
-                        {tool.team && <p className="text-[11px] text-[#94a3b8] truncate">{tool.team}</p>}
+                        {tool.team && (
+                          <p className="text-[11px] text-[rgba(4,11,77,0.40)] truncate">
+                            {tool.team}
+                          </p>
+                        )}
                       </div>
                       {tool.status === 'ACTIVE' && (
-                        <ArrowUpRight className="h-3.5 w-3.5 text-[#94a3b8] flex-shrink-0" aria-hidden />
+                        <ArrowUpRight
+                          className="h-3.5 w-3.5 text-[rgba(4,11,77,0.40)] flex-shrink-0"
+                          aria-hidden
+                        />
                       )}
                     </button>
                   )
@@ -196,7 +216,7 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
             {/* Commands section */}
             {filteredCommands.length > 0 && (
               <div>
-                <p className="px-4 py-1.5 text-[10px] font-semibold tracking-widest uppercase text-[#94a3b8]">
+                <p className="px-4 py-1.5 text-[10px] font-semibold tracking-widest uppercase text-[rgba(4,11,77,0.40)]">
                   Commands
                 </p>
                 {filteredCommands.map((cmd, i) => {
@@ -211,11 +231,11 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={cn(
                         'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
-                        isSelected ? 'bg-[#EEF2FB]' : 'hover:bg-[#f4f3f3]',
+                        isSelected ? 'bg-[#EEF2FB]' : 'hover:bg-[#FAFAFA]',
                       )}
                     >
-                      <div className="h-7 w-7 rounded-lg bg-[#f4f3f3] flex items-center justify-center flex-shrink-0">
-                        <Icon className="h-3.5 w-3.5 text-[#64748b]" aria-hidden />
+                      <div className="h-7 w-7 rounded-lg bg-[#FAFAFA] flex items-center justify-center flex-shrink-0">
+                        <Icon className="h-3.5 w-3.5 text-[rgba(4,11,77,0.55)]" aria-hidden />
                       </div>
                       <p className="text-sm font-medium text-[#040B4D]">{cmd.label}</p>
                     </button>
@@ -226,23 +246,31 @@ export function CommandPalette({ tools }: CommandPaletteProps) {
 
             {totalResults === 0 && (
               <div className="py-8 text-center">
-                <p className="text-sm text-[#94a3b8]">No results for &ldquo;{query}&rdquo;</p>
+                <p className="text-sm text-[rgba(4,11,77,0.40)]">
+                  No results for &ldquo;{query}&rdquo;
+                </p>
               </div>
             )}
           </div>
 
           {/* Footer hint */}
-          <div className="border-t border-[#e2e8f0] px-4 py-2 flex items-center gap-4 text-[10px] text-[#94a3b8]">
+          <div className="border-t border-[#E7E7E7] px-4 py-2 flex items-center gap-4 text-[10px] text-[rgba(4,11,77,0.40)]">
             <span className="inline-flex items-center gap-1">
-              <kbd className="rounded border border-[#e2e8f0] bg-[#f4f3f3] px-1 py-px font-medium">↑↓</kbd>
+              <kbd className="rounded border border-[#E7E7E7] bg-[#FAFAFA] px-1 py-px font-medium">
+                ↑↓
+              </kbd>
               navigate
             </span>
             <span className="inline-flex items-center gap-1">
-              <kbd className="rounded border border-[#e2e8f0] bg-[#f4f3f3] px-1 py-px font-medium">↵</kbd>
+              <kbd className="rounded border border-[#E7E7E7] bg-[#FAFAFA] px-1 py-px font-medium">
+                ↵
+              </kbd>
               open
             </span>
             <span className="inline-flex items-center gap-1">
-              <kbd className="rounded border border-[#e2e8f0] bg-[#f4f3f3] px-1 py-px font-medium">esc</kbd>
+              <kbd className="rounded border border-[#E7E7E7] bg-[#FAFAFA] px-1 py-px font-medium">
+                esc
+              </kbd>
               close
             </span>
           </div>

@@ -20,6 +20,7 @@ The central abstraction is the **Tool** — an entity with context, purpose, own
 **Secondary**: Admins (ADMIN / SUPER_ADMIN) — manage governance, approvals, user access. They need power without ceremony.
 
 **Persona snapshot**:
+
 - Not a developer. Doesn't know what a slug is.
 - Finds tools by name or team, not by remembering URLs.
 - Trusts a platform that "just knows" — autocomplete, smart defaults, zero jargon.
@@ -30,12 +31,15 @@ The central abstraction is the **Tool** — an entity with context, purpose, own
 ## Design Philosophy — Three Principles
 
 ### 1. Extreme Simplicity
+
 Nothing technical, heavy, or intimidating. Every interaction should feel obvious, light, and almost automatic. If the user has to think, the design failed.
 
 ### 2. Living System
+
 This is not a static registry. Tools have a lifecycle: born, active, growing, stale, archived. The design should express this aliveness — motion that suggests activity, states that tell stories, space that breathes.
 
 ### 3. Organizational Clarity
+
 Everything in the company can be located, understood, and evaluated at a glance. Hierarchy, access, team — visible at a glance, never buried.
 
 ---
@@ -45,6 +49,7 @@ Everything in the company can be located, understood, and evaluated at a glance.
 Bubbles are **structural**, not decorative.
 
 Each tool = a bubble in a living system:
+
 - **Size** → impact or usage volume
 - **Proximity** → relationship or dependency between tools
 - **Movement** → activity (or lack of it)
@@ -61,11 +66,13 @@ Current implementation: bubbles animate in the sidebar as ambient life. Future: 
 **Three words**: **Intelligent · Light · Alive**
 
 The product speaks as an **operational assistant** — not a technical tool.
+
 - Clear, direct, zero jargon
 - Confident but not arrogant
 - Feels like it understands you
 
 **Voice examples**:
+
 - ❌ "Submit tool for approval" → ✅ "Add your tool — we'll handle the rest"
 - ❌ "No results found" → ✅ "No tools match your filters"
 - ❌ "Error: unauthorized" → ✅ "This tool is restricted to leadership"
@@ -75,24 +82,28 @@ The product speaks as an **operational assistant** — not a technical tool.
 ## Visual Language
 
 ### Feeling
+
 - Premium but not complex
 - Minimalist but not empty
 - Technological but human
 
 ### Surfaces
+
 - **Background**: `#EEF2FB` with subtle dot-grid texture
 - **Sidebar**: `#040B4D` deep navy — the brand's "soul"
 - **Cards/panels**: white (`#FFFFFF`) with `rgba(4,11,77,x)` navy-tinted shadows
 - **Hero**: `bg-hero-mesh` — dark navy radial mesh, bleeds to the sidebar
 
 ### Typography — Tools Platform Spec
+
 - **Headers (h1–h6)**: **Inter** Bold — `letter-spacing: -0.02em`, `line-height: 1.2`
 - **Body / content**: **DM Sans** Regular (400 only — never 500+, bleeds into Inter territory)
 - **Small UI labels / table headers**: **Inter** Medium 500 — `font-size: 0.75rem`, `letter-spacing: 0.03em`
-- Note: brand guidelines specify Space Grotesk + Inter, but tools platform uses Inter + DM Sans due to existing system investment
+- Note: aligned with brand design system — Inter for display/UI labels, DM Sans for body
 - Scale principle: meaningful jumps between levels (skip steps, not increments)
 
 ### Color System
+
 - `#040B4D` — Royal Blue (primary surface, deepest brand)
 - `#2605EF` — Electric Blue (primary action, active states, accent)
 - `#EEF2FB` — Background (light, blue-tinted — not pure white)
@@ -102,6 +113,7 @@ The product speaks as an **operational assistant** — not a technical tool.
 - **All shadows**: navy-tinted `rgba(4,11,77,x)` — never pure black
 
 ### Shape Language
+
 - `rounded-xl` for cards, panels, modals
 - `rounded-lg` for buttons, nav items, small containers
 - `rounded` for badges and chips
@@ -113,15 +125,15 @@ The product speaks as an **operational assistant** — not a technical tool.
 
 The system should feel alive, but controlled.
 
-| Trigger | Response |
-|---------|----------|
-| Hover card | Subtle lift (`-translate-y-1`) + shadow deepens |
-| Hover list row | Background tint + accent bar intensifies to 100% |
-| Active nav item | `bg-white/[0.15]` + left accent pill |
-| Page load | `fade-up` (0.35s ease) with staggered delays |
+| Trigger          | Response                                                   |
+| ---------------- | ---------------------------------------------------------- |
+| Hover card       | Subtle lift (`-translate-y-1`) + shadow deepens            |
+| Hover list row   | Background tint + accent bar intensifies to 100%           |
+| Active nav item  | `bg-white/[0.15]` + left accent pill                       |
+| Page load        | `fade-up` (0.35s ease) with staggered delays               |
 | Bubble animation | `bubble-rise` — translateY -96vh, 8–16s cycle, ease-in-out |
-| Mouse in sidebar | Radial spotlight follows cursor |
-| Filter toggle | Collapsible row — no layout shift |
+| Mouse in sidebar | Radial spotlight follows cursor                            |
+| Filter toggle    | Collapsible row — no layout shift                          |
 
 **Reduced motion**: All animations disabled via `prefers-reduced-motion` media query.
 
@@ -139,12 +151,12 @@ The system should feel alive, but controlled.
 
 ## Conceptual Architecture
 
-| Layer | Route | Purpose |
-|-------|-------|---------|
-| Creation | `/dashboard/register` | Tools are born — minimum input, system does the rest |
-| Discovery | `/dashboard`, `/dashboard/my-tools` | Tools are explored — visual, fast, understandable |
-| Intelligence | `/dashboard/admin/insights`, `/analytics` | Patterns are understood — what works, what doesn't |
-| Governance | `/dashboard/admin/tools`, `/users`, `/audit` | Control and scale — no friction, but with clarity |
+| Layer        | Route                                        | Purpose                                              |
+| ------------ | -------------------------------------------- | ---------------------------------------------------- |
+| Creation     | `/dashboard/register`                        | Tools are born — minimum input, system does the rest |
+| Discovery    | `/dashboard`, `/dashboard/my-tools`          | Tools are explored — visual, fast, understandable    |
+| Intelligence | `/dashboard/admin/insights`, `/analytics`    | Patterns are understood — what works, what doesn't   |
+| Governance   | `/dashboard/admin/tools`, `/users`, `/audit` | Control and scale — no friction, but with clarity    |
 
 ---
 

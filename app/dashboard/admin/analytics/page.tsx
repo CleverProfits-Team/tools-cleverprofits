@@ -23,26 +23,31 @@ function formatChartDate(iso: string): string {
 
 function TrendBadge({ curr, prev }: { curr: number; prev: number }) {
   if (prev === 0 && curr === 0) return null
-  if (prev === 0) return (
-    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold font-display text-emerald-600 bg-emerald-50 rounded-full px-1.5 py-0.5">
-      New
-    </span>
-  )
+  if (prev === 0)
+    return (
+      <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold font-display text-emerald-600 bg-emerald-50 rounded-full px-1.5 py-0.5">
+        New
+      </span>
+    )
   const pct = Math.round(((curr - prev) / prev) * 100)
-  if (pct === 0) return (
-    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold font-display text-[#94a3b8] bg-[#f4f3f3] rounded-full px-1.5 py-0.5">
-      <Minus className="h-2.5 w-2.5" />
-      0%
-    </span>
-  )
+  if (pct === 0)
+    return (
+      <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold font-display text-[rgba(4,11,77,0.40)] bg-[#FAFAFA] rounded-full px-1.5 py-0.5">
+        <Minus className="h-2.5 w-2.5" />
+        0%
+      </span>
+    )
   const up = pct > 0
   return (
-    <span className={cn(
-      'inline-flex items-center gap-0.5 text-[10px] font-semibold font-display rounded-full px-1.5 py-0.5',
-      up ? 'text-emerald-600 bg-emerald-50' : 'text-red-500 bg-red-50',
-    )}>
+    <span
+      className={cn(
+        'inline-flex items-center gap-0.5 text-[10px] font-semibold font-display rounded-full px-1.5 py-0.5',
+        up ? 'text-emerald-600 bg-emerald-50' : 'text-red-500 bg-red-50',
+      )}
+    >
       {up ? <ArrowUpRight className="h-2.5 w-2.5" /> : <ArrowDownRight className="h-2.5 w-2.5" />}
-      {up ? '+' : ''}{pct}%
+      {up ? '+' : ''}
+      {pct}%
     </span>
   )
 }
@@ -66,7 +71,7 @@ export default async function AnalyticsPage() {
       by: ['toolId'],
       where: { createdAt: { gte: since30d } },
       _count: { id: true },
-      _avg:   { durationMs: true },
+      _avg: { durationMs: true },
     }),
     prisma.proxyHit.groupBy({
       by: ['toolId'],
@@ -79,31 +84,31 @@ export default async function AnalyticsPage() {
     }),
   ])
 
-  const hits30dMap     = new Map(hits30d.map((r) => [r.toolId, r]))
+  const hits30dMap = new Map(hits30d.map((r) => [r.toolId, r]))
   const hitsPrev30dMap = new Map(hitsPrev30d.map((r) => [r.toolId, r._count.id]))
   const hitsAllTimeMap = new Map(hitsAllTime.map((r) => [r.toolId, r._count.id]))
 
   const toolStats = tools
     .map((t) => {
-      const h30     = hits30dMap.get(t.id)
+      const h30 = hits30dMap.get(t.id)
       const allTime = hitsAllTimeMap.get(t.id) ?? 0
-      const prev    = hitsPrev30dMap.get(t.id) ?? 0
+      const prev = hitsPrev30dMap.get(t.id) ?? 0
       return {
         ...t,
-        hits30d:       h30?._count.id ?? 0,
-        hitsPrev30d:   prev,
-        hitsAllTime:   allTime,
+        hits30d: h30?._count.id ?? 0,
+        hitsPrev30d: prev,
+        hitsAllTime: allTime,
         avgDurationMs: h30?._avg.durationMs ?? null,
       }
     })
     .sort((a, b) => b.hits30d - a.hits30d)
 
-  const totalHits30d  = hits30d.reduce((s, r) => s + r._count.id, 0)
-  const totalPrev30d  = hitsPrev30d.reduce((s, r) => s + r._count.id, 0)
-  const totalHitsAll  = hitsAllTime.reduce((s, r) => s + r._count.id, 0)
-  const topTool       = toolStats[0]
-  const activeTools   = toolStats.filter((t) => t.hits30d > 0).length
-  const prevActive    = toolStats.filter((t) => t.hitsPrev30d > 0).length
+  const totalHits30d = hits30d.reduce((s, r) => s + r._count.id, 0)
+  const totalPrev30d = hitsPrev30d.reduce((s, r) => s + r._count.id, 0)
+  const totalHitsAll = hitsAllTime.reduce((s, r) => s + r._count.id, 0)
+  const topTool = toolStats[0]
+  const activeTools = toolStats.filter((t) => t.hits30d > 0).length
+  const prevActive = toolStats.filter((t) => t.hitsPrev30d > 0).length
 
   const dailyHits = await prisma.$queryRaw<{ day: Date; count: bigint }[]>`
     SELECT
@@ -115,12 +120,10 @@ export default async function AnalyticsPage() {
     ORDER BY day ASC
   `
 
-  const dayMap = new Map(
-    dailyHits.map((d) => [d.day.toISOString().slice(0, 10), Number(d.count)])
-  )
+  const dayMap = new Map(dailyHits.map((d) => [d.day.toISOString().slice(0, 10), Number(d.count)]))
   const days: { day: string; count: number }[] = []
   for (let i = 29; i >= 0; i--) {
-    const d   = new Date(now - i * 24 * 60 * 60 * 1000)
+    const d = new Date(now - i * 24 * 60 * 60 * 1000)
     const key = d.toISOString().slice(0, 10)
     days.push({ day: key, count: dayMap.get(key) ?? 0 })
   }
@@ -135,54 +138,66 @@ export default async function AnalyticsPage() {
         <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
           Usage analytics
         </h1>
-        <p className="text-sm text-[#64748b] mt-1">
+        <p className="text-sm text-[rgba(4,11,77,0.55)] mt-1">
           Track tool adoption and performance across CleverProfits teams.
         </p>
       </div>
 
       {/* ── KPI cards ───────────────────────────────────────────────── */}
       <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold font-display text-[#94a3b8] uppercase tracking-widest">Hits (30d)</p>
+            <p className="text-xs font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest">
+              Hits (30d)
+            </p>
             <div className="h-8 w-8 rounded-full bg-[#eeeeff] flex items-center justify-center">
               <BarChart2 className="h-4 w-4 text-[#2605EF]" aria-hidden />
             </div>
           </div>
           <div className="flex items-end gap-2">
-            <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">{totalHits30d.toLocaleString()}</p>
+            <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">
+              {totalHits30d.toLocaleString()}
+            </p>
             <div className="mb-1">
               <TrendBadge curr={totalHits30d} prev={totalPrev30d} />
             </div>
           </div>
-          <p className="text-xs text-[#94a3b8] mt-1">vs prior 30 days</p>
+          <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1">vs prior 30 days</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold font-display text-[#94a3b8] uppercase tracking-widest">All-time</p>
-            <div className="h-8 w-8 rounded-full bg-[#f4f3f3] flex items-center justify-center">
-              <Zap className="h-4 w-4 text-[#64748b]" aria-hidden />
+            <p className="text-xs font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest">
+              All-time
+            </p>
+            <div className="h-8 w-8 rounded-full bg-[#FAFAFA] flex items-center justify-center">
+              <Zap className="h-4 w-4 text-[rgba(4,11,77,0.55)]" aria-hidden />
             </div>
           </div>
-          <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">{totalHitsAll.toLocaleString()}</p>
-          <p className="text-xs text-[#94a3b8] mt-1">total requests</p>
+          <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">
+            {totalHitsAll.toLocaleString()}
+          </p>
+          <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1">total requests</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold font-display text-[#94a3b8] uppercase tracking-widest">Active tools</p>
+            <p className="text-xs font-semibold font-display text-[rgba(4,11,77,0.40)] uppercase tracking-widest">
+              Active tools
+            </p>
             <div className="h-8 w-8 rounded-full bg-emerald-50 flex items-center justify-center">
               <TrendingUp className="h-4 w-4 text-emerald-500" aria-hidden />
             </div>
           </div>
           <div className="flex items-end gap-2">
-            <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">{activeTools}</p>
+            <p className="text-3xl font-bold font-display text-[#040B4D] tabular-nums">
+              {activeTools}
+            </p>
             <div className="mb-1">
               <TrendBadge curr={activeTools} prev={prevActive} />
             </div>
           </div>
-          <p className="text-xs text-[#94a3b8] mt-1">used in last 30 days</p>
+          <p className="text-xs text-[rgba(4,11,77,0.40)] mt-1">used in last 30 days</p>
         </div>
       </div>
 
@@ -192,22 +207,31 @@ export default async function AnalyticsPage() {
           <div className="h-7 w-7 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0">
             <TrendingUp className="h-3.5 w-3.5 text-white" aria-hidden />
           </div>
-          <p className="text-sm text-[#64748b]">
-            <span className="text-[#94a3b8]">Most used in last 30 days — </span>
-            <Link href={`/tools/${topTool.slug}`} className="font-semibold text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded">
+          <p className="text-sm text-[rgba(4,11,77,0.55)]">
+            <span className="text-[rgba(4,11,77,0.40)]">Most used in last 30 days — </span>
+            <Link
+              href={`/tools/${topTool.slug}`}
+              className="font-semibold text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+            >
               {topTool.name}
             </Link>
-            <span className="text-[#94a3b8]"> with </span>
-            <span className="font-semibold text-[#040B4D]">{topTool.hits30d.toLocaleString()} requests</span>
+            <span className="text-[rgba(4,11,77,0.40)]"> with </span>
+            <span className="font-semibold text-[#040B4D]">
+              {topTool.hits30d.toLocaleString()} requests
+            </span>
           </p>
         </div>
       )}
 
       {/* ── 30-day chart ────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card p-6 mb-6">
-        <h2 className="text-sm font-semibold font-display text-[#040B4D] mb-5">Requests — last 30 days</h2>
+      <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6 mb-6">
+        <h2 className="text-sm font-semibold font-display text-[#040B4D] mb-5">
+          Requests — last 30 days
+        </h2>
         {totalHits30d === 0 ? (
-          <p className="text-sm text-[#94a3b8] text-center py-8">No requests recorded yet.</p>
+          <p className="text-sm text-[rgba(4,11,77,0.40)] text-center py-8">
+            No requests recorded yet.
+          </p>
         ) : (
           <div className="flex items-end gap-[3px] h-36">
             {days.map(({ day, count }) => (
@@ -220,44 +244,59 @@ export default async function AnalyticsPage() {
             ))}
           </div>
         )}
-        <div className="flex justify-between mt-2 text-[10px] text-[#94a3b8] font-medium">
+        <div className="flex justify-between mt-2 text-[10px] text-[rgba(4,11,77,0.40)] font-medium">
           <span>{formatChartDate(days[0]?.day ?? '')}</span>
           <span>{formatChartDate(days[days.length - 1]?.day ?? '')}</span>
         </div>
       </div>
 
       {/* ── Per-tool table ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-[#e2e8f0] shadow-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#e2e8f0]">
+      <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card overflow-hidden">
+        <div className="px-6 py-4 border-b border-[#E7E7E7]">
           <h2 className="text-sm font-semibold font-display text-[#040B4D]">Tool breakdown</h2>
-          <p className="text-xs text-[#94a3b8] mt-0.5">Sorted by 30-day activity</p>
+          <p className="text-xs text-[rgba(4,11,77,0.40)] mt-0.5">Sorted by 30-day activity</p>
         </div>
 
         {toolStats.length === 0 ? (
-          <p className="text-sm text-[#94a3b8] text-center py-12">No tools registered.</p>
+          <p className="text-sm text-[rgba(4,11,77,0.40)] text-center py-12">
+            No tools registered.
+          </p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#e2e8f0] bg-[#f4f3f3]/60">
-                <th className="text-left px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[#94a3b8]">Tool</th>
-                <th className="text-right px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[#94a3b8]">30d activity</th>
-                <th className="text-right px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[#94a3b8]">All-time</th>
-                <th className="text-right px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[#94a3b8]">Avg latency</th>
+              <tr className="border-b border-[#E7E7E7] bg-[#FAFAFA]/60">
+                <th className="text-left px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[rgba(4,11,77,0.40)]">
+                  Tool
+                </th>
+                <th className="text-right px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[rgba(4,11,77,0.40)]">
+                  30d activity
+                </th>
+                <th className="text-right px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[rgba(4,11,77,0.40)]">
+                  All-time
+                </th>
+                <th className="text-right px-6 py-3 text-[10px] font-semibold font-display uppercase tracking-widest text-[rgba(4,11,77,0.40)]">
+                  Avg latency
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#e2e8f0]/60">
+            <tbody className="divide-y divide-[#E7E7E7]/60">
               {toolStats.map((t) => (
-                <tr key={t.id} className="hover:bg-[#f4f3f3] transition-colors duration-150 group">
+                <tr key={t.id} className="hover:bg-[#FAFAFA] transition-colors duration-150 group">
                   <td className="px-6 py-3.5">
-                    <Link href={`/tools/${t.slug}`} className="font-semibold font-display text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded">
+                    <Link
+                      href={`/tools/${t.slug}`}
+                      className="font-semibold font-display text-[#040B4D] hover:text-[#2605EF] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+                    >
                       {t.name}
                     </Link>
-                    <span className="ml-2 text-xs font-mono text-[#94a3b8]">/{t.slug}</span>
+                    <span className="ml-2 text-xs font-mono text-[rgba(4,11,77,0.40)]">
+                      /{t.slug}
+                    </span>
                   </td>
                   <td className="px-6 py-3.5">
                     <div className="flex items-center justify-end gap-3">
                       {t.hits30d > 0 && (
-                        <div className="w-16 h-1.5 rounded-full bg-[#f4f3f3] overflow-hidden hidden sm:block">
+                        <div className="w-16 h-1.5 rounded-full bg-[#FAFAFA] overflow-hidden hidden sm:block">
                           <div
                             className="h-full rounded-full bg-[#2605EF]"
                             style={{ width: `${(t.hits30d / maxHits30d) * 100}%` }}
@@ -265,14 +304,22 @@ export default async function AnalyticsPage() {
                         </div>
                       )}
                       <span className="tabular-nums font-semibold font-display text-[#040B4D] w-12 text-right">
-                        {t.hits30d > 0 ? t.hits30d.toLocaleString() : <span className="text-[#94a3b8] font-normal">—</span>}
+                        {t.hits30d > 0 ? (
+                          t.hits30d.toLocaleString()
+                        ) : (
+                          <span className="text-[rgba(4,11,77,0.40)] font-normal">—</span>
+                        )}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-3.5 text-right tabular-nums text-[#64748b]">
-                    {t.hitsAllTime > 0 ? t.hitsAllTime.toLocaleString() : <span className="text-[#94a3b8]">—</span>}
+                  <td className="px-6 py-3.5 text-right tabular-nums text-[rgba(4,11,77,0.55)]">
+                    {t.hitsAllTime > 0 ? (
+                      t.hitsAllTime.toLocaleString()
+                    ) : (
+                      <span className="text-[rgba(4,11,77,0.40)]">—</span>
+                    )}
                   </td>
-                  <td className="px-6 py-3.5 text-right text-[#64748b]">
+                  <td className="px-6 py-3.5 text-right text-[rgba(4,11,77,0.55)]">
                     {formatDuration(t.avgDurationMs)}
                   </td>
                 </tr>

@@ -9,10 +9,15 @@ import { ExternalLink, ArrowLeft, Clock, Users, Pencil, History } from 'lucide-r
 
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata(
-  { params }: { params: { slug: string } }
-): Promise<Metadata> {
-  const tool = await prisma.tool.findUnique({ where: { slug: params.slug }, select: { name: true } })
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  const tool = await prisma.tool.findUnique({
+    where: { slug: params.slug },
+    select: { name: true },
+  })
   return { title: tool?.name ?? 'Tool' }
 }
 
@@ -28,7 +33,7 @@ export default async function ToolInfoPage({
   const userEmail = session?.user?.email ?? ''
 
   const tool = await prisma.tool.findUnique({
-    where:   { slug: params.slug },
+    where: { slug: params.slug },
     include: { tags: { select: { id: true, name: true } } },
   })
 
@@ -42,31 +47,32 @@ export default async function ToolInfoPage({
   }
 
   const createdAt = tool.createdAt.toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
   })
 
   const showEdit = isAdmin || (isOwner && (tool.status === 'PENDING' || tool.status === 'REJECTED'))
-  const updated  = searchParams.updated === '1'
+  const updated = searchParams.updated === '1'
 
   // Version history (shown to owner + admins)
   const canSeeChangelog = isAdmin || isOwner
   const versions = canSeeChangelog
     ? await prisma.toolVersion.findMany({
-        where:   { toolId: tool.id },
+        where: { toolId: tool.id },
         orderBy: { version: 'desc' },
-        take:    10,
+        take: 10,
       })
     : []
 
   return (
     <div className="min-h-screen bg-[#EEF2FB]">
       <div className="max-w-2xl mx-auto px-4 py-12">
-
         {/* Back */}
         <div className="flex items-center justify-between mb-8">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm text-[#64748b] hover:text-[#040B4D] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+            className="inline-flex items-center gap-1.5 text-sm text-[rgba(4,11,77,0.55)] hover:text-[#040B4D] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
             Back to dashboard
@@ -74,7 +80,7 @@ export default async function ToolInfoPage({
           {showEdit && (
             <Link
               href={`/dashboard/tools/${tool.id}/edit`}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#e2e8f0] bg-white px-3 py-1.5 text-sm font-medium text-[#64748b] hover:bg-[#f4f3f3] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#E7E7E7] bg-white px-3 py-1.5 text-sm font-medium text-[rgba(4,11,77,0.55)] hover:bg-[#FAFAFA] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2"
             >
               <Pencil className="h-3.5 w-3.5" aria-hidden />
               Edit
@@ -102,33 +108,37 @@ export default async function ToolInfoPage({
         {tool.status === 'REJECTED' && (
           <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
             <p className="text-sm font-medium text-red-800 mb-1">This tool was rejected.</p>
-            {tool.rejectionReason && (
-              <p className="text-sm text-red-700">{tool.rejectionReason}</p>
-            )}
+            {tool.rejectionReason && <p className="text-sm text-red-700">{tool.rejectionReason}</p>}
           </div>
         )}
 
         {tool.status === 'ARCHIVED' && (
-          <div className="mb-6 rounded-lg border border-[#e2e8f0] bg-[#f4f3f3] px-4 py-3">
-            <p className="text-sm text-[#64748b]">This tool has been archived and is no longer active.</p>
+          <div className="mb-6 rounded-lg border border-[#E7E7E7] bg-[#FAFAFA] px-4 py-3">
+            <p className="text-sm text-[rgba(4,11,77,0.55)]">
+              This tool has been archived and is no longer active.
+            </p>
           </div>
         )}
 
         {/* Card */}
-        <div className="rounded-2xl border border-[#e2e8f0] bg-white shadow-card overflow-hidden">
+        <div className="rounded-2xl border border-[#E7E7E7] bg-white shadow-card overflow-hidden">
           <div className="p-6 sm:p-8">
             {/* Header */}
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">{tool.name}</h1>
-                <p className="text-sm font-mono text-[#94a3b8] mt-0.5">/{tool.slug}</p>
+                <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
+                  {tool.name}
+                </h1>
+                <p className="text-sm font-mono text-[rgba(4,11,77,0.40)] mt-0.5">/{tool.slug}</p>
               </div>
               <StatusBadge status={tool.status} />
             </div>
 
             {/* Description */}
             {tool.description && (
-              <p className="text-[#64748b] text-sm leading-relaxed mb-6">{tool.description}</p>
+              <p className="text-[rgba(4,11,77,0.55)] text-sm leading-relaxed mb-6">
+                {tool.description}
+              </p>
             )}
 
             {/* Tags */}
@@ -137,7 +147,7 @@ export default async function ToolInfoPage({
                 {tool.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="inline-flex items-center rounded-full bg-[#f4f3f3] px-2.5 py-0.5 text-xs font-medium text-[#64748b]"
+                    className="inline-flex items-center rounded-full bg-[#FAFAFA] px-2.5 py-0.5 text-xs font-medium text-[rgba(4,11,77,0.55)]"
                   >
                     {tag.name}
                   </span>
@@ -146,26 +156,28 @@ export default async function ToolInfoPage({
             )}
 
             {/* Meta grid */}
-            <div className="grid grid-cols-2 gap-4 mb-6 py-4 border-y border-[#e2e8f0]">
+            <div className="grid grid-cols-2 gap-4 mb-6 py-4 border-y border-[#E7E7E7]">
               {tool.team && (
-                <div className="flex items-center gap-2 text-sm text-[#64748b]">
-                  <Users className="h-4 w-4 text-[#94a3b8] flex-shrink-0" aria-hidden />
+                <div className="flex items-center gap-2 text-sm text-[rgba(4,11,77,0.55)]">
+                  <Users className="h-4 w-4 text-[rgba(4,11,77,0.40)] flex-shrink-0" aria-hidden />
                   <span>{tool.team}</span>
                 </div>
               )}
               <div>
                 <AccessBadge level={tool.accessLevel} />
               </div>
-              <div className="col-span-2 text-xs text-[#94a3b8]">
+              <div className="col-span-2 text-xs text-[rgba(4,11,77,0.40)]">
                 Registered by {tool.createdByName} · {createdAt}
               </div>
             </div>
 
             {/* Notes */}
             {tool.notes && (
-              <div className="mb-6 rounded-lg bg-[#f4f3f3] border border-[#e2e8f0] px-4 py-3">
-                <p className="text-xs font-medium font-display text-[#94a3b8] uppercase tracking-wider mb-1">Notes</p>
-                <p className="text-sm text-[#64748b]">{tool.notes}</p>
+              <div className="mb-6 rounded-lg bg-[#FAFAFA] border border-[#E7E7E7] px-4 py-3">
+                <p className="text-xs font-medium font-display text-[rgba(4,11,77,0.40)] uppercase tracking-wider mb-1">
+                  Notes
+                </p>
+                <p className="text-sm text-[rgba(4,11,77,0.55)]">{tool.notes}</p>
               </div>
             )}
 
@@ -183,35 +195,47 @@ export default async function ToolInfoPage({
 
           {/* Changelog */}
           {canSeeChangelog && versions.length > 0 && (
-            <div className="border-t border-[#e2e8f0] px-6 sm:px-8 py-5">
+            <div className="border-t border-[#E7E7E7] px-6 sm:px-8 py-5">
               <div className="flex items-center gap-2 mb-3">
-                <History className="h-4 w-4 text-[#94a3b8]" aria-hidden />
-                <h2 className="text-xs font-semibold font-display uppercase tracking-wider text-[#94a3b8]">Change history</h2>
+                <History className="h-4 w-4 text-[rgba(4,11,77,0.40)]" aria-hidden />
+                <h2 className="text-xs font-semibold font-display uppercase tracking-wider text-[rgba(4,11,77,0.40)]">
+                  Change history
+                </h2>
               </div>
               <ol className="space-y-3">
                 {versions.map((v) => {
                   const changes = v.changes as Record<string, { from: unknown; to: unknown }>
                   const changedAt = new Date(v.createdAt).toLocaleDateString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
                   })
                   return (
                     <li key={v.id} className="flex gap-3 text-sm">
-                      <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-[#f4f3f3] flex items-center justify-center text-[10px] font-bold text-[#64748b]">
+                      <span className="flex-shrink-0 mt-0.5 h-5 w-5 rounded-full bg-[#FAFAFA] flex items-center justify-center text-[10px] font-bold text-[rgba(4,11,77,0.55)]">
                         v{v.version}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs text-[#94a3b8] mb-1">
+                        <p className="text-xs text-[rgba(4,11,77,0.40)] mb-1">
                           {v.changedByName} · {changedAt}
                         </p>
                         <ul className="space-y-0.5">
                           {Object.entries(changes).map(([field, { from, to }]) => (
-                            <li key={field} className="text-xs text-[#64748b]">
-                              <span className="font-medium capitalize">{field}</span>
-                              {' '}changed
+                            <li key={field} className="text-xs text-[rgba(4,11,77,0.55)]">
+                              <span className="font-medium capitalize">{field}</span> changed
                               {String(from) !== '' && (
-                                <> from <code className="bg-[#f4f3f3] px-1 rounded text-[11px]">{String(from)}</code></>
-                              )}
-                              {' '}to <code className="bg-[#f4f3f3] px-1 rounded text-[11px]">{String(to)}</code>
+                                <>
+                                  {' '}
+                                  from{' '}
+                                  <code className="bg-[#FAFAFA] px-1 rounded text-[11px]">
+                                    {String(from)}
+                                  </code>
+                                </>
+                              )}{' '}
+                              to{' '}
+                              <code className="bg-[#FAFAFA] px-1 rounded text-[11px]">
+                                {String(to)}
+                              </code>
                             </li>
                           ))}
                         </ul>
@@ -223,7 +247,6 @@ export default async function ToolInfoPage({
             </div>
           )}
         </div>
-
       </div>
     </div>
   )

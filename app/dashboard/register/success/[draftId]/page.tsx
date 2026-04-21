@@ -7,16 +7,16 @@ import { CheckCircle2, Copy, Check, ExternalLink, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface ToolBrief {
-  id:   string
+  id: string
   name: string
   slug: string
 }
 
 export default function SuccessPage({ params }: { params: { draftId: string } }) {
   const { draftId } = params
-  const router      = useRouter()
+  const router = useRouter()
 
-  const [tool,   setTool]   = useState<ToolBrief | null>(null)
+  const [tool, setTool] = useState<ToolBrief | null>(null)
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
 
   if (!tool) {
     return (
-      <div className="max-w-md mx-auto py-16 flex items-center gap-2 text-[#94a3b8]">
+      <div className="max-w-md mx-auto py-16 flex items-center gap-2 text-[rgba(4,11,77,0.40)]">
         <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
         <span className="text-sm">Loading…</span>
       </div>
@@ -59,39 +59,42 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
       <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight mb-2">
         Tool submitted!
       </h1>
-      <p className="text-sm text-[#64748b] mb-1">
-        <span className="font-semibold text-[#040B4D]">{tool.name}</span> is now pending admin review.
+      <p className="text-sm text-[rgba(4,11,77,0.55)] mb-1">
+        <span className="font-semibold text-[#040B4D]">{tool.name}</span> is now pending admin
+        review.
       </p>
-      <p className="text-sm text-[#94a3b8] mb-8">
-        You&apos;ll see it go live in <span className="text-[#64748b] font-medium">My tools</span> once approved.
+      <p className="text-sm text-[rgba(4,11,77,0.40)] mb-8">
+        You&apos;ll see it go live in{' '}
+        <span className="text-[rgba(4,11,77,0.55)] font-medium">My tools</span> once approved.
       </p>
 
       {/* ── Reserved URL pill ─────────────────────────────────────── */}
       {platformUrl && (
-        <div className="w-full flex items-center gap-2 bg-[#f4f3f3] border border-[#e2e8f0] rounded-xl px-4 py-3 mb-8">
-          <ExternalLink className="h-3.5 w-3.5 text-[#94a3b8] flex-shrink-0" aria-hidden />
-          <span className="text-sm font-mono text-[#64748b] flex-1 min-w-0 truncate">
+        <div className="w-full flex items-center gap-2 bg-[#FAFAFA] border border-[#E7E7E7] rounded-xl px-4 py-3 mb-8">
+          <ExternalLink
+            className="h-3.5 w-3.5 text-[rgba(4,11,77,0.40)] flex-shrink-0"
+            aria-hidden
+          />
+          <span className="text-sm font-mono text-[rgba(4,11,77,0.55)] flex-1 min-w-0 truncate">
             {platformUrl}
           </span>
           <button
             onClick={copyUrl}
-            className="flex-shrink-0 text-[#94a3b8] hover:text-[#64748b] transition-colors"
+            className="flex-shrink-0 text-[rgba(4,11,77,0.40)] hover:text-[rgba(4,11,77,0.55)] transition-colors"
             aria-label="Copy URL"
           >
-            {copied
-              ? <Check className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
-              : <Copy className="h-3.5 w-3.5" aria-hidden />
-            }
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
+            ) : (
+              <Copy className="h-3.5 w-3.5" aria-hidden />
+            )}
           </button>
         </div>
       )}
 
       {/* ── CTAs ──────────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
-        <Button
-          className="w-full sm:w-auto"
-          onClick={() => router.push('/dashboard/my-tools')}
-        >
+        <Button className="w-full sm:w-auto" onClick={() => router.push('/dashboard/my-tools')}>
           View my submissions
         </Button>
         <Button
@@ -103,7 +106,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
         </Button>
         <Link
           href="/dashboard/register/identify"
-          className="text-sm font-medium text-[#94a3b8] hover:text-[#64748b] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
+          className="text-sm font-medium text-[rgba(4,11,77,0.40)] hover:text-[rgba(4,11,77,0.55)] transition-colors focus-visible:ring-2 focus-visible:ring-[#2605EF]/30 focus-visible:ring-offset-2 rounded"
         >
           Register another
         </Link>

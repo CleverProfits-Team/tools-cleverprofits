@@ -27,16 +27,16 @@ interface ToolRowProps {
 
 export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
   const isActive = tool.status === 'ACTIVE'
-  const accent   = getToolAccent(tool.name)
-  const initial  = tool.name.charAt(0).toUpperCase()
+  const accent = getToolAccent(tool.name)
+  const initial = tool.name.charAt(0).toUpperCase()
 
   return (
     <div
       className={cn(
         'group relative flex items-center gap-3.5 px-4 py-3',
-        'border-b border-[#e2e8f0]/60 last:border-b-0',
+        'border-b border-[#E7E7E7]/60 last:border-b-0',
         'transition-colors duration-150',
-        'hover:bg-[#f4f3f3]',
+        'hover:bg-[#FAFAFA]',
       )}
     >
       {/* Left accent bar — grows from center on hover */}
@@ -70,7 +70,7 @@ export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
           {tool.name}
         </Link>
         {tool.description && (
-          <p className="text-[11.5px] text-[#64748b] mt-0.5 truncate max-w-lg">
+          <p className="text-[11.5px] text-[rgba(4,11,77,0.55)] mt-0.5 truncate max-w-lg">
             {tool.description}
           </p>
         )}
@@ -79,14 +79,14 @@ export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
       {/* Team + tags */}
       <div className="hidden lg:flex items-center gap-1.5 flex-shrink-0">
         {tool.team && (
-          <span className="rounded-full bg-[#f4f3f3] border border-[#e2e8f0] px-2 py-0.5 text-[10.5px] font-medium text-[#64748b]">
+          <span className="rounded-full bg-[#FAFAFA] border border-[#E7E7E7] px-2 py-0.5 text-[10.5px] font-medium text-[rgba(4,11,77,0.55)]">
             {tool.team}
           </span>
         )}
         {(tool.tags ?? []).slice(0, 2).map((tag) => (
           <span
             key={tag.id}
-            className="rounded-full bg-[#f4f3f3] border border-[#e2e8f0] px-2 py-0.5 text-[10.5px] font-medium text-[#64748b]"
+            className="rounded-full bg-[#FAFAFA] border border-[#E7E7E7] px-2 py-0.5 text-[10.5px] font-medium text-[rgba(4,11,77,0.55)]"
           >
             {tag.name}
           </span>
@@ -95,7 +95,10 @@ export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
 
       {/* Last accessed */}
       {tool.lastAccessedAt && (
-        <div className="hidden md:flex items-center gap-1 text-[11px] text-[#94a3b8] flex-shrink-0" title={`Last used ${timeAgo(tool.lastAccessedAt)}`}>
+        <div
+          className="hidden md:flex items-center gap-1 text-[11px] text-[rgba(4,11,77,0.40)] flex-shrink-0"
+          title={`Last used ${timeAgo(tool.lastAccessedAt)}`}
+        >
           <Activity className="h-3 w-3" aria-hidden />
           <span>{timeAgo(tool.lastAccessedAt)}</span>
         </div>
@@ -112,7 +115,7 @@ export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
           <a
             href={`/${tool.slug}`}
             className={cn(
-              'inline-flex items-center gap-1 rounded-lg px-3 py-1.5 min-h-[36px]',
+              'inline-flex items-center gap-1 rounded-[20px] px-3 py-1.5 min-h-[36px]',
               'bg-[#2605EF] hover:bg-[#1e04cc] active:bg-[#1803b3] text-white text-[11px] font-semibold font-display shadow-xs',
               'transition-all duration-150 active:scale-[0.97]',
               'opacity-0 group-hover:opacity-100',
@@ -126,7 +129,7 @@ export function ToolRow({ tool, isFavorited = false }: ToolRowProps) {
         ) : (
           <Link
             href={`/tools/${tool.slug}`}
-            className="text-[11px] text-[#64748b] hover:text-[#2605EF] transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap font-medium focus-visible:opacity-100"
+            className="text-[11px] text-[rgba(4,11,77,0.55)] hover:text-[#2605EF] transition-colors opacity-0 group-hover:opacity-100 whitespace-nowrap font-medium focus-visible:opacity-100"
           >
             View →
           </Link>

@@ -25,20 +25,13 @@ import { Suspense } from 'react'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
-  AccessDenied:
-    'Access denied. Only @cleverprofits.com accounts are allowed.',
-  Suspended:
-    'Your account has been suspended. Contact your administrator.',
-  OAuthSignin:
-    'Could not start the sign-in flow. Please try again.',
-  OAuthCallback:
-    'OAuth callback error. Please try again.',
-  OAuthAccountNotLinked:
-    'This email address is linked to a different sign-in method.',
-  SessionRequired:
-    'You must be signed in to access that page.',
-  Default:
-    'Sign-in failed. Please try again or contact your administrator.',
+  AccessDenied: 'Access denied. Only @cleverprofits.com accounts are allowed.',
+  Suspended: 'Your account has been suspended. Contact your administrator.',
+  OAuthSignin: 'Could not start the sign-in flow. Please try again.',
+  OAuthCallback: 'OAuth callback error. Please try again.',
+  OAuthAccountNotLinked: 'This email address is linked to a different sign-in method.',
+  SessionRequired: 'You must be signed in to access that page.',
+  Default: 'Sign-in failed. Please try again or contact your administrator.',
 }
 
 function errorMessage(code: string): string {
@@ -60,16 +53,19 @@ function LoginContent() {
 
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-white rounded-xl shadow-elevated px-8 py-10">
-
+      <div className="bg-white rounded-2xl shadow-elevated px-8 py-10">
         {/* ── Logotype ─────────────────────────────────────────────────── */}
         <div className="flex items-center gap-3 mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/cp-logo-circle.png" alt="CleverProfits" className="h-10 w-10 object-contain flex-shrink-0" />
+          <img
+            src="/cp-logo-circle.png"
+            alt="CleverProfits"
+            className="h-10 w-10 object-contain flex-shrink-0"
+          />
           <div className="leading-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/cp-logo-wordmark.png" alt="CleverProfits" className="h-4 object-contain" />
-            <p className="text-[11px] text-slate-400 mt-0.5 tracking-widest uppercase">
+            <p className="text-[11px] text-[rgba(4,11,77,0.40)] mt-0.5 tracking-widest uppercase">
               Tools Platform
             </p>
           </div>
@@ -79,10 +75,9 @@ function LoginContent() {
         <h1 className="font-display font-bold text-2xl text-[#040B4D] mb-1.5 tracking-tight">
           Sign in to continue
         </h1>
-        <p className="text-sm text-slate-500 mb-7 leading-relaxed">
-          Use your{' '}
-          <span className="font-medium text-[#040B4D]">@cleverprofits.com</span>{' '}
-          Google Workspace account to access the tools platform.
+        <p className="text-sm text-[rgba(4,11,77,0.55)] mb-7 leading-relaxed">
+          Use your <span className="font-medium text-[#040B4D]">@cleverprofits.com</span> Google
+          Workspace account to access the tools platform.
         </p>
 
         {/* ── Error banner ─────────────────────────────────────────────── */}
@@ -111,15 +106,15 @@ function LoginContent() {
         <button
           onClick={handleSignIn}
           type="button"
-          className="
-            w-full flex items-center justify-center gap-3
-            rounded-xl border border-slate-200 bg-white
-            px-4 py-3
-            text-sm font-semibold text-slate-700
-            hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100
-            transition-all duration-150 shadow-xs
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2
-          "
+          className={[
+            'w-full flex items-center justify-center gap-3',
+            'rounded-[20px] border border-[#E7E7E7] bg-white',
+            'px-4 py-3',
+            'text-sm font-semibold text-[#040B4D]',
+            'hover:bg-[#FAFAFA] hover:border-[#D6D6D6] active:bg-[#E7E7E7]',
+            'transition-all duration-150 shadow-xs',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2',
+          ].join(' ')}
         >
           <GoogleLogo />
           Continue with Google
@@ -128,18 +123,19 @@ function LoginContent() {
         {/* ── Divider ──────────────────────────────────────────────────── */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-100" />
+            <div className="w-full border-t border-[#E7E7E7]" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-white px-3 text-[11px] text-slate-400 tracking-wide uppercase">
+            <span className="bg-white px-3 text-[11px] text-[rgba(4,11,77,0.40)] tracking-wide uppercase">
               Secured by Google Workspace
             </span>
           </div>
         </div>
 
         {/* ── Fine print ───────────────────────────────────────────────── */}
-        <p className="text-center text-[11px] text-slate-400 leading-relaxed">
-          Internal use only &mdash; CleverProfits.<br />
+        <p className="text-center text-[11px] text-[rgba(4,11,77,0.40)] leading-relaxed">
+          Internal use only &mdash; CleverProfits.
+          <br />
           Access restricted to @cleverprofits.com accounts.
         </p>
       </div>
@@ -154,17 +150,17 @@ function LoginContent() {
 function LoginSkeleton() {
   return (
     <div className="w-full max-w-sm">
-      <div className="bg-white border border-slate-200 rounded-xl shadow-card px-8 py-10 animate-pulse">
+      <div className="bg-white border border-[#E7E7E7] rounded-2xl shadow-card px-8 py-10 animate-pulse">
         <div className="flex items-center gap-3 mb-10">
-          <div className="h-10 w-10 rounded-xl bg-slate-200 flex-shrink-0" />
+          <div className="h-10 w-10 rounded-xl bg-[#E7E7E7] flex-shrink-0" />
           <div className="space-y-1.5">
-            <div className="h-3.5 w-28 bg-slate-200 rounded" />
-            <div className="h-2.5 w-20 bg-slate-100 rounded" />
+            <div className="h-3.5 w-28 bg-[#E7E7E7] rounded" />
+            <div className="h-2.5 w-20 bg-[#FAFAFA] rounded" />
           </div>
         </div>
-        <div className="h-6 w-44 bg-slate-200 rounded mb-2" />
-        <div className="h-4 w-full bg-slate-100 rounded mb-6" />
-        <div className="h-10 w-full bg-slate-100 rounded-lg" />
+        <div className="h-6 w-44 bg-[#E7E7E7] rounded mb-2" />
+        <div className="h-4 w-full bg-[#FAFAFA] rounded mb-6" />
+        <div className="h-10 w-full bg-[#FAFAFA] rounded-[20px]" />
       </div>
     </div>
   )
@@ -176,11 +172,7 @@ function LoginSkeleton() {
 
 function GoogleLogo() {
   return (
-    <svg
-      className="h-[18px] w-[18px] flex-shrink-0"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
+    <svg className="h-[18px] w-[18px] flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
       <path
         fill="#4285F4"
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

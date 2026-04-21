@@ -49,7 +49,7 @@ export const HOP_BY_HOP = new Set([
   'transfer-encoding',
   'upgrade',
   'proxy-connection', // non-standard but widely sent
-  'host',             // replaced with upstream host in buildForwardHeaders()
+  'host', // replaced with upstream host in buildForwardHeaders()
 ])
 
 /**
@@ -79,11 +79,7 @@ export const STRIP_RESPONSE_HEADERS = new Set([
  * the upstream app would be able to impersonate authenticated users on the
  * CleverProfits platform.
  */
-const NEXTAUTH_COOKIE_PREFIXES = [
-  'next-auth.',
-  '__Secure-next-auth.',
-  '__Host-next-auth.',
-]
+const NEXTAUTH_COOKIE_PREFIXES = ['next-auth.', '__Secure-next-auth.', '__Host-next-auth.']
 
 // ─────────────────────────────────────────────────────────────────────────────
 // URL helpers
@@ -105,11 +101,7 @@ const NEXTAUTH_COOKIE_PREFIXES = [
  *   buildUpstreamUrl("https://abc.up.railway.app", [], "")
  *   // → "https://abc.up.railway.app"
  */
-export function buildUpstreamUrl(
-  externalUrl: string,
-  segments: string[],
-  search: string,
-): string {
+export function buildUpstreamUrl(externalUrl: string, segments: string[], search: string): string {
   const base = externalUrl.replace(/\/$/, '')
   const path = segments.length > 0 ? '/' + segments.join('/') : ''
   return base + path + search
@@ -178,9 +170,9 @@ export function buildForwardHeaders(
   // Without x-forwarded-host, the upstream app uses its own Host header
   // (set above) when constructing absolute URLs, so its redirects point at
   // the upstream domain and are correctly rewritten by rewriteLocation().
-  out.set('x-forwarded-for',   clientIp)
+  out.set('x-forwarded-for', clientIp)
   out.set('x-forwarded-proto', 'https')
-  out.set('x-real-ip',         clientIp)
+  out.set('x-real-ip', clientIp)
 
   return out
 }
@@ -219,9 +211,11 @@ function prepareCookiesForUpstream(cookieHeader: string, slug: string): string {
       // 2. Restore renamed tool NextAuth cookies: "{slug}~next-auth.*" → "next-auth.*"
       if (name.startsWith(slugTilde)) {
         const originalName = name.slice(slugTilde.length)
-        if (NEXTAUTH_COOKIE_PREFIXES.some((p) =>
-          originalName.toLowerCase().startsWith(p.toLowerCase()),
-        )) {
+        if (
+          NEXTAUTH_COOKIE_PREFIXES.some((p) =>
+            originalName.toLowerCase().startsWith(p.toLowerCase()),
+          )
+        ) {
           return `${originalName}${cookie.slice(eqIdx)}`
         }
       }
@@ -256,11 +250,7 @@ function prepareCookiesForUpstream(cookieHeader: string, slug: string): string {
  *     "https://other.com/page"  → unchanged
  *     "relative/page"           → unchanged (browser resolves against current URL)
  */
-export function rewriteLocation(
-  location: string,
-  upstreamBase: string,
-  slug: string,
-): string {
+export function rewriteLocation(location: string, upstreamBase: string, slug: string): string {
   const base = upstreamBase.replace(/\/$/, '')
   const upstreamHost = new URL(upstreamBase).host
 
@@ -377,11 +367,7 @@ export function rewriteSetCookie(raw: string, slug: string): string {
  * each one via rewriteSetCookie(). NextAuth-named cookies are silently
  * dropped to prevent name collisions with the platform's own session cookie.
  */
-export function forwardSetCookies(
-  srcHeaders: Headers,
-  dstHeaders: Headers,
-  slug: string,
-): void {
+export function forwardSetCookies(srcHeaders: Headers, dstHeaders: Headers, slug: string): void {
   srcHeaders.forEach((value, key) => {
     if (key.toLowerCase() === 'set-cookie') {
       // rewriteSetCookie() now handles NextAuth cookie renaming — no need to drop here
@@ -422,19 +408,15 @@ export function forwardSetCookies(
  * @param upstreamBase Upstream base URL (e.g. "https://abc.up.railway.app")
  * @param slug         Tool slug (e.g. "leadership-kpis")
  */
-export function rewriteHtml(
-  html: string,
-  upstreamBase: string,
-  slug: string,
-): string {
+export function rewriteHtml(html: string, upstreamBase: string, slug: string): string {
   const host = new URL(upstreamBase).host
   const internalBase = `/${slug}`
 
   // Pass 1: Replace all URL forms pointing at the upstream host
   let result = html
     .replace(new RegExp(`https://${escapeRegExp(host)}`, 'gi'), internalBase)
-    .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
-    .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
+    .replace(new RegExp(`http://${escapeRegExp(host)}`, 'gi'), internalBase)
+    .replace(new RegExp(`//${escapeRegExp(host)}`, 'gi'), internalBase)
 
   // Pass 2: Inject <base> tag + runtime path-prefix script
   //
@@ -448,18 +430,19 @@ export function rewriteHtml(
 
   // Minimal runtime script: intercept History API, fetch, and XHR so that
   // any root-relative path the app constructs is prefixed with /<slug>.
-  const runtimeScript = `<script>(function(S){` +
+  const runtimeScript =
+    `<script>(function(S){` +
     `var R=new RegExp("^"+S+"(/|$)");` +
     `var O=location.origin;` +
     // f(): rewrite root-relative AND origin-absolute paths so they stay inside /<slug>
     // Next.js App Router constructs absolute URLs via new URL('/login', location.href),
     // producing "https://host/login". We must catch those too, not just "/login".
     `function f(u){` +
-      `if(typeof u!=="string")return u;` +
-      `if(u[0]==="/"&&u[1]!=="/"&&!R.test(u))return S+u;` +  // root-relative /path
-      `var p=u.startsWith(O)?u.slice(O.length):null;` +        // strip origin
-      `if(p&&p[0]==="/"&&!R.test(p))return O+S+p;` +           // absolute on this origin
-      `return u;` +
+    `if(typeof u!=="string")return u;` +
+    `if(u[0]==="/"&&u[1]!=="/"&&!R.test(u))return S+u;` + // root-relative /path
+    `var p=u.startsWith(O)?u.slice(O.length):null;` + // strip origin
+    `if(p&&p[0]==="/"&&!R.test(p))return O+S+p;` + // absolute on this origin
+    `return u;` +
     `}` +
     // History API (Next.js SPA navigation)
     `var ps=history.pushState.bind(history),rs=history.replaceState.bind(history);` +
@@ -490,10 +473,7 @@ export function rewriteHtml(
     )
   } else if (hasHead) {
     // <base> tag already exists — still inject the runtime script
-    result = result.replace(
-      /(<head[^>]*>)/i,
-      `$1\n  ${runtimeScript}`,
-    )
+    result = result.replace(/(<head[^>]*>)/i, `$1\n  ${runtimeScript}`)
   }
 
   // Pass 3: Rewrite root-relative absolute paths in HTML attributes.
@@ -513,9 +493,9 @@ export function rewriteHtml(
   const escapedSlug = escapeRegExp(slug)
   result = result.replace(
     new RegExp(
-      `((?:href|src|action)\\s*=\\s*["'])(\\/)`
-      + `(?!\\/)` // skip protocol-relative //...
-      + `(?!${escapedSlug}(?:\\/|['"]))`, // skip already-prefixed /slug/...
+      `((?:href|src|action)\\s*=\\s*["'])(\\/)` +
+        `(?!\\/)` + // skip protocol-relative //...
+        `(?!${escapedSlug}(?:\\/|['"]))`, // skip already-prefixed /slug/...
       'gi',
     ),
     `$1/${slug}/`,
@@ -525,10 +505,7 @@ export function rewriteHtml(
   // Next.js injects <script id="__NEXT_DATA__" type="application/json">{"assetPrefix":"", ...}
   // Setting assetPrefix to /<slug> makes the client load all /_next/ chunks
   // via the proxy path instead of the platform's own /_next/ directory.
-  result = result.replace(
-    /"assetPrefix"\s*:\s*""/g,
-    `"assetPrefix":"/${slug}"`,
-  )
+  result = result.replace(/"assetPrefix"\s*:\s*""/g, `"assetPrefix":"/${slug}"`)
 
   return result
 }
@@ -549,16 +526,16 @@ export function rewriteCss(css: string, upstreamBase: string, slug: string): str
   // Pass 1: upstream origin replacement (same as HTML Pass 1)
   let result = css
     .replace(new RegExp(`https://${escapeRegExp(host)}`, 'gi'), internalBase)
-    .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
-    .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
+    .replace(new RegExp(`http://${escapeRegExp(host)}`, 'gi'), internalBase)
+    .replace(new RegExp(`//${escapeRegExp(host)}`, 'gi'), internalBase)
 
   // Pass 2: root-relative paths inside url(...)
   const escapedSlug = escapeRegExp(slug)
   result = result.replace(
     new RegExp(
       `(url\\s*\\(\\s*['"]?)(\\/)` +
-      `(?!\\/)` +                              // skip protocol-relative //...
-      `(?!${escapedSlug}(?:\\/|['")]))`,       // skip already-prefixed /slug/...
+        `(?!\\/)` + // skip protocol-relative //...
+        `(?!${escapedSlug}(?:\\/|['")]))`, // skip already-prefixed /slug/...
       'gi',
     ),
     `$1/${slug}/`,
@@ -600,27 +577,21 @@ export function rewriteJs(js: string, upstreamBase: string, slug: string): strin
   // Pass 1: upstream origin replacement
   let result = js
     .replace(new RegExp(`https://${escapeRegExp(host)}`, 'gi'), internalBase)
-    .replace(new RegExp(`http://${escapeRegExp(host)}`,  'gi'), internalBase)
-    .replace(new RegExp(`//${escapeRegExp(host)}`,       'gi'), internalBase)
+    .replace(new RegExp(`http://${escapeRegExp(host)}`, 'gi'), internalBase)
+    .replace(new RegExp(`//${escapeRegExp(host)}`, 'gi'), internalBase)
 
   // Pass 2: rewrite quoted "/_next/" string literals → "/<slug>/_next/"
   // Matches single-quoted, double-quoted, and template-literal occurrences.
   // Skips occurrences already prefixed with the slug (idempotent).
   const escapedSlug = escapeRegExp(slug)
   result = result.replace(
-    new RegExp(
-      `(["'\`])\\/_next\\/(?!${escapedSlug}(?:\\/|["'\`]))`,
-      'g',
-    ),
+    new RegExp(`(["'\`])\\/_next\\/(?!${escapedSlug}(?:\\/|["'\`]))`, 'g'),
     `$1/${slug}/_next/`,
   )
 
   // Pass 3: patch assetPrefix in any embedded __NEXT_DATA__ JSON
   // so Next.js Pages Router uses the proxy-relative prefix.
-  result = result.replace(
-    /"assetPrefix"\s*:\s*""/g,
-    `"assetPrefix":"/${slug}"`,
-  )
+  result = result.replace(/"assetPrefix"\s*:\s*""/g, `"assetPrefix":"/${slug}"`)
 
   return result
 }
@@ -650,11 +621,7 @@ function escapeRegExp(str: string): string {
  * @param title       Short human-readable title
  * @param body        Description HTML (may contain <a>, <strong>, <code>)
  */
-export function generateErrorPage(
-  httpStatus: number,
-  title: string,
-  body: string,
-): string {
+export function generateErrorPage(httpStatus: number, title: string, body: string): string {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -670,28 +637,28 @@ export function generateErrorPage(
       min-height: 100vh; padding: 2rem; color: #1e293b;
     }
     .card {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+      background: #fff; border: 1px solid #E7E7E7; border-radius: 12px;
       padding: 3rem 2.5rem; max-width: 480px; width: 100%; text-align: center;
       box-shadow: 0 1px 3px rgba(0,0,0,.07);
     }
     .badge {
       display: inline-block; font-size: .7rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase; color: #94a3b8;
-      background: #f1f5f9; border-radius: 999px;
+      letter-spacing: .08em; text-transform: uppercase; color: rgba(4,11,77,0.40);
+      background: #FAFAFA; border-radius: 999px;
       padding: .25rem .75rem; margin-bottom: 1.25rem;
     }
     h1  { font-size: 1.375rem; font-weight: 700; margin-bottom: .625rem; }
-    p   { font-size: .9375rem; color: #64748b; line-height: 1.6; }
+    p   { font-size: .9375rem; color: rgba(4,11,77,0.55); line-height: 1.6; }
     a   { color: #3b82f6; text-decoration: none; }
     a:hover { text-decoration: underline; }
     code {
-      background: #f1f5f9; padding: .1em .4em;
+      background: #FAFAFA; padding: .1em .4em;
       border-radius: 4px; font-size: .875em;
     }
     .footer {
       margin-top: 2rem; padding-top: 1.25rem;
-      border-top: 1px solid #f1f5f9;
-      font-size: .75rem; color: #cbd5e1;
+      border-top: 1px solid #E7E7E7;
+      font-size: .75rem; color: #D6D6D6;
     }
   </style>
 </head>
