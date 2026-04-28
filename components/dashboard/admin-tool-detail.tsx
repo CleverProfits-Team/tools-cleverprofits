@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -70,6 +70,37 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
   const [rejectReason, setRejectReason]       = useState('')
   const [loading, setLoading]                 = useState<string | null>(null)
   const [error, setError]                     = useState<string | null>(null)
+  const modalRef                              = useRef<HTMLDivElement>(null)
+
+  // Focus trap — keeps keyboard focus inside the reject modal
+  useEffect(() => {
+    if (!showRejectModal) return
+    const modal = modalRef.current
+    if (!modal) return
+
+    const focusable = modal.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+    const first = focusable[0]
+    const last  = focusable[focusable.length - 1]
+    first?.focus()
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setShowRejectModal(false)
+        setRejectReason('')
+        return
+      }
+      if (e.key !== 'Tab') return
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first?.focus() }
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [showRejectModal])
 
   // SUPER_ADMIN can approve any tool, including their own
   const isOwnTool = tool.createdByEmail === currentUserEmail && currentUserRole !== 'SUPER_ADMIN'
@@ -307,7 +338,7 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
                   <button
                     onClick={() => mutate('ACTIVE')}
                     disabled={loading !== null}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-sm"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-sm"
                   >
                     <CheckCircle2 className="h-4 w-4" aria-hidden />
                     {loading === 'ACTIVE' ? 'Approving…' : 'Approve tool'}
@@ -376,9 +407,15 @@ export function AdminToolDetail({ tool: initialTool, currentUserEmail, currentUs
 
       {/* ── Reject Modal ─────────────────────────────────────────────────── */}
       {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-6">
-            <h2 className="text-base font-semibold text-slate-900 mb-1">Reject Tool</h2>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => { if (e.target === e.currentTarget) { setShowRejectModal(false); setRejectReason('') } }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reject-modal-title"
+        >
+          <div ref={modalRef} className="w-full max-w-md rounded-xl bg-white shadow-xl p-6">
+            <h2 id="reject-modal-title" className="text-base font-semibold text-slate-900 mb-1">Reject Tool</h2>
             <p className="text-sm text-slate-500 mb-4">
               Provide a reason so the submitter knows what to fix.
             </p>

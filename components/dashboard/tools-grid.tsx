@@ -229,7 +229,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
 
             <button
               onClick={() => setMineOnly((v) => !v)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
+              className={`px-3 py-2 rounded-md text-xs font-medium border transition-colors whitespace-nowrap ${
                 mineOnly
                   ? 'bg-[#eeeeff] text-[#2605EF] border-[#b0adff]'
                   : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700'
@@ -253,7 +253,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
 
       {/* ── Content ─────────────────────────────────────────────────── */}
       {filtered.length > 0 ? (
-        <div className="space-y-8">
+        <div className="space-y-5">
 
           {/* ── Featured: spotlight section ── */}
           {featuredTools.length > 0 && (
@@ -289,12 +289,17 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           {/* ── Index: unified panel for remaining tools ── */}
           {listTools.length > 0 && (
             <section>
-              {/* Section divider with count badge */}
+              {/* Section divider — consistent structure with featured section */}
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em] flex-shrink-0">
-                  {featuredTools.length > 0 ? 'All tools' : 'Tools'}
-                </span>
-                <span className="inline-flex items-center justify-center h-4 min-w-[1rem] rounded-full bg-slate-100 text-[10px] font-bold text-slate-400 px-1 flex-shrink-0 tabular-nums">
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="h-5 w-5 rounded-md bg-slate-100 flex items-center justify-center">
+                    <Wrench className="h-3 w-3 text-slate-400" aria-hidden />
+                  </div>
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.14em]">
+                    {featuredTools.length > 0 ? 'All tools' : 'Tools'}
+                  </span>
+                </div>
+                <span className="inline-flex items-center justify-center h-4 min-w-[1rem] rounded bg-slate-100 text-[10px] font-bold text-slate-400 px-1 flex-shrink-0 tabular-nums">
                   {listTools.length}
                 </span>
                 <div className="flex-1 h-px bg-slate-100" />

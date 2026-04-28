@@ -1,9 +1,12 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
+import { PlusCircle } from 'lucide-react'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { MyToolsList } from '@/components/dashboard/my-tools-list'
+import { PageHeader } from '@/components/dashboard/page-header'
 import type { SerializedTool } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -36,10 +39,20 @@ export default async function MyToolsPage() {
 
   return (
     <div className="animate-in">
-      <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">My Submissions</h1>
-        <p className="text-sm text-slate-500 mt-1">Tools you&apos;ve registered on the platform</p>
-      </div>
+      <PageHeader
+        label="INTERNAL ASSET REGISTRY"
+        title="My Submissions"
+        subtitle="Tools you've registered on the platform"
+        action={
+          <Link
+            href="/dashboard/register"
+            className="inline-flex items-center gap-2 rounded-xl bg-white/[0.1] border border-white/[0.15] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.18] hover:border-white/25 transition-all duration-150 backdrop-blur-sm"
+          >
+            <PlusCircle className="h-4 w-4" aria-hidden />
+            Register Tool
+          </Link>
+        }
+      />
       <MyToolsList tools={rawTools.map(serialize)} drafts={rawDrafts.map(serialize)} />
     </div>
   )

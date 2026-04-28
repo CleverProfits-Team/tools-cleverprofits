@@ -70,7 +70,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
         className={cn(
           'group flex items-center gap-2.5 px-2.5 py-[7px] rounded-lg text-[13px] transition-all duration-150 relative',
           isActive
-            ? 'bg-white/[0.11] text-white font-medium'
+            ? 'bg-white/[0.15] text-white font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]'
             : 'text-white/60 hover:text-white hover:bg-white/[0.07]',
         )}
       >
@@ -108,7 +108,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold text-white/35 uppercase tracking-[0.13em] px-3.5 mb-1 mt-0.5">
+    <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.13em] px-3.5 mb-1 mt-0.5 truncate">
       {children}
     </p>
   )
@@ -218,7 +218,7 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
               </p>
               {role && (
                 <span className={cn(
-                  'inline-block rounded px-1 py-px text-[9px] font-semibold leading-[14px] uppercase tracking-wide',
+                  'inline-block rounded px-1 py-px text-[10px] font-semibold leading-[14px] uppercase tracking-wide',
                   ROLE_STYLES[role] ?? 'bg-white/8 text-white/35',
                 )}>
                   {ROLE_LABELS[role] ?? role}
@@ -273,6 +273,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   const isDragging  = useRef(false)
   const dragStartX  = useRef(0)
   const dragStartW  = useRef(252)
+  const [isResizeHovered, setIsResizeHovered] = useState(false)
 
   const { data: session } = useSession()
 
@@ -298,7 +299,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
     function onMove(e: MouseEvent) {
       if (!isDragging.current) return
       const delta = e.clientX - dragStartX.current
-      setSidebarWidth(Math.min(360, Math.max(180, dragStartW.current + delta)))
+      setSidebarWidth(Math.min(360, Math.max(210, dragStartW.current + delta)))
     }
     function onUp() { isDragging.current = false }
     document.addEventListener('mousemove', onMove)
@@ -310,15 +311,15 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   }, [])
 
   const Logo = () => (
-    <Link href="/dashboard" className="flex items-center gap-2.5 group">
+    <Link href="/dashboard" className="flex items-center gap-2.5 group min-w-0">
       <div className="h-8 w-8 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors flex-shrink-0">
         <Wrench className="h-4 w-4 text-white" aria-hidden />
       </div>
-      <div className="leading-none">
-        <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none">
+      <div className="leading-none min-w-0 overflow-hidden">
+        <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none truncate">
           CleverProfits
         </p>
-        <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none">
+        <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none truncate">
           Tools
         </p>
       </div>
@@ -376,10 +377,20 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
         {/* Resize handle */}
         <div
           onMouseDown={handleResizeMouseDown}
-          className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize group z-20"
+          onMouseEnter={() => setIsResizeHovered(true)}
+          onMouseLeave={() => setIsResizeHovered(false)}
+          className="absolute right-0 top-0 bottom-0 w-3 cursor-col-resize z-20 flex items-center justify-end"
           title="Drag to resize"
+          aria-hidden
         >
-          <div className="absolute right-0 top-0 bottom-0 w-px bg-white/[0.05] group-hover:bg-[#2605EF]/50 group-hover:w-[3px] transition-all duration-150" />
+          {/* Track line */}
+          <div className={`absolute right-0 top-0 bottom-0 transition-all duration-150 ${isResizeHovered ? 'w-[3px] bg-[#2605EF]/60' : 'w-px bg-white/[0.05]'}`} />
+          {/* Gripper dots — centered vertically */}
+          <div className={`absolute right-[3px] top-1/2 -translate-y-1/2 flex flex-col gap-[3px] transition-opacity duration-150 ${isResizeHovered ? 'opacity-100' : 'opacity-0'}`}>
+            {[0,1,2,3,4].map((i) => (
+              <div key={i} className="w-[3px] h-[3px] rounded-full bg-[#2605EF]/70" />
+            ))}
+          </div>
         </div>
       </aside>
 

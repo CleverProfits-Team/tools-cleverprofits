@@ -237,16 +237,16 @@ export function RegisterToolForm() {
 
   // ── Success screen ───────────────────────────────────────────────────────
   if (registeredSlug) {
-    const internalUrl = `${typeof window !== 'undefined' ? window.location.origin : 'https://tools.cleverprofits.com'}/${registeredSlug}`
+    const internalUrl = `${typeof window !== 'undefined' ? window.location.origin : 'https://cleverprofits.app'}/${registeredSlug}`
 
     return (
-      <div className="flex flex-col items-center text-center py-8 px-4 max-w-md mx-auto">
-        <div className="h-12 w-12 rounded-full bg-emerald-50 flex items-center justify-center mb-4 ring-1 ring-emerald-200">
-          <CheckCircle2 className="h-6 w-6 text-emerald-600" aria-hidden />
+      <div className="flex flex-col items-center text-center py-10 px-4 max-w-md mx-auto animate-in">
+        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center mb-5 ring-1 ring-emerald-200 shadow-sm">
+          <CheckCircle2 className="h-7 w-7 text-emerald-600" aria-hidden />
         </div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-1">Tool registered</h2>
-        <p className="text-sm text-slate-500 mb-6">
-          It&apos;s pending review. Once approved, it will be accessible at:
+        <h2 className="font-display font-bold text-xl text-[#040B4D] mb-2 tracking-tight">Your tool is in the queue</h2>
+        <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
+          An admin will review it shortly. Once approved, it'll be live at:
         </p>
 
         {/* URL pill */}
@@ -289,6 +289,55 @@ export function RegisterToolForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-8 max-w-xl">
 
+      {/* ── Welcome header ──────────────────────────────────────────── */}
+      <div className="pb-2">
+        <p className="text-xs font-semibold text-[#2605EF]/70 uppercase tracking-widest mb-1">New tool</p>
+        <h2 className="font-display font-bold text-xl text-[#040B4D] tracking-tight">
+          Add your tool — we&apos;ll handle the rest
+        </h2>
+        <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+          Give us a name and a URL. Your tool goes live after a quick review.
+        </p>
+      </div>
+
+      {/* ── Step indicator ──────────────────────────────────────────── */}
+      <div className="flex items-center gap-0">
+        {[
+          { n: 1, label: 'Identity' },
+          { n: 2, label: 'Access' },
+          { n: 3, label: 'Details' },
+        ].map((step, i) => (
+          <div key={step.n} className="flex items-center flex-1 last:flex-none">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className={cn(
+                'h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 transition-all duration-300',
+                values.name && values.slug && step.n === 1
+                  ? 'bg-[#2605EF] text-white scale-110'
+                  : step.n === 1 ? 'bg-[#2605EF]/10 text-[#2605EF]'
+                  : values.accessLevel && step.n === 2
+                  ? 'bg-[#2605EF] text-white scale-110'
+                  : step.n === 2 ? 'bg-slate-100 text-slate-400'
+                  : 'bg-slate-100 text-slate-400',
+              )}>
+                {step.n}
+              </span>
+              <span className="text-[11px] font-medium text-slate-400 hidden sm:block">{step.label}</span>
+            </div>
+            {i < 2 && (
+              <div className="flex-1 h-px mx-2 transition-colors duration-500"
+                style={{
+                  background: (i === 0 && values.name && values.slug)
+                    ? '#2605EF'
+                    : (i === 1 && values.accessLevel)
+                    ? '#2605EF'
+                    : '#f1f5f9',
+                }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
       {/* ── Section 1: Identity ─────────────────────────────────────── */}
       <div className="space-y-5">
         <SectionHeader label="Identity" />
@@ -318,7 +367,7 @@ export function RegisterToolForm() {
           </div>
           <div className="flex items-center">
             <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
-              tools.cleverprofits.com/
+              cleverprofits.app/
             </span>
             <Input
               id="slug"
@@ -457,13 +506,13 @@ export function RegisterToolForm() {
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+      <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
         <Button
           type="submit"
           disabled={submitting || slugState === 'checking'}
         >
           {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />}
-          {submitting ? 'Registering…' : 'Register tool'}
+          {submitting ? 'Adding your tool…' : 'Add your tool'}
         </Button>
         <Button
           type="button"

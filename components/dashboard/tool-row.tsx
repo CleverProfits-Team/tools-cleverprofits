@@ -46,9 +46,9 @@ export function ToolRow({ tool }: ToolRowProps) {
         'hover:bg-slate-50/70',
       )}
     >
-      {/* Left accent bar — grows from center on hover */}
+      {/* Left accent bar — always visible at rest, intensifies on hover */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-[2px] rounded-r-full origin-center transition-transform duration-200 scale-y-0 group-hover:scale-y-100"
+        className="absolute left-0 top-0 bottom-0 w-[2px] rounded-r-full transition-opacity duration-200 opacity-[0.28] group-hover:opacity-100"
         style={{ backgroundColor: accent.hex }}
         aria-hidden
       />
@@ -80,7 +80,7 @@ export function ToolRow({ tool }: ToolRowProps) {
           </span>
         </div>
         {tool.description && (
-          <p className="text-[11.5px] text-slate-400 mt-0.5 truncate max-w-lg">
+          <p className="text-[11.5px] text-slate-400 mt-0.5 truncate max-w-2xl">
             {tool.description}
           </p>
         )}
@@ -89,14 +89,14 @@ export function ToolRow({ tool }: ToolRowProps) {
       {/* Team + tags */}
       <div className="hidden lg:flex items-center gap-1.5 flex-shrink-0">
         {tool.team && (
-          <span className="rounded-full bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400">
+          <span className="rounded bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400">
             {tool.team}
           </span>
         )}
         {(tool.tags ?? []).slice(0, 2).map((tag) => (
           <span
             key={tag.id}
-            className="rounded-full bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
+            className="rounded bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
           >
             {tag.name}
           </span>

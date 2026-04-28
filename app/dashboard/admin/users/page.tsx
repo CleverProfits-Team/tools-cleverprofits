@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { AdminUsersPanel } from '@/components/dashboard/admin-users-panel'
+import { PageHeader } from '@/components/dashboard/page-header'
 import type { SerializedUser } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -20,11 +21,11 @@ export default async function AdminUsersPage() {
   }))
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Users</h1>
-        <p className="text-sm text-slate-500 mt-1">Manage team members, roles, and access levels.</p>
-      </div>
+    <div className="animate-in">
+      <PageHeader
+        title="Users"
+        subtitle="Manage team members, roles, and access levels."
+      />
       <AdminUsersPanel
         initialUsers={users}
         currentUserId={session!.user.id}

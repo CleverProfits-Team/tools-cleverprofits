@@ -93,10 +93,10 @@ export function AdminToolsList({ initialTools, teams }: Props) {
         <button
           onClick={() => { setPendingOnly((v) => !v); if (!pendingOnly) setStatusFilter('ALL') }}
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors',
+            'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
             pendingOnly
-              ? 'border-amber-300 bg-amber-50 text-amber-700'
-              : 'border-slate-200 text-slate-600 hover:bg-slate-50',
+              ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
+              : 'bg-[#f4f3f3] text-slate-600 hover:bg-[#eeeeee]',
           )}
         >
           <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', pendingOnly ? 'bg-amber-500' : 'bg-slate-300')} aria-hidden />
@@ -117,13 +117,13 @@ export function AdminToolsList({ initialTools, teams }: Props) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl border border-slate-200 bg-white py-16 text-center">
+        <div className="rounded-2xl bg-[#f4f3f3] py-16 text-center">
           <p className="text-sm text-slate-400">No tools match the current filters.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-card">
+        <div className="overflow-x-auto rounded-2xl bg-white shadow-[0_20px_40px_rgba(4,11,77,0.06)]">
           <table className="w-full text-left">
-            <thead className="border-b border-slate-200 bg-slate-50/60">
+            <thead className="bg-[#f4f3f3]">
               <tr>
                 <th className={thCls}>Tool</th>
                 <th className={thCls}>Owner</th>
@@ -133,15 +133,24 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                 <th className={thCls}></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-[#f4f3f3]">
               {filtered.map((tool) => {
                 const isPending = tool.status === 'PENDING'
                 return (
                   <tr
                     key={tool.id}
                     onClick={() => router.push(`/dashboard/admin/tools/${tool.id}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        router.push(`/dashboard/admin/tools/${tool.id}`)
+                      }
+                    }}
+                    tabIndex={0}
+                    role="link"
+                    aria-label={`View ${tool.name}`}
                     className={cn(
-                      'transition-colors cursor-pointer',
+                      'transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2605EF]',
                       isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-slate-50',
                     )}
                   >
@@ -171,10 +180,10 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                       <Link
                         href={`/dashboard/admin/tools/${tool.id}`}
                         className={cn(
-                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all duration-150 whitespace-nowrap',
+                          'inline-flex items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-medium transition-all duration-150 whitespace-nowrap',
                           isPending
                             ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-xs hover:scale-[1.03] active:scale-95'
-                            : 'border border-slate-200 text-slate-600 hover:bg-slate-100 hover:border-slate-300',
+                            : 'bg-[#f4f3f3] text-slate-600 hover:bg-[#eeeeee]',
                         )}
                       >
                         {isPending ? 'Review' : 'View'}

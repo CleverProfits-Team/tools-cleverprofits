@@ -39,14 +39,17 @@ export default async function DashboardPage() {
         totalCount={tools.length}
       />
 
-      {/* ── Tools grid ──────────────────────────────────────────────────── */}
-      <Suspense>
-        <ToolsGrid
-          tools={tools}
-          teams={teams}
-          currentUserEmail={session?.user?.email ?? ''}
-        />
-      </Suspense>
+      {/* ── Content overlapping hero ─────────────────────────────────────── */}
+      <div className="-mt-10 relative z-10">
+        {/* ── Tools grid ────────────────────────────────────────────────── */}
+        <Suspense>
+          <ToolsGrid
+            tools={tools}
+            teams={teams}
+            currentUserEmail={session?.user?.email ?? ''}
+          />
+        </Suspense>
+      </div>
     </div>
   )
 }

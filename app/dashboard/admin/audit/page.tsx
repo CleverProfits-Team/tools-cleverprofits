@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/db'
 import { AdminAuditLog } from '@/components/dashboard/admin-audit-log'
+import { PageHeader } from '@/components/dashboard/page-header'
 
 export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Admin — Audit Log' }
@@ -17,11 +18,11 @@ export default async function AdminAuditPage() {
   }))
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Audit Log</h1>
-        <p className="text-sm text-slate-500 mt-1">Immutable record of all significant platform actions.</p>
-      </div>
+    <div className="animate-in">
+      <PageHeader
+        title="Audit Log"
+        subtitle="Immutable record of all significant platform actions."
+      />
       <AdminAuditLog logs={serialized} />
     </div>
   )

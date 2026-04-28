@@ -21,7 +21,7 @@ export function AdminSubNav({ pendingCount }: Props) {
   ]
 
   return (
-    <div className="flex gap-1 border-b border-slate-200 mb-6">
+    <div className="flex gap-1 border-b border-slate-200 mb-6 overflow-x-auto scrollbar-none">
       {tabs.map(({ href, label, badge }) => {
         const isActive = pathname.startsWith(href)
         return (
@@ -29,10 +29,10 @@ export function AdminSubNav({ pendingCount }: Props) {
             key={href}
             href={href}
             className={cn(
-              'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors',
+              'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors rounded-t-lg',
               isActive
-                ? 'border-[#2605EF] text-[#2605EF]'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300',
+                ? 'border-[#2605EF] text-[#2605EF] bg-[#eeeeff]/60'
+                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 hover:bg-slate-50',
             )}
           >
             {label}

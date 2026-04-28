@@ -119,8 +119,9 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                   <button
                     onClick={() => discardDraft(draft.id)}
                     disabled={discarding === draft.id}
-                    className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-slate-400 hover:text-red-500 hover:border-red-200 disabled:opacity-50 transition-colors"
+                    className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-slate-400 hover:text-red-500 hover:border-red-200 disabled:opacity-50 transition-colors min-w-[36px]"
                     title="Discard draft"
+                    aria-label="Discard draft"
                   >
                     <Trash2 className="h-3.5 w-3.5" aria-hidden />
                   </button>
@@ -141,7 +142,7 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                 key={value}
                 onClick={() => setFilter(value)}
                 className={cn(
-                  'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors',
+                  'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
                   filter === value
                     ? 'bg-[#2605EF] text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200',

@@ -24,13 +24,30 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
     setMouse({ x: -1000, y: -1000 })
   }
 
+  // Compute efficiency label from active / total
+  const efficiencyPct = totalCount > 0 ? Math.round((activeCount / totalCount) * 100) : 100
+
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-8 bg-hero-mesh relative overflow-hidden"
+      className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-0 relative overflow-hidden rounded-bl-[3rem]"
+      style={{ background: '#1A1A3A' }}
     >
+      {/* Radial glow — top-right (purple) */}
+      <div
+        className="absolute top-[-20%] right-[-10%] w-[50%] h-[150%] rounded-full opacity-50 blur-3xl pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(74,0,224,0.2), transparent)' }}
+        aria-hidden
+      />
+      {/* Radial glow — bottom-left (blue) */}
+      <div
+        className="absolute bottom-[-50%] left-[10%] w-[40%] h-[100%] rounded-full opacity-40 blur-3xl pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.2), transparent)' }}
+        aria-hidden
+      />
+
       {/* Dot-grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.07]"
@@ -40,6 +57,7 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         }}
         aria-hidden
       />
+
       {/* Decorative circle outlines — echo the bubble language */}
       <div className="absolute -top-20 right-8 w-72 h-72 rounded-full border border-white/[0.05] pointer-events-none" aria-hidden />
       <div className="absolute -bottom-16 right-1/4 w-52 h-52 rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
@@ -54,34 +72,56 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         aria-hidden
       />
 
-      <div className="relative px-4 sm:px-6 lg:px-8 pt-9 pb-7">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 pt-10 pb-20">
+        <div className="flex justify-between items-start gap-4">
+          {/* Left: headline block */}
+          <div className="max-w-2xl">
+            {/* System status */}
+            <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8E2DE2] mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 pulse-dot flex-shrink-0" aria-hidden />
+              System Status: Optimal
+            </p>
+
+            {/* Welcome line */}
             {firstName && (
-              <p className="text-white/40 text-[11px] font-medium uppercase tracking-[0.12em] mb-1.5">
+              <p className="text-white/40 text-[11px] font-medium uppercase tracking-[0.12em] mb-2">
                 Welcome back, {firstName}
               </p>
             )}
-            <h1 className="font-display font-bold text-[28px] text-white tracking-tight leading-none">
-              Your tools
+
+            {/* Gradient headline */}
+            <h1
+              className="font-display text-4xl md:text-5xl font-bold leading-tight mb-4"
+              style={{
+                backgroundImage: 'linear-gradient(to right, #ffffff, #9ca3af)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              Operational Pulse: {efficiencyPct}% Efficiency
             </h1>
-            <p className="text-white/45 text-sm mt-1.5">
-              Launch, manage, and scale internal tools across CleverProfits.
+
+            <p className="text-gray-300 text-base font-light max-w-xl leading-relaxed">
+              Cross-functional tools are currently operating at peak capacity.
             </p>
           </div>
 
-          <Link
-            href="/dashboard/register"
-            className="inline-flex items-center gap-2 rounded-xl bg-white/[0.1] border border-white/[0.15] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.18] hover:border-white/25 transition-all duration-150 self-start sm:self-end flex-shrink-0 backdrop-blur-sm"
-          >
-            <PlusCircle className="h-4 w-4" aria-hidden />
-            Register Tool
-          </Link>
+          {/* Right: actions */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <Link
+              href="/dashboard/register"
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-sm text-white transition-all"
+            >
+              <PlusCircle className="h-4 w-4" aria-hidden />
+              Register Tool
+            </Link>
+          </div>
         </div>
 
         {/* Inline stats row */}
         {totalCount > 0 && (
-          <div className="flex items-stretch mt-7 pt-5 border-t border-white/[0.08]">
+          <div className="flex items-stretch mt-8 pt-5 border-t border-white/[0.08]">
             <div className="pr-7">
               <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
                 {activeCount}

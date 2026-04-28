@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { prisma } from '@/lib/db'
 import { AdminInvitationsList } from '@/components/dashboard/admin-invitations-list'
+import { PageHeader } from '@/components/dashboard/page-header'
 import type { SerializedInvitation } from '@/types'
 
 export const dynamic = 'force-dynamic'
@@ -17,11 +18,11 @@ export default async function AdminInvitationsPage() {
   }))
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">Invitations</h1>
-        <p className="text-sm text-slate-500 mt-1">Invite new team members and manage pending invitations.</p>
-      </div>
+    <div className="animate-in">
+      <PageHeader
+        title="Invitations"
+        subtitle="Invite new team members and manage pending invitations."
+      />
       <AdminInvitationsList initialInvitations={invitations} />
     </div>
   )

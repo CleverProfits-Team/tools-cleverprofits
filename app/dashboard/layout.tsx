@@ -36,11 +36,13 @@ export default async function DashboardLayout({
     : 0
 
   return (
-    <div className="md:flex min-h-screen bg-[#EEF2FB]">
+    <div className="md:flex min-h-screen bg-[#f9f9f9]">
       <Sidebar pendingCount={pendingCount} />
       <div className="flex-1 min-w-0">
         <main className="px-4 sm:px-6 lg:px-8 py-8 bg-dot-grid content-seamless min-h-screen relative">
-          {children}
+          <div className="max-w-[1400px]">
+            {children}
+          </div>
         </main>
       </div>
     </div>

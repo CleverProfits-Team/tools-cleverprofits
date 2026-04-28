@@ -6,6 +6,7 @@ import { prisma } from '@/lib/db'
 import { BarChart2, TrendingUp, Zap, ArrowUpRight, ArrowDownRight, Minus } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { PageHeader } from '@/components/dashboard/page-header'
 
 export const metadata: Metadata = { title: 'Analytics' }
 export const dynamic = 'force-dynamic'
@@ -129,20 +130,16 @@ export default async function AnalyticsPage() {
   const maxHits30d = Math.max(...toolStats.map((t) => t.hits30d), 1)
 
   return (
-    <div>
-      {/* ── Page header ─────────────────────────────────────────────── */}
-      <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
-          Usage analytics
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Track tool adoption and performance across CleverProfits teams.
-        </p>
-      </div>
+    <div className="animate-in">
+      <PageHeader
+        label="OPERATIONAL INTELLIGENCE"
+        title="Usage Analytics"
+        subtitle="Track tool adoption and performance across CleverProfits teams."
+      />
 
       {/* ── KPI cards ───────────────────────────────────────────────── */}
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Hits (30d)</p>
             <div className="h-8 w-8 rounded-lg bg-[#eeeeff] flex items-center justify-center">
@@ -158,7 +155,7 @@ export default async function AnalyticsPage() {
           <p className="text-xs text-slate-400 mt-1">vs prior 30 days</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">All-time</p>
             <div className="h-8 w-8 rounded-lg bg-slate-50 flex items-center justify-center">
@@ -169,7 +166,7 @@ export default async function AnalyticsPage() {
           <p className="text-xs text-slate-400 mt-1">total requests</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-5">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active Tools</p>
             <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
@@ -204,7 +201,7 @@ export default async function AnalyticsPage() {
       )}
 
       {/* ── 30-day chart ────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6 mb-6">
+      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-6 mb-6">
         <h2 className="text-sm font-semibold text-[#040B4D] mb-5">Requests — last 30 days</h2>
         {totalHits30d === 0 ? (
           <p className="text-sm text-slate-400 text-center py-8">No requests recorded yet.</p>
@@ -227,8 +224,8 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* ── Per-tool table ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100">
+      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] overflow-hidden">
+        <div className="px-6 py-4 bg-[#f4f3f3] rounded-t-2xl">
           <h2 className="text-sm font-semibold text-[#040B4D]">Tool breakdown</h2>
           <p className="text-xs text-slate-400 mt-0.5">Sorted by 30-day activity</p>
         </div>
@@ -238,14 +235,14 @@ export default async function AnalyticsPage() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/60">
+              <tr className="bg-[#f9f9f9]">
                 <th className="text-left px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Tool</th>
                 <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">30d activity</th>
                 <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">All-time</th>
                 <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Avg latency</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-[#f4f3f3]">
               {toolStats.map((t) => (
                 <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
                   <td className="px-6 py-3.5">

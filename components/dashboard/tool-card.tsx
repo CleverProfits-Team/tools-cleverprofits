@@ -40,11 +40,11 @@ export function ToolCard({ tool }: ToolCardProps) {
     <article
       className={cn(
         'group relative flex flex-col bg-white rounded-xl overflow-hidden',
-        'border border-slate-100 border-l-[3px]',
+        'border-l-4 border-t-0 border-r-0 border-b-0',
+        'shadow-[0_20px_40px_rgba(4,11,77,0.06)]',
         'transition-all duration-200 ease-out',
         'hover:-translate-y-1',
         'hover:shadow-[0_16px_40px_rgba(4,11,77,0.10),0_4px_12px_rgba(4,11,77,0.06)]',
-        'hover:border-slate-200/60',
         !isActive && 'opacity-80',
       )}
       style={{ borderLeftColor: accent.hex }}
@@ -94,7 +94,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         {/* Description */}
         <p
           className={cn(
-            'text-[12.5px] leading-relaxed line-clamp-2 mb-4 flex-1',
+            'text-[11px] leading-relaxed line-clamp-2 mb-4 flex-1',
             tool.description ? 'text-slate-400' : 'text-slate-300 italic',
           )}
         >
@@ -108,15 +108,15 @@ export function ToolCard({ tool }: ToolCardProps) {
           {(tool.tags ?? []).map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center rounded bg-slate-50 border border-slate-100 px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
+              className="inline-flex items-center rounded bg-[#f4f3f3] px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
             >
               {tag.name}
             </span>
           ))}
         </div>
 
-        {/* Footer */}
-        <div className="mt-auto pt-3.5 border-t border-slate-50 flex items-center justify-between gap-2">
+        {/* Footer — tonal divider: background shift instead of line */}
+        <div className="mt-auto pt-3.5 border-t border-[#f4f3f3] flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 text-[11px] text-slate-300 min-w-0">
             <User className="h-3 w-3 flex-shrink-0" aria-hidden />
             <span className="truncate">{tool.createdByName}</span>
