@@ -29,7 +29,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
   }, [draftId])
 
   const platformUrl = tool
-    ? `${typeof window !== 'undefined' ? window.location.origin : 'https://tools.cleverprofits.com'}/${tool.slug}`
+    ? `${typeof window !== 'undefined' ? window.location.origin : 'https://cleverprofits.app'}/${tool.slug}`
     : null
 
   async function copyUrl() {
