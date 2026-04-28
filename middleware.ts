@@ -38,15 +38,23 @@ export default withAuth(
       authorized({ req, token }) {
         const { pathname } = req.nextUrl
 
-        const isPublicRoute =
+        // Always public — auth pages, NextAuth internals, invite flow, healthcheck
+        if (
           pathname.startsWith('/login') ||
           pathname.startsWith('/api/auth') ||
           pathname.startsWith('/invite') ||
           pathname === '/api/health'
+        ) return true
 
-        if (isPublicRoute) return true
+        // Platform routes require a valid session
+        if (pathname.startsWith('/dashboard') || pathname.startsWith('/api/')) {
+          return !!token
+        }
 
-        return !!token
+        // Everything else is a slug proxy route — public by design.
+        // The proxy handler itself enforces tool-level access (ACTIVE status,
+        // access level checks). Platform login is not required to reach a tool.
+        return true
       },
     },
 
@@ -64,9 +72,9 @@ export const config = {
    *  - favicon.ico
    *  - Common static asset extensions (svg, png, jpg, etc.)
    *
-   * This is intentionally broad so that the proxy route /[slug]/[[...path]]
-   * is also covered — unauthenticated requests to tool URLs get redirected
-   * to /login rather than reaching the proxy handler.
+   * Slug proxy routes (/[slug]/[[...path]]) are covered here but are allowed
+   * through without auth — tools are publicly accessible, each tool handles
+   * its own authentication.
    */
   matcher: [
     '/((?!_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
