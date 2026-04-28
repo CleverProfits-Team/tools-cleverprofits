@@ -139,7 +139,7 @@ export default async function AnalyticsPage() {
 
       {/* ── KPI cards ───────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Hits (30d)</p>
             <div className="h-8 w-8 rounded-lg bg-[#eeeeff] flex items-center justify-center">
@@ -155,7 +155,7 @@ export default async function AnalyticsPage() {
           <p className="text-xs text-slate-400 mt-1">vs prior 30 days</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">All-time</p>
             <div className="h-8 w-8 rounded-lg bg-slate-50 flex items-center justify-center">
@@ -166,7 +166,7 @@ export default async function AnalyticsPage() {
           <p className="text-xs text-slate-400 mt-1">total requests</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active Tools</p>
             <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
@@ -185,13 +185,13 @@ export default async function AnalyticsPage() {
 
       {/* ── Top tool insight ────────────────────────────────────────── */}
       {topTool && topTool.hits30d > 0 && (
-        <div className="flex items-center gap-3 bg-[#040B4D]/[0.03] border border-[#040B4D]/[0.08] rounded-xl px-4 py-3 mb-8">
+        <div className="flex items-center gap-3 bg-[#0F0038]/[0.03] border border-[#0F0038]/[0.08] rounded-xl px-4 py-3 mb-8">
           <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center flex-shrink-0">
             <TrendingUp className="h-3.5 w-3.5 text-white" aria-hidden />
           </div>
           <p className="text-sm text-slate-600">
             <span className="text-slate-400">Most used in last 30 days — </span>
-            <Link href={`/tools/${topTool.slug}`} className="font-semibold text-[#040B4D] hover:text-[#2605EF] transition-colors">
+            <Link href={`/tools/${topTool.slug}`} className="font-semibold text-[#0F0038] hover:text-[#2605EF] transition-colors">
               {topTool.name}
             </Link>
             <span className="text-slate-400"> with </span>
@@ -201,8 +201,8 @@ export default async function AnalyticsPage() {
       )}
 
       {/* ── 30-day chart ────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-6 mb-6">
-        <h2 className="text-sm font-semibold text-[#040B4D] mb-5">Requests — last 30 days</h2>
+      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6 mb-6">
+        <h2 className="text-sm font-semibold text-[#0F0038] mb-5">Requests — last 30 days</h2>
         {totalHits30d === 0 ? (
           <p className="text-sm text-slate-400 text-center py-8">No requests recorded yet.</p>
         ) : (
@@ -224,9 +224,9 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* ── Per-tool table ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] overflow-hidden">
         <div className="px-6 py-4 bg-[#f4f3f3] rounded-t-2xl">
-          <h2 className="text-sm font-semibold text-[#040B4D]">Tool breakdown</h2>
+          <h2 className="text-sm font-semibold text-[#0F0038]">Tool breakdown</h2>
           <p className="text-xs text-slate-400 mt-0.5">Sorted by 30-day activity</p>
         </div>
 
@@ -246,7 +246,7 @@ export default async function AnalyticsPage() {
               {toolStats.map((t) => (
                 <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
                   <td className="px-6 py-3.5">
-                    <Link href={`/tools/${t.slug}`} className="font-semibold text-[#040B4D] hover:text-[#2605EF] transition-colors">
+                    <Link href={`/tools/${t.slug}`} className="font-semibold text-[#0F0038] hover:text-[#2605EF] transition-colors">
                       {t.name}
                     </Link>
                     <span className="ml-2 text-xs font-mono text-slate-300">/{t.slug}</span>

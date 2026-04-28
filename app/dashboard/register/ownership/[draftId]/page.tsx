@@ -150,7 +150,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
       {draft && (
         <div className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 mb-6">
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#040B4D] truncate">{draft.name}</p>
+            <p className="text-sm font-semibold text-[#0F0038] truncate">{draft.name}</p>
             <p className="text-xs text-slate-400 font-mono truncate">{draft.externalUrl}</p>
           </div>
           <ExternalLink className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" aria-hidden />

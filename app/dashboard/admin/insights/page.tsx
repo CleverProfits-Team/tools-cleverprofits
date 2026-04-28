@@ -108,14 +108,14 @@ function SummaryCard({
   color: string
 }) {
   return (
-    <div className="bg-white rounded-xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(4,11,77,0.08)] group">
+    <div className="bg-white rounded-xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,0,56,0.08)] group">
       <div className="flex items-center justify-between mb-3">
         <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</p>
         <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${color}`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <p className="font-display text-3xl font-bold text-[#040B4D] tabular-nums">{value}</p>
+      <p className="font-display text-3xl font-bold text-[#0F0038] tabular-nums">{value}</p>
       <p className="text-xs text-slate-400 mt-1">{description}</p>
     </div>
   )
@@ -177,10 +177,10 @@ export default async function InsightsPage() {
 
       {/* Tool ecosystem map */}
       {allActiveTools.length > 0 && (
-        <div className="bg-white rounded-xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-5">
+        <div className="bg-white rounded-xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-sm font-semibold text-[#040B4D]">Tool Ecosystem</h2>
+              <h2 className="text-sm font-semibold text-[#0F0038]">Tool Ecosystem</h2>
               <p className="text-xs text-slate-400 mt-0.5">
                 {activeHitIds.length} of {allActiveTools.length} tools active in the last 30 days
               </p>
@@ -228,14 +228,14 @@ export default async function InsightsPage() {
 
       {/* Category + Framework distributions */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-6">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6">
           <div className="flex items-center gap-2 mb-5">
             <GitBranch className="h-4 w-4 text-slate-400" aria-hidden />
             <h2 className="text-sm font-semibold text-slate-900">Tool Categories</h2>
           </div>
           <DistributionBar rows={categoryRows} maxCount={maxCategoryCount} colorClass="bg-[#2605EF]" />
         </div>
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-6">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6">
           <div className="flex items-center gap-2 mb-5">
             <Cpu className="h-4 w-4 text-slate-400" aria-hidden />
             <h2 className="text-sm font-semibold text-slate-900">Frameworks & Tech</h2>
@@ -337,7 +337,7 @@ export default async function InsightsPage() {
 
       {/* Overlap clusters */}
       {overlapClusters.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(4,11,77,0.06)] p-6">
+        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6">
           <div className="flex items-center gap-2 mb-1">
             <AlertTriangle className="h-4 w-4 text-violet-500" aria-hidden />
             <h2 className="text-sm font-semibold text-slate-900">Potential Overlap Clusters</h2>

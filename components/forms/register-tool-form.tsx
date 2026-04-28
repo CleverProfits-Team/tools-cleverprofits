@@ -244,7 +244,7 @@ export function RegisterToolForm() {
         <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center mb-5 ring-1 ring-emerald-200 shadow-sm">
           <CheckCircle2 className="h-7 w-7 text-emerald-600" aria-hidden />
         </div>
-        <h2 className="font-display font-bold text-xl text-[#040B4D] mb-2 tracking-tight">Your tool is in the queue</h2>
+        <h2 className="font-display font-bold text-xl text-[#0F0038] mb-2 tracking-tight">Your tool is in the queue</h2>
         <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
           An admin will review it shortly. Once approved, it'll be live at:
         </p>
@@ -292,7 +292,7 @@ export function RegisterToolForm() {
       {/* ── Welcome header ──────────────────────────────────────────── */}
       <div className="pb-2">
         <p className="text-xs font-semibold text-[#2605EF]/70 uppercase tracking-widest mb-1">New tool</p>
-        <h2 className="font-display font-bold text-xl text-[#040B4D] tracking-tight">
+        <h2 className="font-display font-bold text-xl text-[#0F0038] tracking-tight">
           Add your tool — we&apos;ll handle the rest
         </h2>
         <p className="text-sm text-slate-400 mt-1 leading-relaxed">

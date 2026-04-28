@@ -121,7 +121,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
           <p className="text-sm text-slate-400">No tools match the current filters.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl bg-white shadow-[0_20px_40px_rgba(4,11,77,0.06)]">
+        <div className="overflow-x-auto rounded-2xl bg-white shadow-[0_20px_40px_rgba(15,0,56,0.06)]">
           <table className="w-full text-left">
             <thead className="bg-[#f4f3f3]">
               <tr>
@@ -162,7 +162,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                           <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">Needs review</span>
                         </div>
                       )}
-                      <div className="font-semibold text-[#040B4D]">{tool.name}</div>
+                      <div className="font-semibold text-[#0F0038]">{tool.name}</div>
                       <div className="text-xs text-slate-400 font-mono mt-0.5">/{tool.slug}</div>
                     </td>
                     <td className={tdCls}>

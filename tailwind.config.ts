@@ -18,7 +18,7 @@ const config: Config = {
         'surface-low': '#f4f3f3',
         // CleverProfits brand palette (from brand guidelines)
         cp: {
-          'royal-blue':    '#040B4D',
+          'royal-blue':    '#0F0038',
           'electric-blue': '#2605EF',
           'dark-navy':     '#18197D',
           'navy':          '#1508AC',
@@ -42,10 +42,10 @@ const config: Config = {
         },
       },
       boxShadow: {
-        card:          '0 1px 4px 0 rgba(4,11,77,0.06), 0 1px 2px -1px rgba(4,11,77,0.04)',
-        'card-hover':  '0 8px 28px -4px rgba(4,11,77,0.12), 0 4px 8px -4px rgba(4,11,77,0.06)',
-        'xs':          '0 1px 2px 0 rgba(4,11,77,0.05)',
-        'elevated':    '0 12px 32px -8px rgba(4,11,77,0.14), 0 4px 10px -4px rgba(4,11,77,0.06)',
+        card:          '0 1px 4px 0 rgba(15,0,56,0.06), 0 1px 2px -1px rgba(15,0,56,0.04)',
+        'card-hover':  '0 8px 28px -4px rgba(15,0,56,0.12), 0 4px 8px -4px rgba(15,0,56,0.06)',
+        'xs':          '0 1px 2px 0 rgba(15,0,56,0.05)',
+        'elevated':    '0 12px 32px -8px rgba(15,0,56,0.14), 0 4px 10px -4px rgba(15,0,56,0.06)',
         'glow-blue':   '0 0 0 3px rgb(38 5 239 / 0.15)',
       },
       borderRadius: {

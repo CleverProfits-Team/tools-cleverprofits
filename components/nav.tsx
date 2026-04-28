@@ -70,7 +70,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
 
   return (
     <header
-      className="sticky top-0 z-30 bg-[#040B4D] border-b border-[#18197D]/60 shadow-md overflow-hidden"
+      className="sticky top-0 z-30 bg-[#0F0038] border-b border-[#18197D]/60 shadow-md overflow-hidden"
       onMouseMove={handleNavMouseMove}
       onMouseLeave={handleNavMouseLeave}
     >
@@ -130,7 +130,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                   <ShieldAlert className="h-3.5 w-3.5" aria-hidden />
                   Admin
                   {pendingCount > 0 && (
-                    <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#040B4D] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
+                    <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#0F0038] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
                       {pendingCount}
                     </span>
                   )}
@@ -177,7 +177,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
               {open && (
                 <div className="absolute right-0 top-full mt-1.5 w-72 rounded-xl border border-slate-200 bg-white shadow-elevated overflow-hidden z-50">
                   {/* User info header */}
-                  <div className="px-4 py-4 border-b border-slate-100 bg-gradient-to-br from-[#040B4D] to-[#18197D]">
+                  <div className="px-4 py-4 border-b border-slate-100 bg-gradient-to-br from-[#0F0038] to-[#18197D]">
                     <div className="flex items-center gap-3">
                       {session.user.image ? (
                         // eslint-disable-next-line @next/next/no-img-element

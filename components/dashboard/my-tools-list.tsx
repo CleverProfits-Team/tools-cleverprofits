@@ -111,7 +111,7 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Link
                     href={draftContinueUrl(draft)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-[#040B4D] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0d1870] transition-colors"
+                    className="inline-flex items-center gap-1 rounded-lg bg-[#0F0038] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0d1870] transition-colors"
                   >
                     Continue
                     <ChevronRight className="h-3 w-3" aria-hidden />

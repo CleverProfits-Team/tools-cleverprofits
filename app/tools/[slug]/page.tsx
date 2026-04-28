@@ -120,7 +120,7 @@ export default async function ToolInfoPage({
             {/* Header */}
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
-                <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">{tool.name}</h1>
+                <h1 className="font-display font-bold text-2xl text-[#0F0038] tracking-tight">{tool.name}</h1>
                 <p className="text-sm font-mono text-slate-400 mt-0.5">/{tool.slug}</p>
               </div>
               <StatusBadge status={tool.status} />

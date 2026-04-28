@@ -64,13 +64,13 @@ function LoginContent() {
 
         {/* ── Logotype ─────────────────────────────────────────────────── */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-10 w-10 rounded-xl bg-[#040B4D] flex items-center justify-center flex-shrink-0 shadow-sm">
+          <div className="h-10 w-10 rounded-xl bg-[#0F0038] flex items-center justify-center flex-shrink-0 shadow-sm">
             <span className="text-white font-display font-bold text-base tracking-tight select-none">
               CP
             </span>
           </div>
           <div className="leading-none">
-            <p className="font-display font-bold text-[#040B4D] text-sm tracking-tight">CleverProfits</p>
+            <p className="font-display font-bold text-[#0F0038] text-sm tracking-tight">CleverProfits</p>
             <p className="text-[11px] text-slate-400 mt-0.5 tracking-widest uppercase">
               Tools Platform
             </p>
@@ -78,12 +78,12 @@ function LoginContent() {
         </div>
 
         {/* ── Heading ──────────────────────────────────────────────────── */}
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] mb-1.5 tracking-tight">
+        <h1 className="font-display font-bold text-2xl text-[#0F0038] mb-1.5 tracking-tight">
           Sign in to continue
         </h1>
         <p className="text-sm text-slate-500 mb-7 leading-relaxed">
           Use your{' '}
-          <span className="font-medium text-[#040B4D]">@cleverprofits.com</span>{' '}
+          <span className="font-medium text-[#0F0038]">@cleverprofits.com</span>{' '}
           Google Workspace account to access the tools platform.
         </p>
 

@@ -159,7 +159,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
                 <p className={cn(
                   'text-sm font-semibold leading-none mb-0.5',
                   status === 'done'    && 'text-emerald-700',
-                  status === 'active'  && 'text-[#040B4D]',
+                  status === 'active'  && 'text-[#0F0038]',
                   status === 'error'   && 'text-red-700',
                   status === 'pending' && 'text-slate-400',
                 )}>

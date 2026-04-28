@@ -115,7 +115,7 @@ export function BubbleMap({ tools, activeHitIds }: Props) {
         if (!tool) return null
         const active = hitSet.has(tool.id)
         return (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-[#040B4D] text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-30 whitespace-nowrap">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-[#0F0038] text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-30 whitespace-nowrap">
             <span
               className="h-1.5 w-1.5 rounded-full flex-shrink-0"
               style={{ backgroundColor: active ? '#10b981' : '#94a3b8' }}

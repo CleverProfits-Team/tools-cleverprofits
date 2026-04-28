@@ -6,7 +6,7 @@
 :root {
   /* Brand */
   --cp-brand:      #2605EF;
-  --cp-deep:       #040B4D;
+  --cp-deep:       #0F0038;
   --cp-mid:        #18197D;
   --cp-navy:       #1508AC;
   --cp-navy-black: #0F0038;
@@ -21,7 +21,7 @@
   --cp-border-subtle: #f1f5f9;
 
   /* Text */
-  --cp-text:          #040B4D;
+  --cp-text:          #0F0038;
   --cp-text-secondary:#64748b;
   --cp-text-muted:    #94a3b8;
 
@@ -32,10 +32,10 @@
   --cp-archived: #94a3b8;
 
   /* Shadows (navy-tinted) */
-  --cp-shadow-xs:  0 1px 2px 0 rgba(4,11,77,0.05);
-  --cp-shadow-sm:  0 1px 4px 0 rgba(4,11,77,0.06), 0 1px 2px -1px rgba(4,11,77,0.04);
-  --cp-shadow-md:  0 4px 16px -2px rgba(4,11,77,0.10), 0 2px 6px -2px rgba(4,11,77,0.06);
-  --cp-shadow-lg:  0 12px 32px -8px rgba(4,11,77,0.14), 0 4px 10px -4px rgba(4,11,77,0.06);
+  --cp-shadow-xs:  0 1px 2px 0 rgba(15,0,56,0.05);
+  --cp-shadow-sm:  0 1px 4px 0 rgba(15,0,56,0.06), 0 1px 2px -1px rgba(15,0,56,0.04);
+  --cp-shadow-md:  0 4px 16px -2px rgba(15,0,56,0.10), 0 2px 6px -2px rgba(15,0,56,0.06);
+  --cp-shadow-lg:  0 12px 32px -8px rgba(15,0,56,0.14), 0 4px 10px -4px rgba(15,0,56,0.06);
 }
 
 @layer base {
@@ -83,7 +83,7 @@
   /* Better text selection */
   ::selection {
     background: #d5d4ff;
-    color: #040B4D;
+    color: #0F0038;
   }
 
   /* Slim custom scrollbar */
@@ -150,7 +150,7 @@
     background:
       radial-gradient(ellipse 80% 55% at 60% -10%, rgb(38 5 239 / 0.28) 0%, transparent 65%),
       radial-gradient(ellipse 40% 30% at 100% 0%, rgb(24 25 125 / 0.5) 0%, transparent 60%),
-      linear-gradient(160deg, #040B4D 0%, #030828 100%);
+      linear-gradient(160deg, #0F0038 0%, #030828 100%);
   }
 
   /* ── Kinetic hero section ─────────────────────────────────────────────────

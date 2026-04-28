@@ -306,7 +306,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
               </div>
 
               {/* Premium unified panel */}
-              <div className="rounded-xl border border-slate-100 overflow-hidden bg-white shadow-[0_1px_4px_rgba(4,11,77,0.04)]">
+              <div className="rounded-xl border border-slate-100 overflow-hidden bg-white shadow-[0_1px_4px_rgba(15,0,56,0.04)]">
                 {listTools.map((tool) => (
                   <ToolRow key={tool.id} tool={tool} />
                 ))}
@@ -321,7 +321,7 @@ export function ToolsGrid({ tools, teams, currentUserEmail }: ToolsGridProps) {
           <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-[#eeeeff] to-[#d5d4ff] flex items-center justify-center mb-5 shadow-xs">
             <Wrench className="h-7 w-7 text-[#2605EF]" aria-hidden />
           </div>
-          <h3 className="font-display font-bold text-[17px] text-[#040B4D] mb-2">
+          <h3 className="font-display font-bold text-[17px] text-[#0F0038] mb-2">
             Your toolkit is empty
           </h3>
           <p className="text-sm text-slate-400 mb-6 max-w-xs leading-relaxed">

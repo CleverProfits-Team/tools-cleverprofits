@@ -56,7 +56,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
       </div>
 
       {/* ── Heading ───────────────────────────────────────────────── */}
-      <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight mb-2">
+      <h1 className="font-display font-bold text-2xl text-[#0F0038] tracking-tight mb-2">
         Tool submitted!
       </h1>
       <p className="text-sm text-slate-500 mb-1">

@@ -30,7 +30,7 @@ export function PageHeader({ title, subtitle, label, action }: PageHeaderProps) 
       {/* Left-edge merge gradient — blends header into sidebar */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'linear-gradient(to right, rgba(4,11,77,0.55) 0%, transparent 28%)' }}
+        style={{ background: 'linear-gradient(to right, rgba(15,0,56,0.55) 0%, transparent 28%)' }}
         aria-hidden
       />
 

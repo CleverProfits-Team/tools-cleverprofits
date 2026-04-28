@@ -93,7 +93,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
         <span className="flex-1 truncate leading-none">{label}</span>
 
         {badge !== undefined && badge > 0 && (
-          <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#040B4D] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none flex-shrink-0">
+          <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#0F0038] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none flex-shrink-0">
             {badge}
           </span>
         )}
@@ -334,7 +334,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{ width: sidebarWidth }}
-        className="hidden md:flex flex-col sticky top-0 h-screen flex-shrink-0 bg-[#040B4D] border-r border-white/[0.05] overflow-hidden relative"
+        className="hidden md:flex flex-col sticky top-0 h-screen flex-shrink-0 bg-[#0F0038] border-r border-white/[0.05] overflow-hidden relative"
       >
         {/* Floating bubbles */}
         {BUBBLES.map((b) => (
@@ -395,7 +395,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
       </aside>
 
       {/* ── Mobile top bar ────────────────────────────── */}
-      <div className="md:hidden sticky top-0 z-30 flex h-12 items-center justify-between px-4 bg-[#040B4D] border-b border-white/[0.06]">
+      <div className="md:hidden sticky top-0 z-30 flex h-12 items-center justify-between px-4 bg-[#0F0038] border-b border-white/[0.06]">
         <Logo />
         <div className="flex items-center gap-2">
           {session?.user?.image ? (
@@ -428,7 +428,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[252px] flex flex-col bg-[#040B4D] shadow-2xl border-r border-white/[0.05]">
+          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[252px] flex flex-col bg-[#0F0038] shadow-2xl border-r border-white/[0.05]">
             <div className="h-12 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
               <Logo />
               <button

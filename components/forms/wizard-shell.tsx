@@ -38,7 +38,7 @@ export function WizardShell({
                 <div className={cn(
                   'h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200',
                   done   && 'bg-[#2605EF] text-white',
-                  active && 'bg-[#040B4D] text-white ring-4 ring-[#040B4D]/10',
+                  active && 'bg-[#0F0038] text-white ring-4 ring-[#0F0038]/10',
                   !done && !active && 'bg-slate-100 text-slate-400',
                 )}>
                   {done ? <Check className="h-3.5 w-3.5" /> : step.id}
@@ -46,7 +46,7 @@ export function WizardShell({
                 <span className={cn(
                   'mt-1.5 text-[11px] font-semibold whitespace-nowrap',
                   done   && 'text-[#2605EF]',
-                  active && 'text-[#040B4D]',
+                  active && 'text-[#0F0038]',
                   !done && !active && 'text-slate-400',
                 )}>
                   {step.label}
@@ -65,7 +65,7 @@ export function WizardShell({
 
       {/* ── Page header ──────────────────────────────────────────── */}
       <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl text-[#040B4D] tracking-tight">
+        <h1 className="font-display font-bold text-2xl text-[#0F0038] tracking-tight">
           {title}
         </h1>
         {subtitle && (

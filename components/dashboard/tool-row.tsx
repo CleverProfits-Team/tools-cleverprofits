@@ -71,7 +71,7 @@ export function ToolRow({ tool }: ToolRowProps) {
         <div className="flex items-baseline gap-2 flex-wrap">
           <Link
             href={`/tools/${tool.slug}`}
-            className="font-semibold text-[13px] text-[#040B4D] hover:text-[#2605EF] transition-colors leading-tight focus-ring rounded"
+            className="font-semibold text-[13px] text-[#0F0038] hover:text-[#2605EF] transition-colors leading-tight focus-ring rounded"
           >
             {tool.name}
           </Link>
@@ -115,7 +115,7 @@ export function ToolRow({ tool }: ToolRowProps) {
             href={`/${tool.slug}`}
             className={cn(
               'inline-flex items-center gap-1 rounded-lg px-3 py-1.5',
-              'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold shadow-xs',
+              'bg-[#0F0038] hover:bg-[#2605EF] text-white text-[11px] font-semibold shadow-xs',
               'transition-all duration-150 active:scale-95',
               'opacity-0 group-hover:opacity-100',
             )}

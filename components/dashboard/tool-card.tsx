@@ -41,10 +41,10 @@ export function ToolCard({ tool }: ToolCardProps) {
       className={cn(
         'group relative flex flex-col bg-white rounded-xl overflow-hidden',
         'border-l-4 border-t-0 border-r-0 border-b-0',
-        'shadow-[0_20px_40px_rgba(4,11,77,0.06)]',
+        'shadow-[0_20px_40px_rgba(15,0,56,0.06)]',
         'transition-all duration-200 ease-out',
         'hover:-translate-y-1',
-        'hover:shadow-[0_16px_40px_rgba(4,11,77,0.10),0_4px_12px_rgba(4,11,77,0.06)]',
+        'hover:shadow-[0_16px_40px_rgba(15,0,56,0.10),0_4px_12px_rgba(15,0,56,0.06)]',
         !isActive && 'opacity-80',
       )}
       style={{ borderLeftColor: accent.hex }}
@@ -67,7 +67,7 @@ export function ToolCard({ tool }: ToolCardProps) {
             className={cn(
               'h-11 w-11 rounded-xl flex items-center justify-center flex-shrink-0',
               'text-white text-[15px] font-bold select-none',
-              'shadow-[0_2px_10px_rgba(4,11,77,0.22)]',
+              'shadow-[0_2px_10px_rgba(15,0,56,0.22)]',
               'transition-transform duration-200 group-hover:scale-[1.06]',
               accent.bg,
             )}
@@ -81,7 +81,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         {/* Name */}
         <Link
           href={`/tools/${tool.slug}`}
-          className="font-display font-bold text-[15.5px] leading-snug text-[#040B4D] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-ring rounded"
+          className="font-display font-bold text-[15.5px] leading-snug text-[#0F0038] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-ring rounded"
         >
           {tool.name}
         </Link>
@@ -127,7 +127,7 @@ export function ToolCard({ tool }: ToolCardProps) {
               href={`/${tool.slug}`}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 flex-shrink-0',
-                'bg-[#040B4D] hover:bg-[#2605EF] text-white text-[11px] font-semibold',
+                'bg-[#0F0038] hover:bg-[#2605EF] text-white text-[11px] font-semibold',
                 'shadow-xs transition-all duration-150 active:scale-95',
                 'group-hover:shadow-[0_0_0_3px_rgba(38,5,239,0.12)]',
               )}
