@@ -56,10 +56,14 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         aria-hidden
       />
 
-      {/* Decorative bubble outlines */}
-      <div className="absolute -top-20 right-8 w-72 h-72 rounded-full border border-white/[0.05] pointer-events-none" aria-hidden />
-      <div className="absolute -bottom-16 right-1/4 w-52 h-52 rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
-      <div className="absolute top-4 right-1/3 w-36 h-36 rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
+      {/* Concentric ring system (Stitch signature) — anchored top-right, expanding outward */}
+      <div className="absolute top-1/2 right-[-10%] -translate-y-1/2 pointer-events-none" aria-hidden>
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 w-[140px] h-[140px] rounded-full border border-white/[0.18]" />
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] rounded-full border border-white/[0.12]" />
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full border border-white/[0.08]" />
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] rounded-full border border-white/[0.05]" />
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 w-[740px] h-[740px] rounded-full border border-white/[0.03]" />
+      </div>
 
       {/* Mouse spotlight */}
       <div
@@ -70,38 +74,36 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         aria-hidden
       />
 
-      <div className="relative z-10 px-4 sm:px-6 lg:px-8 pt-10 pb-20">
-        <div className="flex justify-between items-start gap-4">
-          {/* Left: headline block */}
-          <div className="max-w-2xl">
-            {/* System status */}
-            <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#D5D4FF] mb-2">
-              <span className="w-2 h-2 rounded-full bg-[#10B981] pulse-dot flex-shrink-0" aria-hidden />
-              System Status — Optimal
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-24">
+        {/* Editorial top label — System Status + cycle marker */}
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-8">
+          <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#D5D4FF]">
+            <span className="w-2 h-2 rounded-full bg-[#10B981] pulse-dot flex-shrink-0" aria-hidden />
+            System Status — Optimal
+          </p>
+          {firstName && (
+            <p className="text-white/45 text-[11px] font-semibold uppercase tracking-[0.12em]">
+              · Welcome back, {firstName}
             </p>
+          )}
+        </div>
 
-            {/* Welcome line */}
-            {firstName && (
-              <p className="text-white/45 text-[11px] font-semibold uppercase tracking-[0.12em] mb-2">
-                Welcome back, {firstName}
-              </p>
-            )}
-
-            {/* Headline */}
-            <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.1] tracking-[-0.03em] mb-4 text-white">
-              Operational pulse — {efficiencyPct}% efficiency
+        {/* Asymmetric grid: headline left (8 cols), action right (4 cols) */}
+        <div className="grid lg:grid-cols-12 gap-x-8 gap-y-6 items-end">
+          <div className="lg:col-span-8 min-w-0">
+            <h1 className="font-display font-bold text-white tracking-[-0.04em] leading-[0.95] text-5xl md:text-6xl lg:text-7xl">
+              <span className="block">Operational pulse —</span>
+              <span className="block">{efficiencyPct}% efficiency</span>
             </h1>
-
-            <p className="text-white/65 text-base font-light max-w-xl leading-relaxed">
+            <p className="text-white/65 text-base lg:text-lg font-light max-w-xl leading-relaxed mt-6">
               Cross-functional tools are operating at peak capacity.
             </p>
           </div>
 
-          {/* Right: actions */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="lg:col-span-4 flex lg:justify-end flex-shrink-0">
             <Link
               href="/dashboard/register"
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-sm text-white transition-all focus-ring"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-5 py-2.5 rounded-lg text-sm font-medium text-white transition-all focus-ring whitespace-nowrap"
             >
               <PlusCircle className="h-4 w-4" aria-hidden />
               Register Tool
@@ -111,7 +113,7 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
 
         {/* Inline stats row */}
         {totalCount > 0 && (
-          <div className="flex items-stretch mt-8 pt-5 border-t border-white/[0.08]">
+          <div className="flex items-stretch mt-12 pt-6 border-t border-white/[0.08]">
             <div className="pr-7">
               <p className="text-[28px] font-display font-bold text-white tabular-nums leading-none tracking-[-0.02em]">
                 {activeCount}
