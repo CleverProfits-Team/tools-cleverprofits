@@ -43,3 +43,6 @@ yarn-error.log*
 
 # Local Claude Code state
 .claude/
+
+# Local design references (not committed)
+.design-references/

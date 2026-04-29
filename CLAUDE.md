@@ -23,6 +23,71 @@ If this platform overrides a brand value (e.g., a custom token, a local exceptio
 
 ---
 
+## Design System Override — Stitch "Kinetic Editor"
+
+**Decision (2026-04-29):** This platform adopts Google Stitch's "Kinetic Editor" **structural** philosophy — surface tiers, no-line containment, asymmetric editorial layouts, tonal layering, hero gradient, card radii. The brand kit at `~/.claude/skills/cleverfy-v3/clever-brand-kit.md` remains the source of truth for **brand colors AND typography** (Inter display + DM Sans body — preserved).
+
+**Reference materials:** `~/tools-platform/.design-references/stitch/`
+- `DESIGN.md` — the Kinetic Editor specification
+- `screen.png` — visual target
+- `code.html` — Stitch's HTML reference
+
+### What overrides Stitch (brand kit wins)
+
+| Token | Brand kit value | Stitch default (replaced) |
+|---|---|---|
+| `primary` | `#0F0038` Royal Blue | `#1800b0` |
+| `primary-container` | `#2605EF` Electric Blue | `#2605ef` (incidental match) |
+| `error` | `#DC2626` | `#ba1a1a` |
+| `success` | `#10B981` | (Stitch has none) |
+| `warning` | `#F59E0B` | (Stitch has none) |
+
+### What overrides the brand kit (Stitch wins)
+
+| Concern | Stitch | Brand kit (set aside) |
+|---|---|---|
+| Surface tiers | M3-style: `surface`, `surface-container-low/lowest/high/highest`, `surface-bright` | flat `cp-surface` / `cp-background` |
+| Containment | **No-line rule** — boundaries via tonal shifts only, never 1px borders | varied |
+| Elevation | **Tonal layering** (stacking surface tiers) > shadows | shadows |
+| Card radius | `rounded-[2rem]` (= `rounded-4xl`) for hero/feature cards | `rounded-2xl` |
+| Section gaps | `spacing-20` (5rem) / `spacing-24` (6rem) | varied |
+| Hero gradient | 135° `primary → primary-container` | shadows + flat fills |
+| Letter-spacing scale | Editorial: `-0.04em`/`-0.03em`/`-0.02em` for display, `0.18em` for micro-labels | varied |
+
+**Note on typography:** Stitch DESIGN.md specifies Space Grotesk (display) + Inter (body). This platform deliberately keeps the brand kit's Inter (display) + DM Sans (body) instead — brand identity ranks higher than Stitch's typographic voice for an internal CleverProfits product.
+
+### Why this divergence
+
+The brand kit is excellent for marketing surfaces and KPI dashboards (data-dense, table-heavy). The internal tools platform is editorial — it tells a story about a living ecosystem. The Kinetic Editor's asymmetric layouts, expansive negative space, and tonal layering match this product's "living system" north star better than a card-everything dashboard pattern would. Brand identity is preserved through color (Royal Blue + Electric Blue are still the soul); only the structural philosophy shifts.
+
+### Where the override is wired
+
+- **`app/layout.tsx`** — Inter + DM Sans (brand kit, unchanged). Variables: `--font-inter`, `--font-dm-sans`.
+- **`tailwind.config.ts`** —
+  - `font-display` → Inter; `font-sans` → DM Sans (brand kit, unchanged)
+  - Stitch surface tier tokens added at exact Stitch values: `surface`, `surface-bright`, `surface-dim`, `surface-variant`, `surface-container-{lowest,low,,high,highest}`, `outline`, `outline-variant`, `on-surface`, `on-surface-variant`, `inverse-surface`, `inverse-on-surface`
+  - `primary`/`primary-container`/`secondary`/`tertiary` exposed as Stitch-compatible tokens, but `primary` and `primary-container` remapped to brand Royal Blue / Electric Blue
+  - Functional palette (`error`, `success`, `warning`) from brand kit
+  - `rounded-4xl: 2rem` added for Stitch hero/feature cards
+  - `shadow-tonal`, `shadow-tonal-lg`, `shadow-tonal-xl` — Stitch tertiary-tinted ambient shadows for floating elements
+  - `bg-kinetic-gradient` — 135° Royal Blue → Electric Blue (Stitch hero gradient)
+  - `backdropBlur.glass: 20px` (Stitch glassmorphism)
+  - `letterSpacing.{tightest,extra-tight,editorial,wider,widest}` (Stitch editorial scale)
+- **`app/globals.css`** — unchanged; `h1-h6` stay on `--font-inter` per brand kit.
+
+### How to apply this in components
+
+When building a new component or refactoring an existing one:
+
+1. **Containment:** never use `border` for sectioning. Define boundaries with `bg-surface-container-low` against `bg-surface`, etc.
+2. **Cards:** `bg-surface-container-lowest` (white), `rounded-2xl` or `rounded-4xl` for hero, `p-6` to `p-8` internal, `shadow-card` only if a soft lift is required — prefer tonal layering instead.
+3. **Display headlines:** `font-display` (Inter, brand kit), `tracking-[-0.02em]` to `tracking-[-0.04em]`, `leading-none` to `leading-tight`.
+4. **Labels:** `text-[10px]` or `text-[11px]`, `uppercase`, `tracking-[0.18em]`, often paired with `text-primary` color to act as a "Technical Header" marker above a display headline.
+5. **Section gaps:** `mb-20` (5rem) or `mb-24` (6rem). Smaller gaps look templated.
+6. **Hero/CTA gradient:** `bg-kinetic-gradient` (or `bg-gradient-to-br from-primary to-primary-container`).
+
+---
+
 ## What We're Building
 
 CleverProfits Tools is an **internal operational intelligence platform** — not a tool list, not a dashboard, but a living ecosystem where every internal tool has an identity, owner, purpose, and lifecycle. It transforms scattered internal tools into a structured, discoverable, and governable system.
@@ -108,6 +173,7 @@ The brand kit specifies Inter (display) + DM Sans (body); this project follows t
 
 Project-specific notes:
 - **Body weight**: never 500+ in DM Sans — it bleeds into Inter's visual territory. Stick to 400.
+- **Display tracking**: `-0.02em` standard, tighten to `-0.04em` for hero headlines (Stitch editorial density)
 - **Scale principle**: meaningful jumps between levels (skip steps, not increments)
 
 ### Color
