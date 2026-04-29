@@ -2,10 +2,11 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import {
-  Wrench, LogOut, PlusCircle, LayoutDashboard,
+  LogOut, PlusCircle, LayoutDashboard,
   ShieldAlert, ClipboardList, ChevronDown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -17,10 +18,10 @@ const NAV_LINKS = [
 ]
 
 const ROLE_STYLES: Record<string, string> = {
-  SUPER_ADMIN: 'bg-violet-100 text-violet-700',
-  ADMIN:       'bg-blue-100   text-blue-700',
-  BUILDER:     'bg-amber-100  text-amber-700',
-  VIEWER:      'bg-slate-100  text-slate-600',
+  SUPER_ADMIN: 'bg-[rgba(38,5,239,0.10)] text-[#2605EF]',
+  ADMIN:       'bg-[rgba(38,5,239,0.10)] text-[#2605EF]',
+  BUILDER:     'bg-[rgba(245,158,11,0.10)] text-[#92400E]',
+  VIEWER:      'bg-[#E7E7E7] text-[rgba(15,0,56,0.68)]',
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -40,7 +41,6 @@ export function Nav({ pendingCount = 0 }: NavProps) {
   const [open, setOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!open) return
     function handler(e: MouseEvent) {
@@ -78,7 +78,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(350px circle at ${navMouse.x}px ${navMouse.y}px, rgba(99,60,255,0.25), rgba(38,5,239,0.08) 45%, transparent 65%)`,
+          background: `radial-gradient(350px circle at ${navMouse.x}px ${navMouse.y}px, rgba(38,5,239,0.22), rgba(38,5,239,0.06) 45%, transparent 65%)`,
         }}
         aria-hidden
       />
@@ -88,12 +88,25 @@ export function Nav({ pendingCount = 0 }: NavProps) {
           {/* ── Brand + nav ──────────────────────────────────────────── */}
           <div className="flex items-center gap-6 min-w-0">
             <Link href="/dashboard" className="flex items-center gap-2.5 flex-shrink-0 group">
-              <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors">
-                <Wrench className="h-3.5 w-3.5 text-white" aria-hidden />
+              <div className="h-7 w-7 rounded-full overflow-hidden ring-1 ring-white/10">
+                <Image
+                  src="/cp-logo-circle.png"
+                  alt=""
+                  width={28}
+                  height={28}
+                  className="h-full w-full object-cover"
+                  aria-hidden
+                />
               </div>
-              <span className="font-display font-bold text-sm tracking-tight hidden sm:block text-white">
-                CleverProfits{' '}
-                <span className="text-white/50 font-normal">Tools</span>
+              <Image
+                src="/cp-logo-wordmark-white.png"
+                alt="CleverProfits"
+                width={120}
+                height={16}
+                className="h-[14px] w-auto hidden sm:block"
+              />
+              <span className="hidden sm:inline text-[10px] font-bold tracking-[0.18em] uppercase text-white/40">
+                Tools
               </span>
             </Link>
 
@@ -107,7 +120,7 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                     className={cn(
                       'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors',
                       isActive
-                        ? 'bg-white/15 text-white font-medium'
+                        ? 'bg-white/15 text-white font-semibold'
                         : 'text-white/60 hover:text-white hover:bg-white/10',
                     )}
                   >
@@ -123,14 +136,14 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                   className={cn(
                     'flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors',
                     pathname.startsWith('/dashboard/admin')
-                      ? 'bg-white/15 text-white font-medium'
+                      ? 'bg-white/15 text-white font-semibold'
                       : 'text-white/60 hover:text-white hover:bg-white/10',
                   )}
                 >
                   <ShieldAlert className="h-3.5 w-3.5" aria-hidden />
                   Admin
                   {pendingCount > 0 && (
-                    <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#0F0038] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
+                    <span className="inline-flex items-center justify-center rounded-full bg-[#F59E0B] text-[#0F0038] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none">
                       {pendingCount}
                     </span>
                   )}
@@ -148,7 +161,6 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                 aria-expanded={open}
                 aria-haspopup="true"
               >
-                {/* Avatar */}
                 {session.user.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -157,8 +169,11 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                     className="h-7 w-7 rounded-full object-cover ring-1 ring-white/20 flex-shrink-0"
                   />
                 ) : (
-                  <div className="h-7 w-7 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-semibold text-white select-none">{initials}</span>
+                  <div
+                    className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #1508AC 0%, #2605EF 60%, #18197D 100%)' }}
+                  >
+                    <span className="text-xs font-bold text-white select-none">{initials}</span>
                   </div>
                 )}
                 <span className="hidden md:block text-sm font-medium text-white/80 max-w-[100px] truncate">
@@ -175,9 +190,8 @@ export function Nav({ pendingCount = 0 }: NavProps) {
 
               {/* Dropdown panel */}
               {open && (
-                <div className="absolute right-0 top-full mt-1.5 w-72 rounded-xl border border-slate-200 bg-white shadow-elevated overflow-hidden z-50">
-                  {/* User info header */}
-                  <div className="px-4 py-4 border-b border-slate-100 bg-gradient-to-br from-[#0F0038] to-[#18197D]">
+                <div className="absolute right-0 top-full mt-1.5 w-72 rounded-2xl border border-[#E7E7E7] bg-white shadow-elevated overflow-hidden z-50">
+                  <div className="px-4 py-4 border-b border-[#E7E7E7] bg-[#0F0038]">
                     <div className="flex items-center gap-3">
                       {session.user.image ? (
                         // eslint-disable-next-line @next/next/no-img-element
@@ -187,20 +201,23 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                           className="h-10 w-10 rounded-full object-cover ring-2 ring-white/20 flex-shrink-0"
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-semibold text-white select-none">{initials}</span>
+                        <div
+                          className="h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: 'linear-gradient(135deg, #1508AC 0%, #2605EF 60%, #18197D 100%)' }}
+                        >
+                          <span className="text-sm font-bold text-white select-none">{initials}</span>
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-white truncate">{session.user.name}</p>
+                        <p className="text-sm font-bold text-white truncate">{session.user.name}</p>
                         <p className="text-xs text-white/60 truncate">{session.user.email}</p>
                       </div>
                     </div>
                     {role && (
                       <div className="mt-2.5">
                         <span className={cn(
-                          'inline-block rounded-full px-2.5 py-0.5 text-xs font-medium',
-                          ROLE_STYLES[role] ?? 'bg-slate-100 text-slate-600',
+                          'inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.04em]',
+                          ROLE_STYLES[role] ?? 'bg-[#E7E7E7] text-[rgba(15,0,56,0.68)]',
                         )}>
                           {ROLE_LABELS[role] ?? role}
                         </span>
@@ -208,13 +225,12 @@ export function Nav({ pendingCount = 0 }: NavProps) {
                     )}
                   </div>
 
-                  {/* Actions */}
                   <div className="py-1">
                     <button
                       onClick={() => signOut({ callbackUrl: '/login' })}
-                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors"
+                      className="flex items-center gap-2.5 w-full px-4 py-2.5 text-sm text-[rgba(15,0,56,0.65)] hover:bg-[#FAFAFA] hover:text-[#0F0038] transition-colors"
                     >
-                      <LogOut className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+                      <LogOut className="h-3.5 w-3.5 text-[rgba(15,0,56,0.40)]" aria-hidden />
                       Sign out
                     </button>
                   </div>

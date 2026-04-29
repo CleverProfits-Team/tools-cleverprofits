@@ -51,7 +51,7 @@ function SlugStatus({ state, reason }: { state: SlugState; reason?: string }) {
 
   if (state === 'checking') {
     return (
-      <span className="flex items-center gap-1 text-xs text-slate-400">
+      <span className="flex items-center gap-1 text-xs text-[rgba(15,0,56,0.40)]">
         <Loader2 className="h-3 w-3 animate-spin" aria-hidden />
         Checking…
       </span>
@@ -59,14 +59,14 @@ function SlugStatus({ state, reason }: { state: SlugState; reason?: string }) {
   }
   if (state === 'available') {
     return (
-      <span className="flex items-center gap-1 text-xs text-emerald-600">
+      <span className="flex items-center gap-1 text-xs text-[#065F46]">
         <CheckCircle2 className="h-3 w-3" aria-hidden />
         Available
       </span>
     )
   }
   return (
-    <span className="flex items-center gap-1 text-xs text-red-500">
+    <span className="flex items-center gap-1 text-xs text-[#EF4444]">
       <AlertCircle className="h-3 w-3" aria-hidden />
       {reason ?? 'Unavailable'}
     </span>
@@ -241,27 +241,27 @@ export function RegisterToolForm() {
 
     return (
       <div className="flex flex-col items-center text-center py-10 px-4 max-w-md mx-auto animate-in">
-        <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center mb-5 ring-1 ring-emerald-200 shadow-sm">
-          <CheckCircle2 className="h-7 w-7 text-emerald-600" aria-hidden />
+        <div className="h-14 w-14 rounded-2xl bg-[rgba(16,185,129,0.10)] flex items-center justify-center mb-5 ring-1 ring-emerald-200 shadow-md">
+          <CheckCircle2 className="h-7 w-7 text-[#10B981]" aria-hidden />
         </div>
-        <h2 className="font-display font-bold text-xl text-[#0F0038] mb-2 tracking-tight">Your tool is in the queue</h2>
-        <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
+        <h2 className="font-display font-bold text-xl text-[#0F0038] mb-2 tracking-[-0.02em]">Your tool is in the queue</h2>
+        <p className="text-sm text-[rgba(15,0,56,0.40)] mb-6 leading-relaxed max-w-xs">
           An admin will review it shortly. Once approved, it'll be live at:
         </p>
 
         {/* URL pill */}
-        <div className="flex items-center gap-2 w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 mb-6">
-          <ExternalLink className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" aria-hidden />
-          <span className="text-sm font-mono text-slate-700 flex-1 min-w-0 truncate">
+        <div className="flex items-center gap-2 w-full bg-[#FAFAFA] border border-[#E7E7E7] rounded-lg px-3 py-2 mb-6">
+          <ExternalLink className="h-3.5 w-3.5 text-[rgba(15,0,56,0.40)] flex-shrink-0" aria-hidden />
+          <span className="text-sm font-mono text-[#0F0038] flex-1 min-w-0 truncate">
             {internalUrl}
           </span>
           <button
             onClick={copyUrl}
-            className="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors"
+            className="flex-shrink-0 text-[rgba(15,0,56,0.40)] hover:text-[rgba(15,0,56,0.65)] transition-colors"
             aria-label="Copy URL"
           >
             {copied
-              ? <Check className="h-3.5 w-3.5 text-emerald-500" aria-hidden />
+              ? <Check className="h-3.5 w-3.5 text-[#10B981]" aria-hidden />
               : <Copy className="h-3.5 w-3.5" aria-hidden />}
           </button>
         </div>
@@ -292,10 +292,10 @@ export function RegisterToolForm() {
       {/* ── Welcome header ──────────────────────────────────────────── */}
       <div className="pb-2">
         <p className="text-xs font-semibold text-[#2605EF]/70 uppercase tracking-widest mb-1">New tool</p>
-        <h2 className="font-display font-bold text-xl text-[#0F0038] tracking-tight">
+        <h2 className="font-display font-bold text-xl text-[#0F0038] tracking-[-0.02em]">
           Add your tool — we&apos;ll handle the rest
         </h2>
-        <p className="text-sm text-slate-400 mt-1 leading-relaxed">
+        <p className="text-sm text-[rgba(15,0,56,0.40)] mt-1 leading-relaxed">
           Give us a name and a URL. Your tool goes live after a quick review.
         </p>
       </div>
@@ -316,12 +316,12 @@ export function RegisterToolForm() {
                   : step.n === 1 ? 'bg-[#2605EF]/10 text-[#2605EF]'
                   : values.accessLevel && step.n === 2
                   ? 'bg-[#2605EF] text-white scale-110'
-                  : step.n === 2 ? 'bg-slate-100 text-slate-400'
-                  : 'bg-slate-100 text-slate-400',
+                  : step.n === 2 ? 'bg-[#E7E7E7] text-[rgba(15,0,56,0.40)]'
+                  : 'bg-[#E7E7E7] text-[rgba(15,0,56,0.40)]',
               )}>
                 {step.n}
               </span>
-              <span className="text-[11px] font-medium text-slate-400 hidden sm:block">{step.label}</span>
+              <span className="text-[11px] font-medium text-[rgba(15,0,56,0.40)] hidden sm:block">{step.label}</span>
             </div>
             {i < 2 && (
               <div className="flex-1 h-px mx-2 transition-colors duration-500"
@@ -330,7 +330,7 @@ export function RegisterToolForm() {
                     ? '#2605EF'
                     : (i === 1 && values.accessLevel)
                     ? '#2605EF'
-                    : '#f1f5f9',
+                    : '#E7E7E7',
                 }}
               />
             )}
@@ -344,7 +344,7 @@ export function RegisterToolForm() {
 
         {/* Name */}
         <div>
-          <Label htmlFor="name">Tool name <span className="text-red-500">*</span></Label>
+          <Label htmlFor="name">Tool name <span className="text-[#EF4444]">*</span></Label>
           <Input
             id="name"
             placeholder="e.g. Revenue Dashboard"
@@ -361,12 +361,12 @@ export function RegisterToolForm() {
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <Label htmlFor="slug" className="mb-0">
-              URL slug <span className="text-red-500">*</span>
+              URL slug <span className="text-[#EF4444]">*</span>
             </Label>
             <SlugStatus state={slugState} reason={slugReason} />
           </div>
           <div className="flex items-center">
-            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
+            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-[#E7E7E7] rounded-l-md bg-[#FAFAFA] text-[rgba(15,0,56,0.40)] text-sm font-mono select-none">
               cleverprofits.app/
             </span>
             <Input
@@ -378,14 +378,14 @@ export function RegisterToolForm() {
               className={cn(
                 'rounded-l-none font-mono',
                 slugState === 'available' && 'border-emerald-300 focus-visible:ring-emerald-300',
-                (slugState === 'taken' || slugState === 'invalid') && 'border-red-300 focus-visible:ring-red-300',
+                (slugState === 'taken' || slugState === 'invalid') && 'border-[#FCA5A5] focus-visible:ring-[#FCA5A5]',
               )}
               autoComplete="off"
               spellCheck={false}
             />
           </div>
           {!fieldErrors.slug && (
-            <p className="text-xs text-slate-400 mt-1.5">
+            <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">
               Auto-generated from name · lowercase letters, numbers, hyphens only
             </p>
           )}
@@ -399,7 +399,7 @@ export function RegisterToolForm() {
 
         <div>
           <Label htmlFor="externalUrl">
-            Railway URL <span className="text-red-500">*</span>
+            Railway URL <span className="text-[#EF4444]">*</span>
           </Label>
           <Input
             id="externalUrl"
@@ -411,7 +411,7 @@ export function RegisterToolForm() {
             autoComplete="off"
             spellCheck={false}
           />
-          <p className="text-xs text-slate-400 mt-1.5">
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">
             Proxied server-side — the Railway URL is never exposed to users.
           </p>
           {fieldErrors.externalUrl && <FieldError>{fieldErrors.externalUrl}</FieldError>}
@@ -425,7 +425,7 @@ export function RegisterToolForm() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="accessLevel">
-              Access level <span className="text-red-500">*</span>
+              Access level <span className="text-[#EF4444]">*</span>
             </Label>
             <Select
               id="accessLevel"
@@ -438,7 +438,7 @@ export function RegisterToolForm() {
           </div>
 
           <div>
-            <Label htmlFor="team">Team <span className="text-slate-400 font-normal">(optional)</span></Label>
+            <Label htmlFor="team">Team <span className="text-[rgba(15,0,56,0.40)] font-normal">(optional)</span></Label>
             <Input
               id="team"
               placeholder="Finance, Ops…"
@@ -474,7 +474,7 @@ export function RegisterToolForm() {
             onChange={set('notes')}
             rows={3}
           />
-          <p className="text-xs text-slate-400 mt-1.5">
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">
             Visible to platform admins only.
           </p>
         </div>
@@ -499,14 +499,14 @@ export function RegisterToolForm() {
 
       {/* Server error */}
       {serverError && (
-        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
+        <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B]">
           <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
           {serverError}
         </div>
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+      <div className="flex items-center gap-3 pt-4 border-t border-[#FAFAFA]">
         <Button
           type="submit"
           disabled={submitting || slugState === 'checking'}
@@ -531,17 +531,17 @@ export function RegisterToolForm() {
 function SectionHeader({ label, note }: { label: string; note?: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <span className="text-xs font-semibold uppercase tracking-wider text-[rgba(15,0,56,0.40)]">
         {label}
-        {note && <span className="font-normal normal-case tracking-normal ml-1 text-slate-300">· {note}</span>}
+        {note && <span className="font-normal normal-case tracking-normal ml-1 text-[rgba(15,0,56,0.32)]">· {note}</span>}
       </span>
-      <div className="flex-1 h-px bg-slate-100" />
+      <div className="flex-1 h-px bg-[#FAFAFA]" />
     </div>
   )
 }
 
 function FieldError({ children }: { children: React.ReactNode }) {
-  return <p className="text-xs text-red-500 mt-1">{children}</p>
+  return <p className="text-xs text-[#EF4444] mt-1">{children}</p>
 }
 
 interface TagInputProps {
@@ -562,19 +562,19 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
     <div>
       <Label>Tags</Label>
       <div className={cn(
-        'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5',
-        'focus-within:ring-2 focus-within:ring-[#d5d4ff] focus-within:border-[#2605EF] transition-colors',
+        'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-[#E7E7E7] bg-white px-2.5 py-1.5',
+        'focus-within:ring-2 focus-within:ring-[#D5D4FF] focus-within:border-[#2605EF] transition-colors',
       )}>
         {tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+            className="inline-flex items-center gap-1 rounded-full bg-[#E7E7E7] px-2 py-0.5 text-xs font-medium text-[#0F0038]"
           >
             {tag}
             <button
               type="button"
               onClick={() => onRemove(tag)}
-              className="text-slate-400 hover:text-slate-700 transition-colors"
+              className="text-[rgba(15,0,56,0.40)] hover:text-[#0F0038] transition-colors"
               aria-label={`Remove tag ${tag}`}
             >
               <X className="h-2.5 w-2.5" aria-hidden />
@@ -596,11 +596,11 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
             }}
             onBlur={() => { if (inputValue.trim()) commitTag(inputValue) }}
             placeholder={tags.length === 0 ? 'Add tags… (Enter or comma to confirm)' : ''}
-            className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-slate-300 py-0.5"
+            className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[rgba(15,0,56,0.32)] py-0.5"
           />
         )}
       </div>
-      <p className="text-xs text-slate-400 mt-1.5">
+      <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">
         Up to 10 tags. Press Enter or comma to add.
       </p>
     </div>

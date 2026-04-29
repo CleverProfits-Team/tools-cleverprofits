@@ -18,17 +18,17 @@ function formatDate(iso: string) {
 }
 
 const STATUS_CONFIG: Record<ToolStatus, { label: string; dot: string; pill: string }> = {
-  DRAFT:    { label: 'Draft',    dot: 'bg-slate-300',   pill: 'bg-slate-100  text-slate-400   ring-1 ring-slate-400/20'   },
-  ACTIVE:   { label: 'Active',   dot: 'bg-emerald-500', pill: 'bg-emerald-50  text-emerald-700 ring-1 ring-emerald-600/20' },
-  PENDING:  { label: 'Pending',  dot: 'bg-amber-500',   pill: 'bg-amber-50   text-amber-700   ring-1 ring-amber-600/20'   },
-  ARCHIVED: { label: 'Archived', dot: 'bg-slate-400',   pill: 'bg-slate-100  text-slate-500   ring-1 ring-slate-500/20'   },
-  REJECTED: { label: 'Rejected', dot: 'bg-red-500',     pill: 'bg-red-50     text-red-700     ring-1 ring-red-600/20'     },
+  DRAFT:    { label: 'Draft',    dot: 'bg-[rgba(15,0,56,0.32)]', pill: 'bg-[#E7E7E7]                  text-[rgba(15,0,56,0.40)] ring-1 ring-[rgba(15,0,56,0.20)]' },
+  ACTIVE:   { label: 'Active',   dot: 'bg-[#10B981]',            pill: 'bg-[rgba(16,185,129,0.10)]    text-[#065F46]            ring-1 ring-emerald-600/20'      },
+  PENDING:  { label: 'Pending',  dot: 'bg-[#F59E0B]',            pill: 'bg-[rgba(245,158,11,0.10)]    text-[#92400E]            ring-1 ring-amber-600/20'        },
+  ARCHIVED: { label: 'Archived', dot: 'bg-[rgba(15,0,56,0.40)]', pill: 'bg-[#E7E7E7]                  text-[rgba(15,0,56,0.55)] ring-1 ring-[rgba(15,0,56,0.20)]' },
+  REJECTED: { label: 'Rejected', dot: 'bg-[#EF4444]',            pill: 'bg-[rgba(239,68,68,0.10)]     text-[#991B1B]            ring-1 ring-red-600/20'          },
 }
 
 function StatusPill({ status }: { status: ToolStatus }) {
   const { label, dot, pill } = STATUS_CONFIG[status]
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap', pill)}>
+    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.04em] whitespace-nowrap', pill)}>
       <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', dot)} aria-hidden />
       {label}
     </span>
@@ -57,8 +57,8 @@ export function AdminToolsList({ initialTools, teams }: Props) {
 
   const pendingCount = initialTools.filter((t) => t.status === 'PENDING').length
 
-  const thCls = 'px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'
-  const tdCls = 'px-4 py-3.5 text-sm text-slate-700 align-middle'
+  const thCls = 'px-4 py-3 text-left text-xs font-semibold text-[rgba(15,0,56,0.55)] uppercase tracking-wider'
+  const tdCls = 'px-4 py-3.5 text-sm text-[#0F0038] align-middle'
 
   return (
     <div>
@@ -93,37 +93,37 @@ export function AdminToolsList({ initialTools, teams }: Props) {
         <button
           onClick={() => { setPendingOnly((v) => !v); if (!pendingOnly) setStatusFilter('ALL') }}
           className={cn(
-            'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+            'inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap',
             pendingOnly
-              ? 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
-              : 'bg-[#f4f3f3] text-slate-600 hover:bg-[#eeeeee]',
+              ? 'bg-[rgba(245,158,11,0.10)] text-[#92400E] ring-1 ring-amber-200'
+              : 'bg-[#FAFAFA] text-[rgba(15,0,56,0.65)] hover:bg-[#E7E7E7]',
           )}
         >
-          <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', pendingOnly ? 'bg-amber-500' : 'bg-slate-300')} aria-hidden />
+          <span className={cn('h-1.5 w-1.5 rounded-full flex-shrink-0', pendingOnly ? 'bg-[#F59E0B]' : 'bg-[rgba(15,0,56,0.32)]')} aria-hidden />
           Needs review
           {pendingCount > 0 && (
             <span className={cn(
               'rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none',
-              pendingOnly ? 'bg-amber-200 text-amber-800' : 'bg-slate-200 text-slate-600',
+              pendingOnly ? 'bg-[rgba(245,158,11,0.20)] text-[#92400E]' : 'bg-[#D6D6D6] text-[rgba(15,0,56,0.65)]',
             )}>
               {pendingCount}
             </span>
           )}
         </button>
 
-        <span className="ml-auto text-xs text-slate-400">
+        <span className="ml-auto text-xs text-[rgba(15,0,56,0.40)]">
           {filtered.length} tool{filtered.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-2xl bg-[#f4f3f3] py-16 text-center">
-          <p className="text-sm text-slate-400">No tools match the current filters.</p>
+        <div className="rounded-2xl bg-[#FAFAFA] py-16 text-center">
+          <p className="text-sm text-[rgba(15,0,56,0.40)]">No tools match the current filters.</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl bg-white shadow-[0_20px_40px_rgba(15,0,56,0.06)]">
+        <div className="overflow-x-auto rounded-2xl border border-[#E7E7E7] bg-white shadow-card">
           <table className="w-full text-left">
-            <thead className="bg-[#f4f3f3]">
+            <thead className="bg-[#FAFAFA]">
               <tr>
                 <th className={thCls}>Tool</th>
                 <th className={thCls}>Owner</th>
@@ -133,7 +133,7 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                 <th className={thCls}></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f4f3f3]">
+            <tbody className="divide-y divide-[#FAFAFA]">
               {filtered.map((tool) => {
                 const isPending = tool.status === 'PENDING'
                 return (
@@ -151,29 +151,29 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                     aria-label={`View ${tool.name}`}
                     className={cn(
                       'transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#2605EF]',
-                      isPending ? 'bg-amber-50/40 hover:bg-amber-50' : 'hover:bg-slate-50',
+                      isPending ? 'bg-[rgba(245,158,11,0.05)] hover:bg-[rgba(245,158,11,0.10)]' : 'hover:bg-[#FAFAFA]',
                     )}
                   >
                     {/* Left accent border via first cell */}
-                    <td className={cn(tdCls, isPending && 'border-l-2 border-amber-400')}>
+                    <td className={cn(tdCls, isPending && 'border-l-[3px] border-[#F59E0B]')}>
                       {isPending && (
                         <div className="flex items-center gap-1.5 mb-0.5">
-                          <Clock className="h-3 w-3 text-amber-500" aria-hidden />
-                          <span className="text-[10px] font-semibold text-amber-600 uppercase tracking-wider">Needs review</span>
+                          <Clock className="h-3 w-3 text-[#F59E0B]" aria-hidden />
+                          <span className="text-[10px] font-semibold text-[#92400E] uppercase tracking-wider">Needs review</span>
                         </div>
                       )}
                       <div className="font-semibold text-[#0F0038]">{tool.name}</div>
-                      <div className="text-xs text-slate-400 font-mono mt-0.5">/{tool.slug}</div>
+                      <div className="text-xs text-[rgba(15,0,56,0.40)] font-mono mt-0.5">/{tool.slug}</div>
                     </td>
                     <td className={tdCls}>
-                      <div className="font-medium text-slate-800">{tool.createdByName}</div>
-                      <div className="text-xs text-slate-400">{tool.createdByEmail}</div>
+                      <div className="font-medium text-[#0F0038]">{tool.createdByName}</div>
+                      <div className="text-xs text-[rgba(15,0,56,0.40)]">{tool.createdByEmail}</div>
                     </td>
-                    <td className={cn(tdCls, 'text-slate-500')}>{tool.team ?? <span className="text-slate-300">—</span>}</td>
+                    <td className={cn(tdCls, 'text-[rgba(15,0,56,0.55)]')}>{tool.team ?? <span className="text-[rgba(15,0,56,0.32)]">—</span>}</td>
                     <td className={tdCls}>
                       <StatusPill status={tool.status} />
                     </td>
-                    <td className={cn(tdCls, 'text-slate-400 hidden lg:table-cell whitespace-nowrap')}>
+                    <td className={cn(tdCls, 'text-[rgba(15,0,56,0.40)] hidden lg:table-cell whitespace-nowrap')}>
                       {formatDate(tool.createdAt)}
                     </td>
                     <td className={cn(tdCls, 'text-right')}>
@@ -182,8 +182,8 @@ export function AdminToolsList({ initialTools, teams }: Props) {
                         className={cn(
                           'inline-flex items-center gap-1 rounded-lg px-2.5 py-2 text-xs font-medium transition-all duration-150 whitespace-nowrap',
                           isPending
-                            ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-xs hover:scale-[1.03] active:scale-95'
-                            : 'bg-[#f4f3f3] text-slate-600 hover:bg-[#eeeeee]',
+                            ? 'bg-[#F59E0B] text-white hover:opacity-90 shadow-md hover:scale-[1.03] active:scale-95'
+                            : 'bg-[#FAFAFA] text-[rgba(15,0,56,0.65)] hover:bg-[#E7E7E7]',
                         )}
                       >
                         {isPending ? 'Review' : 'View'}

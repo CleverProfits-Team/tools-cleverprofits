@@ -14,12 +14,13 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       <select
         ref={ref}
         className={cn(
-          'flex h-9 w-full appearance-none rounded-lg border border-slate-200 bg-white',
-          'pl-3 pr-8 text-sm text-slate-900',
-          'transition-colors',
-          'focus:outline-none focus:ring-2 focus:ring-[#2605EF] focus:border-transparent',
-          'disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500',
-          error && 'border-red-400 focus:ring-red-400',
+          'flex h-11 w-full appearance-none rounded-lg border-[1.5px] border-[#E7E7E7] bg-white',
+          'pl-4 pr-10 py-3 text-sm text-[#0F0038]',
+          'transition-all duration-150',
+          'hover:border-[#D6D6D6]',
+          'focus:outline-none focus:border-[#2605EF] focus:shadow-[0_0_0_3px_rgba(38,5,239,0.10)]',
+          'disabled:cursor-not-allowed disabled:opacity-40',
+          error && 'border-[#DC2626] focus:border-[#DC2626] focus:shadow-[0_0_0_3px_rgba(220,38,38,0.08)]',
           className,
         )}
         {...props}
@@ -33,7 +34,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           : children}
       </select>
       <ChevronDown
-        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgba(15,0,56,0.40)]"
         aria-hidden
       />
     </div>

@@ -46,9 +46,9 @@ interface FullDraft {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function confidenceLabel(v: number): { text: string; color: string } {
-  if (v >= 0.8) return { text: 'High',   color: 'text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200' }
-  if (v >= 0.5) return { text: 'Medium', color: 'text-amber-700   bg-amber-50   ring-1 ring-amber-200'   }
-  return              { text: 'Low',    color: 'text-slate-500   bg-slate-100  ring-1 ring-slate-200'   }
+  if (v >= 0.8) return { text: 'High',   color: 'text-[#065F46] bg-[rgba(16,185,129,0.10)] ring-1 ring-emerald-200' }
+  if (v >= 0.5) return { text: 'Medium', color: 'text-[#92400E] bg-[rgba(245,158,11,0.10)] ring-1 ring-amber-200'   }
+  return              { text: 'Low',    color: 'text-[rgba(15,0,56,0.55)] bg-[#E7E7E7] ring-1 ring-[#D6D6D6]'   }
 }
 
 function parseOverlapWarnings(raw: unknown): string[] {
@@ -59,8 +59,8 @@ function parseOverlapWarnings(raw: unknown): string[] {
 function SectionDivider({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3 pt-2">
-      <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{label}</span>
-      <div className="flex-1 h-px bg-slate-100" />
+      <span className="text-xs font-semibold uppercase tracking-wider text-[rgba(15,0,56,0.40)]">{label}</span>
+      <div className="flex-1 h-px bg-[#FAFAFA]" />
     </div>
   )
 }
@@ -85,19 +85,19 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
 
   return (
     <div className={cn(
-      'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5',
-      'focus-within:ring-2 focus-within:ring-[#d5d4ff] focus-within:border-[#2605EF] transition-colors',
+      'flex flex-wrap gap-1.5 min-h-9 w-full rounded-md border border-[#E7E7E7] bg-white px-2.5 py-1.5',
+      'focus-within:ring-2 focus-within:ring-[#D5D4FF] focus-within:border-[#2605EF] transition-colors',
     )}>
       {tags.map((tag) => (
         <span
           key={tag}
-          className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+          className="inline-flex items-center gap-1 rounded-full bg-[#E7E7E7] px-2 py-0.5 text-xs font-medium text-[#0F0038]"
         >
           {tag}
           <button
             type="button"
             onClick={() => onRemove(tag)}
-            className="text-slate-400 hover:text-slate-700 transition-colors"
+            className="text-[rgba(15,0,56,0.40)] hover:text-[#0F0038] transition-colors"
             aria-label={`Remove ${tag}`}
           >
             <X className="h-2.5 w-2.5" aria-hidden />
@@ -115,7 +115,7 @@ function TagInput({ tags, inputValue, onInputChange, onAdd, onRemove }: TagInput
           }}
           onBlur={() => { if (inputValue.trim()) commit(inputValue) }}
           placeholder={tags.length === 0 ? 'Add tags… (Enter or comma)' : ''}
-          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-slate-300 py-0.5"
+          className="flex-1 min-w-[120px] text-sm outline-none bg-transparent placeholder:text-[rgba(15,0,56,0.32)] py-0.5"
         />
       )}
     </div>
@@ -242,7 +242,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
   if (loading) {
     return (
       <WizardShell currentStep={4} title="Review your tool" maxWidth="max-w-2xl">
-        <div className="flex items-center gap-2 text-slate-400 py-6">
+        <div className="flex items-center gap-2 text-[rgba(15,0,56,0.40)] py-6">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
           <span className="text-sm">Loading analysis results…</span>
         </div>
@@ -254,7 +254,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
   if (loadErr) {
     return (
       <WizardShell currentStep={4} title="Review your tool" maxWidth="max-w-2xl">
-        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
+        <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B]">
           <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
           {loadErr}
         </div>
@@ -287,27 +287,27 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               </span>
             )}
             {aiCategory && (
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 capitalize">
+              <span className="rounded-full bg-[#E7E7E7] px-2 py-0.5 text-[11px] font-medium text-[rgba(15,0,56,0.65)] capitalize">
                 {aiCategory}
               </span>
             )}
             {aiFrameworkGuess && (
-              <span className="text-xs text-slate-500">{aiFrameworkGuess}</span>
+              <span className="text-xs text-[rgba(15,0,56,0.55)]">{aiFrameworkGuess}</span>
             )}
             {aiTechStack && aiTechStack !== aiFrameworkGuess && (
-              <span className="text-xs text-slate-400">{aiTechStack}</span>
+              <span className="text-xs text-[rgba(15,0,56,0.40)]">{aiTechStack}</span>
             )}
           </div>
         )}
 
         {/* ── Overlap warnings ────────────────────────────────────────── */}
         {overlapWarnings.length > 0 && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 space-y-1.5">
+          <div className="rounded-xl border border-amber-200 bg-[rgba(245,158,11,0.10)] px-4 py-3 space-y-1.5">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0" aria-hidden />
-              <p className="text-sm font-semibold text-amber-800">Possible overlap detected</p>
+              <AlertTriangle className="h-4 w-4 text-[#F59E0B] flex-shrink-0" aria-hidden />
+              <p className="text-sm font-semibold text-[#92400E]">Possible overlap detected</p>
             </div>
-            <p className="text-xs text-amber-700">
+            <p className="text-xs text-[#92400E]">
               This tool may overlap with: {overlapWarnings.join(', ')}. Consider checking those tools before submitting.
             </p>
           </div>
@@ -320,7 +320,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           {/* Name */}
           <div>
             <Label htmlFor="name">
-              Tool name <span className="text-red-500">*</span>
+              Tool name <span className="text-[#EF4444]">*</span>
             </Label>
             <Input
               id="name"
@@ -335,7 +335,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <div>
             <Label htmlFor="summary">
               Summary{' '}
-              <span className="font-normal text-slate-400">(one sentence)</span>
+              <span className="font-normal text-[rgba(15,0,56,0.40)]">(one sentence)</span>
             </Label>
             <Input
               id="summary"
@@ -364,10 +364,10 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <SectionDivider label="Ownership" />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Owner */}
-            <div className="rounded-lg border border-slate-200 p-3.5 space-y-3">
+            <div className="rounded-lg border border-[#E7E7E7] p-3.5 space-y-3">
               <div className="flex items-center gap-2">
-                <User className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Product owner</p>
+                <User className="h-3.5 w-3.5 text-[rgba(15,0,56,0.40)]" aria-hidden />
+                <p className="text-[11px] font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-wider">Product owner</p>
               </div>
               <div className="space-y-2">
                 <div>
@@ -396,15 +396,15 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               </div>
             </div>
             {/* Maintainer */}
-            <div className="rounded-lg border border-slate-200 p-3.5 space-y-3">
+            <div className="rounded-lg border border-[#E7E7E7] p-3.5 space-y-3">
               <div className="flex items-center gap-2">
-                <Wrench className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Maintainer</p>
+                <Wrench className="h-3.5 w-3.5 text-[rgba(15,0,56,0.40)]" aria-hidden />
+                <p className="text-[11px] font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-wider">Maintainer</p>
               </div>
               <div className="space-y-2">
                 <div>
                   <Label htmlFor="review-maintainerName" className="text-xs">
-                    Name <span className="font-normal text-slate-300">(optional)</span>
+                    Name <span className="font-normal text-[rgba(15,0,56,0.32)]">(optional)</span>
                   </Label>
                   <Input
                     id="review-maintainerName"
@@ -417,7 +417,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
                 </div>
                 <div>
                   <Label htmlFor="review-maintainerEmail" className="text-xs">
-                    Email <span className="font-normal text-slate-300">(optional)</span>
+                    Email <span className="font-normal text-[rgba(15,0,56,0.32)]">(optional)</span>
                   </Label>
                   <Input
                     id="review-maintainerEmail"
@@ -440,15 +440,15 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
             <SectionDivider label="AI Insights" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {aiObjective && (
-                <div className="rounded-lg bg-slate-50 border border-slate-200 px-3.5 py-3">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Objective</p>
-                  <p className="text-sm text-slate-700">{aiObjective}</p>
+                <div className="rounded-lg bg-[#FAFAFA] border border-[#E7E7E7] px-3.5 py-3">
+                  <p className="text-[10px] font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-wider mb-1">Objective</p>
+                  <p className="text-sm text-[#0F0038]">{aiObjective}</p>
                 </div>
               )}
               {aiSuggestedUsers && (
-                <div className="rounded-lg bg-slate-50 border border-slate-200 px-3.5 py-3">
-                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">For</p>
-                  <p className="text-sm text-slate-700">{aiSuggestedUsers}</p>
+                <div className="rounded-lg bg-[#FAFAFA] border border-[#E7E7E7] px-3.5 py-3">
+                  <p className="text-[10px] font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-wider mb-1">For</p>
+                  <p className="text-sm text-[#0F0038]">{aiSuggestedUsers}</p>
                 </div>
               )}
             </div>
@@ -467,7 +467,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onAdd={(tag) => setTags((prev) => [...prev, tag])}
               onRemove={(tag) => setTags((prev) => prev.filter((t) => t !== tag))}
             />
-            <p className="text-xs text-slate-400 mt-1.5">
+            <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">
               Up to 10 tags. Press Enter or comma to add.
             </p>
           </div>
@@ -479,7 +479,7 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
           <div>
             <Label htmlFor="notes">
               Internal notes{' '}
-              <span className="font-normal text-slate-400">(optional)</span>
+              <span className="font-normal text-[rgba(15,0,56,0.40)]">(optional)</span>
             </Label>
             <Textarea
               id="notes"
@@ -488,20 +488,20 @@ export default function ReviewPage({ params }: { params: { draftId: string } }) 
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
             />
-            <p className="text-xs text-slate-400 mt-1.5">Visible to platform admins only.</p>
+            <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">Visible to platform admins only.</p>
           </div>
         </div>
 
         {/* ── Server error ─────────────────────────────────────────────── */}
         {serverErr && (
-          <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
+          <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B]">
             <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
             {serverErr}
           </div>
         )}
 
         {/* ── Actions ──────────────────────────────────────────────────── */}
-        <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#FAFAFA]">
           <Button type="submit" disabled={submitting}>
             {submitting && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {submitting ? 'Submitting…' : 'Submit for review'}

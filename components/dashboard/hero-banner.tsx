@@ -24,7 +24,6 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
     setMouse({ x: -1000, y: -1000 })
   }
 
-  // Compute efficiency label from active / total
   const efficiencyPct = totalCount > 0 ? Math.round((activeCount / totalCount) * 100) : 100
 
   return (
@@ -32,19 +31,18 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-0 relative overflow-hidden rounded-bl-[3rem]"
-      style={{ background: '#1A1A3A' }}
+      className="-mx-4 sm:-mx-6 lg:-mx-8 -mt-8 mb-0 relative overflow-hidden rounded-bl-[3rem] bg-hero-mesh"
     >
-      {/* Radial glow — top-right (purple) */}
+      {/* Radial glow — top-right (electric) */}
       <div
         className="absolute top-[-20%] right-[-10%] w-[50%] h-[150%] rounded-full opacity-50 blur-3xl pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(74,0,224,0.2), transparent)' }}
+        style={{ background: 'radial-gradient(circle, rgba(38,5,239,0.20), transparent)' }}
         aria-hidden
       />
-      {/* Radial glow — bottom-left (blue) */}
+      {/* Radial glow — bottom-left (navy) */}
       <div
         className="absolute bottom-[-50%] left-[10%] w-[40%] h-[100%] rounded-full opacity-40 blur-3xl pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.2), transparent)' }}
+        style={{ background: 'radial-gradient(circle, rgba(24,25,125,0.30), transparent)' }}
         aria-hidden
       />
 
@@ -58,7 +56,7 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         aria-hidden
       />
 
-      {/* Decorative circle outlines — echo the bubble language */}
+      {/* Decorative bubble outlines */}
       <div className="absolute -top-20 right-8 w-72 h-72 rounded-full border border-white/[0.05] pointer-events-none" aria-hidden />
       <div className="absolute -bottom-16 right-1/4 w-52 h-52 rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
       <div className="absolute top-4 right-1/3 w-36 h-36 rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
@@ -67,7 +65,7 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
       <div
         className="absolute inset-0 pointer-events-none transition-opacity duration-300"
         style={{
-          background: `radial-gradient(500px circle at ${mouse.x}px ${mouse.y}px, rgba(99,60,255,0.22), rgba(38,5,239,0.06) 40%, transparent 65%)`,
+          background: `radial-gradient(500px circle at ${mouse.x}px ${mouse.y}px, rgba(38,5,239,0.22), rgba(38,5,239,0.06) 40%, transparent 65%)`,
         }}
         aria-hidden
       />
@@ -77,33 +75,25 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
           {/* Left: headline block */}
           <div className="max-w-2xl">
             {/* System status */}
-            <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8E2DE2] mb-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 pulse-dot flex-shrink-0" aria-hidden />
-              System Status: Optimal
+            <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#D5D4FF] mb-2">
+              <span className="w-2 h-2 rounded-full bg-[#10B981] pulse-dot flex-shrink-0" aria-hidden />
+              System Status — Optimal
             </p>
 
             {/* Welcome line */}
             {firstName && (
-              <p className="text-white/40 text-[11px] font-medium uppercase tracking-[0.12em] mb-2">
+              <p className="text-white/45 text-[11px] font-semibold uppercase tracking-[0.12em] mb-2">
                 Welcome back, {firstName}
               </p>
             )}
 
-            {/* Gradient headline */}
-            <h1
-              className="font-display text-4xl md:text-5xl font-bold leading-tight mb-4"
-              style={{
-                backgroundImage: 'linear-gradient(to right, #ffffff, #9ca3af)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Operational Pulse: {efficiencyPct}% Efficiency
+            {/* Headline */}
+            <h1 className="font-display text-4xl md:text-5xl font-bold leading-[1.1] tracking-[-0.03em] mb-4 text-white">
+              Operational pulse — {efficiencyPct}% efficiency
             </h1>
 
-            <p className="text-gray-300 text-base font-light max-w-xl leading-relaxed">
-              Cross-functional tools are currently operating at peak capacity.
+            <p className="text-white/65 text-base font-light max-w-xl leading-relaxed">
+              Cross-functional tools are operating at peak capacity.
             </p>
           </div>
 
@@ -111,7 +101,7 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
           <div className="flex items-center gap-3 flex-shrink-0">
             <Link
               href="/dashboard/register"
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-sm text-white transition-all"
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-sm text-white transition-all focus-ring"
             >
               <PlusCircle className="h-4 w-4" aria-hidden />
               Register Tool
@@ -123,28 +113,28 @@ export function HeroBanner({ firstName, activeCount, pendingCount, totalCount }:
         {totalCount > 0 && (
           <div className="flex items-stretch mt-8 pt-5 border-t border-white/[0.08]">
             <div className="pr-7">
-              <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
+              <p className="text-[28px] font-display font-bold text-white tabular-nums leading-none tracking-[-0.02em]">
                 {activeCount}
               </p>
-              <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Active</p>
+              <p className="text-white/45 text-[11px] mt-1.5 uppercase tracking-[0.1em] font-semibold">Active</p>
             </div>
 
             <div className="w-px bg-white/[0.1] self-stretch" />
 
             <div className="px-7">
-              <p className={`text-[26px] font-display font-bold tabular-nums leading-none ${pendingCount > 0 ? 'text-amber-400' : 'text-white'}`}>
+              <p className={`text-[28px] font-display font-bold tabular-nums leading-none tracking-[-0.02em] ${pendingCount > 0 ? 'text-[#F59E0B]' : 'text-white'}`}>
                 {pendingCount}
               </p>
-              <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Pending</p>
+              <p className="text-white/45 text-[11px] mt-1.5 uppercase tracking-[0.1em] font-semibold">Pending</p>
             </div>
 
             <div className="w-px bg-white/[0.1] self-stretch" />
 
             <div className="pl-7">
-              <p className="text-[26px] font-display font-bold text-white tabular-nums leading-none">
+              <p className="text-[28px] font-display font-bold text-white tabular-nums leading-none tracking-[-0.02em]">
                 {totalCount}
               </p>
-              <p className="text-white/35 text-[11px] mt-1.5 uppercase tracking-[0.1em]">Total</p>
+              <p className="text-white/45 text-[11px] mt-1.5 uppercase tracking-[0.1em] font-semibold">Total</p>
             </div>
           </div>
         )}

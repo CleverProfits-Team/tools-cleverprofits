@@ -21,7 +21,7 @@ export function AdminSubNav({ pendingCount }: Props) {
   ]
 
   return (
-    <div className="flex gap-1 border-b border-slate-200 mb-6 overflow-x-auto scrollbar-none">
+    <div className="flex gap-0 border-b-2 border-[#E7E7E7] mb-6 overflow-x-auto scrollbar-none">
       {tabs.map(({ href, label, badge }) => {
         const isActive = pathname.startsWith(href)
         return (
@@ -29,17 +29,19 @@ export function AdminSubNav({ pendingCount }: Props) {
             key={href}
             href={href}
             className={cn(
-              'flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors rounded-t-lg',
+              'flex items-center gap-1.5 px-5 py-3 text-sm font-semibold border-b-2 -mb-px transition-colors whitespace-nowrap',
               isActive
-                ? 'border-[#2605EF] text-[#2605EF] bg-[#eeeeff]/60'
-                : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 hover:bg-slate-50',
+                ? 'border-[#2605EF] text-[#0F0038]'
+                : 'border-transparent text-[rgba(15,0,56,0.55)] hover:text-[#0F0038]',
             )}
           >
             {label}
             {badge !== undefined && (
               <span className={cn(
-                'inline-flex items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-medium min-w-[1.25rem]',
-                isActive ? 'bg-[#eeeeff] text-[#2605EF]' : 'bg-amber-100 text-amber-700',
+                'inline-flex items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.04em] min-w-[1.25rem]',
+                isActive
+                  ? 'bg-[rgba(38,5,239,0.10)] text-[#2605EF]'
+                  : 'bg-[rgba(245,158,11,0.10)] text-[#92400E]',
               )}>
                 {badge}
               </span>

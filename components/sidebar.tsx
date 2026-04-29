@@ -2,18 +2,18 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import {
-  Wrench, LogOut, PlusCircle, LayoutDashboard, ClipboardList,
+  LogOut, PlusCircle, LayoutDashboard, ClipboardList,
   ShieldCheck, Users, Mail, FileText, BarChart2, Sparkles,
   Menu, X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Navigation structure
-// Three sections: CORE (all users) · INTELLIGENCE (admins) · GOVERNANCE (admins)
+// Navigation structure — CORE · INTELLIGENCE · GOVERNANCE
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CORE_LINKS = [
@@ -27,7 +27,7 @@ const INTELLIGENCE_LINKS = [
   { href: '/dashboard/admin/analytics', label: 'Analytics',  icon: BarChart2 },
 ]
 
-const GOVERNANCE_LINKS: { href: string; label: string; icon: typeof Wrench; hasBadge?: true }[] = [
+const GOVERNANCE_LINKS: { href: string; label: string; icon: typeof Users; hasBadge?: true }[] = [
   { href: '/dashboard/admin/tools',       label: 'Reviews',     icon: ShieldCheck, hasBadge: true },
   { href: '/dashboard/admin/users',       label: 'Users',        icon: Users    },
   { href: '/dashboard/admin/invitations', label: 'Invitations',  icon: Mail     },
@@ -35,10 +35,10 @@ const GOVERNANCE_LINKS: { href: string; label: string; icon: typeof Wrench; hasB
 ]
 
 const ROLE_STYLES: Record<string, string> = {
-  SUPER_ADMIN: 'bg-violet-500/15 text-violet-300',
-  ADMIN:       'bg-[#2605EF]/15  text-blue-300',
-  BUILDER:     'bg-amber-500/15  text-amber-300',
-  VIEWER:      'bg-white/8       text-white/35',
+  SUPER_ADMIN: 'bg-[rgba(38,5,239,0.18)] text-[#D5D4FF]',
+  ADMIN:       'bg-[rgba(38,5,239,0.15)] text-[#D5D4FF]',
+  BUILDER:     'bg-[rgba(245,158,11,0.18)] text-[#FDE68A]',
+  VIEWER:      'bg-white/10 text-white/40',
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -49,7 +49,7 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// NavItem — single navigation link
+// NavItem
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface NavItemProps {
@@ -93,7 +93,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
         <span className="flex-1 truncate leading-none">{label}</span>
 
         {badge !== undefined && badge > 0 && (
-          <span className="inline-flex items-center justify-center rounded-full bg-amber-400 text-[#0F0038] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none flex-shrink-0">
+          <span className="inline-flex items-center justify-center rounded-full bg-[#F59E0B] text-[#0F0038] text-[10px] font-bold min-w-[1.1rem] h-[1.1rem] px-1 leading-none flex-shrink-0">
             {badge}
           </span>
         )}
@@ -108,7 +108,7 @@ function NavItem({ href, label, icon: Icon, isActive, badge, onClick }: NavItemP
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.13em] px-3.5 mb-1 mt-0.5 truncate">
+    <p className="text-[10px] font-bold text-white/45 uppercase tracking-[0.13em] px-3.5 mb-1 mt-0.5 truncate">
       {children}
     </p>
   )
@@ -208,8 +208,11 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
                 className="h-7 w-7 rounded-full object-cover ring-1 ring-white/15 flex-shrink-0"
               />
             ) : (
-              <div className="h-7 w-7 rounded-full bg-[#2605EF] flex items-center justify-center flex-shrink-0">
-                <span className="text-[11px] font-semibold text-white select-none">{initials}</span>
+              <div
+                className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
+                style={{ background: 'linear-gradient(135deg, #1508AC 0%, #2605EF 60%, #18197D 100%)' }}
+              >
+                <span className="text-[11px] font-bold text-white select-none">{initials}</span>
               </div>
             )}
             <div className="min-w-0 flex-1">
@@ -219,7 +222,7 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
               {role && (
                 <span className={cn(
                   'inline-block rounded px-1 py-px text-[10px] font-semibold leading-[14px] uppercase tracking-wide',
-                  ROLE_STYLES[role] ?? 'bg-white/8 text-white/35',
+                  ROLE_STYLES[role] ?? 'bg-white/10 text-white/40',
                 )}>
                   {ROLE_LABELS[role] ?? role}
                 </span>
@@ -247,10 +250,6 @@ function SidebarNav({ pendingCount, onLinkClick }: SidebarNavProps) {
 interface SidebarProps {
   pendingCount?: number
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Bubble definitions — static so no hydration mismatch
-// ─────────────────────────────────────────────────────────────────────────────
 
 const BUBBLES = [
   { id: 1, size: 56,  left: '14%',  bottom: '-60px', delay: 0,   duration: 13 },
@@ -280,14 +279,12 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
   const initials = (session?.user?.name ?? 'U')
     .split(' ').slice(0, 2).map((n) => n[0]).join('').toUpperCase()
 
-  // ── Spotlight ──────────────────────────────────────────────────────────────
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     setMouse({ x: e.clientX - rect.left, y: e.clientY - rect.top })
   }, [])
   const handleMouseLeave = useCallback(() => setMouse({ x: -1000, y: -1000 }), [])
 
-  // ── Resize ─────────────────────────────────────────────────────────────────
   const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     isDragging.current = true
@@ -310,16 +307,28 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
     }
   }, [])
 
+  // ── Logo: CP logomark circle + white wordmark ─────────────────────────────
   const Logo = () => (
     <Link href="/dashboard" className="flex items-center gap-2.5 group min-w-0">
-      <div className="h-8 w-8 rounded-lg bg-[#2605EF] flex items-center justify-center shadow-sm group-hover:bg-[#1e04cc] transition-colors flex-shrink-0">
-        <Wrench className="h-4 w-4 text-white" aria-hidden />
+      <div className="h-8 w-8 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-white/10">
+        <Image
+          src="/cp-logo-circle.png"
+          alt=""
+          width={32}
+          height={32}
+          className="h-full w-full object-cover"
+          aria-hidden
+        />
       </div>
-      <div className="leading-none min-w-0 overflow-hidden">
-        <p className="font-display font-bold text-[13px] text-white tracking-tight leading-none truncate">
-          CleverProfits
-        </p>
-        <p className="text-[10px] text-white/30 mt-0.5 tracking-widest uppercase leading-none truncate">
+      <div className="leading-none min-w-0 overflow-hidden flex-1">
+        <Image
+          src="/cp-logo-wordmark-white.png"
+          alt="CleverProfits"
+          width={120}
+          height={16}
+          className="h-[14px] w-auto"
+        />
+        <p className="text-[9px] text-white/40 mt-1.5 tracking-[0.18em] uppercase leading-none">
           Tools
         </p>
       </div>
@@ -336,7 +345,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
         style={{ width: sidebarWidth }}
         className="hidden md:flex flex-col sticky top-0 h-screen flex-shrink-0 bg-[#0F0038] border-r border-white/[0.05] overflow-hidden relative"
       >
-        {/* Floating bubbles */}
+        {/* Floating bubbles — ambient life */}
         {BUBBLES.map((b) => (
           <div
             key={b.id}
@@ -356,17 +365,17 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
           />
         ))}
 
-        {/* Mouse spotlight */}
+        {/* Mouse spotlight — electric tint */}
         <div
           aria-hidden
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(320px circle at ${mouse.x}px ${mouse.y}px, rgba(99,60,255,0.22), rgba(38,5,239,0.06) 50%, transparent 70%)`,
+            background: `radial-gradient(320px circle at ${mouse.x}px ${mouse.y}px, rgba(38,5,239,0.20), rgba(38,5,239,0.06) 50%, transparent 70%)`,
           }}
         />
 
         {/* Logo */}
-        <div className="h-[52px] flex items-center px-4 border-b border-white/[0.06] flex-shrink-0 relative z-10">
+        <div className="h-[58px] flex items-center px-4 border-b border-white/[0.06] flex-shrink-0 relative z-10">
           <Logo />
         </div>
 
@@ -383,9 +392,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
           title="Drag to resize"
           aria-hidden
         >
-          {/* Track line */}
           <div className={`absolute right-0 top-0 bottom-0 transition-all duration-150 ${isResizeHovered ? 'w-[3px] bg-[#2605EF]/60' : 'w-px bg-white/[0.05]'}`} />
-          {/* Gripper dots — centered vertically */}
           <div className={`absolute right-[3px] top-1/2 -translate-y-1/2 flex flex-col gap-[3px] transition-opacity duration-150 ${isResizeHovered ? 'opacity-100' : 'opacity-0'}`}>
             {[0,1,2,3,4].map((i) => (
               <div key={i} className="w-[3px] h-[3px] rounded-full bg-[#2605EF]/70" />
@@ -395,7 +402,7 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
       </aside>
 
       {/* ── Mobile top bar ────────────────────────────── */}
-      <div className="md:hidden sticky top-0 z-30 flex h-12 items-center justify-between px-4 bg-[#0F0038] border-b border-white/[0.06]">
+      <div className="md:hidden sticky top-0 z-30 flex h-14 items-center justify-between px-4 bg-[#0F0038] border-b border-white/[0.06]">
         <Logo />
         <div className="flex items-center gap-2">
           {session?.user?.image ? (
@@ -406,8 +413,11 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
               className="h-7 w-7 rounded-full object-cover ring-1 ring-white/15"
             />
           ) : (
-            <div className="h-7 w-7 rounded-full bg-[#2605EF] flex items-center justify-center">
-              <span className="text-[11px] font-semibold text-white select-none">{initials}</span>
+            <div
+              className="h-7 w-7 rounded-full flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #1508AC 0%, #2605EF 60%, #18197D 100%)' }}
+            >
+              <span className="text-[11px] font-bold text-white select-none">{initials}</span>
             </div>
           )}
           <button
@@ -424,12 +434,12 @@ export function Sidebar({ pendingCount = 0 }: SidebarProps) {
       {mobileOpen && (
         <>
           <div
-            className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className="md:hidden fixed inset-0 z-40 bg-[rgba(15,0,56,0.6)] backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[252px] flex flex-col bg-[#0F0038] shadow-2xl border-r border-white/[0.05]">
-            <div className="h-12 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
+          <div className="md:hidden fixed inset-y-0 left-0 z-50 w-[252px] flex flex-col bg-[#0F0038] shadow-xl border-r border-white/[0.05]">
+            <div className="h-14 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
               <Logo />
               <button
                 onClick={() => setMobileOpen(false)}

@@ -40,3 +40,6 @@ yarn-error.log*
 # ── Misc ──────────────────────────────────────────────────────────────────────
 .vercel
 .turbo
+
+# Local Claude Code state
+.claude/

@@ -3,13 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Shared accent palette — same hash function as tool-card / tool-row
-// ─────────────────────────────────────────────────────────────────────────────
-
+// Brand-aligned palette — same hash function as tool-card / tool-row
 const PALETTE = [
-  '#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#f43f5e',
-  '#0ea5e9', '#f97316', '#14b8a6', '#ec4899', '#6366f1',
+  '#2605EF', '#1508AC', '#18197D', '#0F0038', '#6560F5',
+  '#1E04CC', '#10B981', '#F59E0B', '#1803B3', '#8A85FF',
 ]
 
 function getColor(name: string) {
@@ -18,7 +15,6 @@ function getColor(name: string) {
   return PALETTE[Math.abs(h) % PALETTE.length]
 }
 
-// Deterministic pseudo-random position — stable across renders
 function getPos(name: string, index: number) {
   let h = index * 2654435761
   for (let i = 0; i < name.length; i++) h = (h * 17 + name.charCodeAt(i)) | 0
@@ -46,7 +42,7 @@ export function BubbleMap({ tools, activeHitIds }: Props) {
 
   if (tools.length === 0) {
     return (
-      <div className="flex items-center justify-center h-48 text-sm text-slate-400">
+      <div className="flex items-center justify-center h-48 text-sm text-[rgba(15,0,56,0.55)]">
         No active tools yet
       </div>
     )
@@ -54,19 +50,17 @@ export function BubbleMap({ tools, activeHitIds }: Props) {
 
   return (
     <div className="relative w-full h-56 rounded-xl overflow-hidden"
-      style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 50%, rgba(38,5,239,0.04) 0%, transparent 70%), #F8FAFD' }}
+      style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 50%, rgba(38,5,239,0.04) 0%, transparent 70%), #FAFAFA' }}
     >
-      {/* Subtle dot grid */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.35]"
         style={{
-          backgroundImage: 'radial-gradient(circle, rgb(99 110 176 / 0.20) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, rgba(15,0,56,0.20) 1px, transparent 1px)',
           backgroundSize: '18px 18px',
         }}
         aria-hidden
       />
 
-      {/* Bubbles */}
       {tools.map((tool, i) => {
         const color   = getColor(tool.name)
         const { x, y } = getPos(tool.name, i)
@@ -109,16 +103,15 @@ export function BubbleMap({ tools, activeHitIds }: Props) {
         )
       })}
 
-      {/* Tooltip */}
       {hovered && (() => {
         const tool = tools.find((t) => t.id === hovered)
         if (!tool) return null
         const active = hitSet.has(tool.id)
         return (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-[#0F0038] text-white text-xs font-medium px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-30 whitespace-nowrap">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-[#0F0038] text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-30 whitespace-nowrap">
             <span
               className="h-1.5 w-1.5 rounded-full flex-shrink-0"
-              style={{ backgroundColor: active ? '#10b981' : '#94a3b8' }}
+              style={{ backgroundColor: active ? '#10B981' : 'rgba(255,255,255,0.40)' }}
             />
             {tool.name}
             <span className="text-white/40 font-normal">{active ? '· active' : '· no recent activity'}</span>
@@ -126,14 +119,13 @@ export function BubbleMap({ tools, activeHitIds }: Props) {
         )
       })()}
 
-      {/* Legend */}
-      <div className="absolute top-3 right-3 flex items-center gap-3 text-[10px] text-slate-400">
+      <div className="absolute top-3 right-3 flex items-center gap-3 text-[10px] text-[rgba(15,0,56,0.55)]">
         <span className="flex items-center gap-1">
-          <span className="h-2.5 w-2.5 rounded-full bg-slate-400 opacity-85" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#0F0038] opacity-85" />
           Active (30d)
         </span>
         <span className="flex items-center gap-1">
-          <span className="h-2 w-2 rounded-full bg-slate-300 opacity-50" />
+          <span className="h-2 w-2 rounded-full bg-[#D6D6D6] opacity-70" />
           Inactive
         </span>
       </div>

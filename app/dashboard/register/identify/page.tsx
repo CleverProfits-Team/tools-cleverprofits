@@ -15,9 +15,9 @@ type SlugState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid'
 
 function SlugStatus({ state, reason }: { state: SlugState; reason?: string }) {
   if (state === 'idle')      return null
-  if (state === 'checking')  return <span className="flex items-center gap-1 text-xs text-slate-400"><Loader2 className="h-3 w-3 animate-spin" />Checking…</span>
-  if (state === 'available') return <span className="flex items-center gap-1 text-xs text-emerald-600"><CheckCircle2 className="h-3 w-3" />Available</span>
-  return <span className="flex items-center gap-1 text-xs text-red-500"><AlertCircle className="h-3 w-3" />{reason ?? 'Unavailable'}</span>
+  if (state === 'checking')  return <span className="flex items-center gap-1 text-xs text-[rgba(15,0,56,0.40)]"><Loader2 className="h-3 w-3 animate-spin" />Checking…</span>
+  if (state === 'available') return <span className="flex items-center gap-1 text-xs text-[#065F46]"><CheckCircle2 className="h-3 w-3" />Available</span>
+  return <span className="flex items-center gap-1 text-xs text-[#EF4444]"><AlertCircle className="h-3 w-3" />{reason ?? 'Unavailable'}</span>
 }
 
 export default function IdentifyPage() {
@@ -135,7 +135,7 @@ export default function IdentifyPage() {
 
         {/* Tool name */}
         <div>
-          <Label htmlFor="name">Tool name <span className="text-red-500">*</span></Label>
+          <Label htmlFor="name">Tool name <span className="text-[#EF4444]">*</span></Label>
           <Input
             id="name"
             placeholder="e.g. KPIs Dashboard"
@@ -145,17 +145,17 @@ export default function IdentifyPage() {
             autoFocus
             autoComplete="off"
           />
-          {errors.name && <p className="text-xs text-red-500 mt-1.5">{errors.name}</p>}
+          {errors.name && <p className="text-xs text-[#EF4444] mt-1.5">{errors.name}</p>}
         </div>
 
         {/* URL slug */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <Label htmlFor="slug" className="mb-0">URL slug <span className="text-red-500">*</span></Label>
+            <Label htmlFor="slug" className="mb-0">URL slug <span className="text-[#EF4444]">*</span></Label>
             <SlugStatus state={slugState} reason={slugReason} />
           </div>
           <div className="flex items-center">
-            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-slate-200 rounded-l-md bg-slate-50 text-slate-400 text-sm font-mono select-none">
+            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-[#E7E7E7] rounded-l-md bg-[#FAFAFA] text-[rgba(15,0,56,0.40)] text-sm font-mono select-none">
               cleverprofits.app/
             </span>
             <Input
@@ -167,21 +167,21 @@ export default function IdentifyPage() {
               className={cn(
                 'rounded-l-none font-mono',
                 slugState === 'available' && 'border-emerald-300 focus-visible:ring-emerald-300',
-                (slugState === 'taken' || slugState === 'invalid') && 'border-red-300 focus-visible:ring-red-300',
+                (slugState === 'taken' || slugState === 'invalid') && 'border-[#FCA5A5] focus-visible:ring-[#FCA5A5]',
               )}
               autoComplete="off"
               spellCheck={false}
             />
           </div>
           {errors.slug
-            ? <p className="text-xs text-red-500 mt-1.5">{errors.slug}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">Auto-generated from name · lowercase, numbers, hyphens only</p>
+            ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.slug}</p>
+            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">Auto-generated from name · lowercase, numbers, hyphens only</p>
           }
         </div>
 
         {/* Tool URL */}
         <div>
-          <Label htmlFor="url">Tool URL <span className="text-red-500">*</span></Label>
+          <Label htmlFor="url">Tool URL <span className="text-[#EF4444]">*</span></Label>
           <Input
             id="url"
             type="url"
@@ -193,14 +193,14 @@ export default function IdentifyPage() {
             spellCheck={false}
           />
           {errors.url
-            ? <p className="text-xs text-red-500 mt-1.5">{errors.url}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">The Railway (or any HTTPS) URL. Never exposed to end users.</p>
+            ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.url}</p>
+            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">The Railway (or any HTTPS) URL. Never exposed to end users.</p>
           }
         </div>
 
         {/* GitHub repo */}
         <div>
-          <Label htmlFor="github">GitHub repository <span className="text-red-500">*</span></Label>
+          <Label htmlFor="github">GitHub repository <span className="text-[#EF4444]">*</span></Label>
           <Input
             id="github"
             type="url"
@@ -212,14 +212,14 @@ export default function IdentifyPage() {
             spellCheck={false}
           />
           {errors.github
-            ? <p className="text-xs text-red-500 mt-1.5">{errors.github}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">Used to read the README and tech stack for AI analysis.</p>
+            ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.github}</p>
+            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">Used to read the README and tech stack for AI analysis.</p>
           }
         </div>
 
         {/* Description */}
         <div>
-          <Label htmlFor="description">Brief description <span className="text-red-500">*</span></Label>
+          <Label htmlFor="description">Brief description <span className="text-[#EF4444]">*</span></Label>
           <Textarea
             id="description"
             placeholder="What does this tool do? Who uses it and what problem does it solve?"
@@ -228,19 +228,19 @@ export default function IdentifyPage() {
             rows={3}
           />
           {errors.description
-            ? <p className="text-xs text-red-500 mt-1.5">{errors.description}</p>
-            : <p className="text-xs text-slate-400 mt-1.5">2–3 sentences — the most important input for AI analysis.</p>
+            ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.description}</p>
+            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">2–3 sentences — the most important input for AI analysis.</p>
           }
         </div>
 
         {serverErr && (
-          <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
+          <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B]">
             <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
             {serverErr}
           </div>
         )}
 
-        <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#FAFAFA]">
           <Button type="submit" disabled={loading || slugState === 'checking'}>
             {loading && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {loading ? 'Creating…' : 'Continue'}

@@ -1,28 +1,9 @@
 'use client'
 
-/**
- * Login page — public route, no auth required.
- *
- * This file is a Client Component because it uses:
- *  - useSearchParams() to read ?error= and ?callbackUrl= from the URL
- *  - signIn() from next-auth/react to trigger the Google OAuth flow
- *
- * It is wrapped in a <Suspense> boundary because Next.js 14 suspends
- * components that call useSearchParams() during server-side rendering.
- * The fallback is a skeleton that matches the card's dimensions to
- * prevent layout shift.
- */
-
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 import { Suspense } from 'react'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Error message map
-//
-// NextAuth sets ?error=<code> on OAuth failure. These codes are documented at:
-// https://next-auth.js.org/configuration/pages#error-page
-// ─────────────────────────────────────────────────────────────────────────────
 
 const AUTH_ERROR_MESSAGES: Record<string, string> = {
   AccessDenied:
@@ -45,10 +26,6 @@ function errorMessage(code: string): string {
   return AUTH_ERROR_MESSAGES[code] ?? AUTH_ERROR_MESSAGES.Default
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LoginContent — inner component that reads URL search params
-// ─────────────────────────────────────────────────────────────────────────────
-
 function LoginContent() {
   const params = useSearchParams()
   const errorCode = params.get('error') ?? undefined
@@ -59,31 +36,42 @@ function LoginContent() {
   }
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="bg-white rounded-xl shadow-elevated px-8 py-10">
+    <div className="w-full max-w-sm relative z-10">
+      <div className="bg-white rounded-2xl shadow-xl px-8 py-10">
 
-        {/* ── Logotype ─────────────────────────────────────────────────── */}
+        {/* ── Logo lockup ───────────────────────────────────────────────── */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-10 w-10 rounded-xl bg-[#0F0038] flex items-center justify-center flex-shrink-0 shadow-sm">
-            <span className="text-white font-display font-bold text-base tracking-tight select-none">
-              CP
-            </span>
+          <div className="h-10 w-10 rounded-full overflow-hidden flex-shrink-0 ring-1 ring-[#E7E7E7]">
+            <Image
+              src="/cp-logo-circle.png"
+              alt=""
+              width={40}
+              height={40}
+              className="h-full w-full object-cover"
+              aria-hidden
+            />
           </div>
           <div className="leading-none">
-            <p className="font-display font-bold text-[#0F0038] text-sm tracking-tight">CleverProfits</p>
-            <p className="text-[11px] text-slate-400 mt-0.5 tracking-widest uppercase">
+            <Image
+              src="/cp-logo-wordmark.png"
+              alt="CleverProfits"
+              width={140}
+              height={18}
+              className="h-[16px] w-auto"
+            />
+            <p className="text-[10px] text-[rgba(15,0,56,0.55)] mt-1.5 tracking-[0.18em] uppercase font-semibold">
               Tools Platform
             </p>
           </div>
         </div>
 
         {/* ── Heading ──────────────────────────────────────────────────── */}
-        <h1 className="font-display font-bold text-2xl text-[#0F0038] mb-1.5 tracking-tight">
+        <h1 className="font-display font-bold text-[29px] text-[#0F0038] mb-1.5 tracking-[-0.02em] leading-[1.2]">
           Sign in to continue
         </h1>
-        <p className="text-sm text-slate-500 mb-7 leading-relaxed">
+        <p className="text-sm text-[rgba(15,0,56,0.55)] mb-7 leading-relaxed">
           Use your{' '}
-          <span className="font-medium text-[#0F0038]">@cleverprofits.com</span>{' '}
+          <span className="font-semibold text-[#0F0038]">@cleverprofits.com</span>{' '}
           Google Workspace account to access the tools platform.
         </p>
 
@@ -91,10 +79,10 @@ function LoginContent() {
         {errorCode && (
           <div
             role="alert"
-            className="mb-5 flex items-start gap-2.5 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3"
+            className="mb-5 flex items-start gap-2.5 rounded-lg border-l-[3px] border-[#EF4444] bg-[rgba(239,68,68,0.06)] px-4 py-3"
           >
             <svg
-              className="h-4 w-4 flex-shrink-0 mt-0.5 text-red-500"
+              className="h-4 w-4 flex-shrink-0 mt-0.5 text-[#EF4444]"
               viewBox="0 0 20 20"
               fill="currentColor"
               aria-hidden="true"
@@ -105,7 +93,7 @@ function LoginContent() {
                 clipRule="evenodd"
               />
             </svg>
-            <p className="text-sm text-red-700">{errorMessage(errorCode)}</p>
+            <p className="text-sm font-medium text-[#991B1B]">{errorMessage(errorCode)}</p>
           </div>
         )}
 
@@ -115,10 +103,10 @@ function LoginContent() {
           type="button"
           className="
             w-full flex items-center justify-center gap-3
-            rounded-xl border border-slate-200 bg-white
+            rounded-lg border-[1.5px] border-[#E7E7E7] bg-white
             px-4 py-3
-            text-sm font-semibold text-slate-700
-            hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100
+            text-sm font-bold text-[#0F0038]
+            hover:bg-[#FAFAFA] hover:border-[#D6D6D6]
             transition-all duration-150 shadow-xs
             focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2
           "
@@ -130,17 +118,17 @@ function LoginContent() {
         {/* ── Divider ──────────────────────────────────────────────────── */}
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-100" />
+            <div className="w-full border-t border-[#E7E7E7]" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-white px-3 text-[11px] text-slate-400 tracking-wide uppercase">
+            <span className="bg-white px-3 text-[11px] text-[rgba(15,0,56,0.40)] tracking-[0.10em] uppercase font-semibold">
               Secured by Google Workspace
             </span>
           </div>
         </div>
 
         {/* ── Fine print ───────────────────────────────────────────────── */}
-        <p className="text-center text-[11px] text-slate-400 leading-relaxed">
+        <p className="text-center text-[11px] text-[rgba(15,0,56,0.40)] leading-relaxed">
           Internal use only &mdash; CleverProfits.<br />
           Access restricted to @cleverprofits.com accounts.
         </p>
@@ -149,32 +137,24 @@ function LoginContent() {
   )
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Skeleton — shown during Suspense fallback
-// ─────────────────────────────────────────────────────────────────────────────
-
 function LoginSkeleton() {
   return (
-    <div className="w-full max-w-sm">
-      <div className="bg-white border border-slate-200 rounded-xl shadow-card px-8 py-10 animate-pulse">
+    <div className="w-full max-w-sm relative z-10">
+      <div className="bg-white border border-[#E7E7E7] rounded-2xl shadow-xl px-8 py-10 animate-pulse">
         <div className="flex items-center gap-3 mb-10">
-          <div className="h-10 w-10 rounded-xl bg-slate-200 flex-shrink-0" />
+          <div className="h-10 w-10 rounded-full bg-[#E7E7E7] flex-shrink-0" />
           <div className="space-y-1.5">
-            <div className="h-3.5 w-28 bg-slate-200 rounded" />
-            <div className="h-2.5 w-20 bg-slate-100 rounded" />
+            <div className="h-3.5 w-28 bg-[#E7E7E7] rounded" />
+            <div className="h-2.5 w-20 bg-[#FAFAFA] rounded" />
           </div>
         </div>
-        <div className="h-6 w-44 bg-slate-200 rounded mb-2" />
-        <div className="h-4 w-full bg-slate-100 rounded mb-6" />
-        <div className="h-10 w-full bg-slate-100 rounded-lg" />
+        <div className="h-6 w-44 bg-[#E7E7E7] rounded mb-2" />
+        <div className="h-4 w-full bg-[#FAFAFA] rounded mb-6" />
+        <div className="h-10 w-full bg-[#FAFAFA] rounded-lg" />
       </div>
     </div>
   )
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Google "G" logo (inline SVG — no extra network request)
-// ─────────────────────────────────────────────────────────────────────────────
 
 function GoogleLogo() {
   return (
@@ -203,20 +183,14 @@ function GoogleLogo() {
   )
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Page export
-// ─────────────────────────────────────────────────────────────────────────────
-
 export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-hero-mesh px-4 relative overflow-hidden">
-      {/* Dot-grid texture */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.06]"
         style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize: '22px 22px' }}
         aria-hidden
       />
-      {/* Decorative circles — echo the bubble language */}
       <div className="absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full border border-white/[0.04] pointer-events-none" aria-hidden />
       <div className="absolute -bottom-24 -left-24 w-[360px] h-[360px] rounded-full border border-white/[0.03] pointer-events-none" aria-hidden />
       <div className="absolute top-1/3 right-1/4 w-[200px] h-[200px] rounded-full border border-white/[0.035] pointer-events-none" aria-hidden />

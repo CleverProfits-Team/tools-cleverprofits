@@ -1,7 +1,25 @@
 # CleverProfits Tools — Design System Foundation
 
-> Last updated: 2026-03-24
+> Last updated: 2026-04-29
 > North Star: **"Turn operational chaos into a visible, intelligent system."**
+
+---
+
+## Source of Truth
+
+This document defines **product-level** decisions for tools.cleverprofits.com — north star, audience, philosophy, motion behavior, UX principles, architecture. It does **not** define brand tokens.
+
+For colors, typography, spacing, shadows, radii, and component specs:
+
+| Layer | File | Role |
+|---|---|---|
+| Brand kit | `~/.claude/skills/cleverfy-v3/clever-brand-kit.md` | Canonical source for every brand token — colors, typography, shadows, components |
+| Tailwind config | `tailwind.config.ts` | Live runtime mapping of brand tokens (`cp-*`, `brand-*`, `shadow-card`, `font-display`, etc.) |
+| This file | `CLAUDE.md` | Product behavior + decisions specific to this platform |
+
+**Rule:** never hardcode hex values, font names, or shadow recipes here. If a brand value needs to change, update it in the brand kit (and propagate to `tailwind.config.ts`); CLAUDE.md should not need to change.
+
+If this platform overrides a brand value (e.g., a custom token, a local exception), document the override + reason here — but reference the brand kit token it diverges from.
 
 ---
 
@@ -79,46 +97,44 @@ The product speaks as an **operational assistant** — not a technical tool.
 - Minimalist but not empty
 - Technological but human
 
-### Surfaces
-- **Background**: `#EEF2FB` with subtle dot-grid texture
-- **Sidebar**: `#040B4D` deep navy — the brand's "soul"
-- **Cards/panels**: white (`#FFFFFF`) with `rgba(4,11,77,x)` navy-tinted shadows
-- **Hero**: `bg-hero-mesh` — dark navy radial mesh, bleeds to the sidebar
+### Surfaces (product behavior — values from brand kit)
+- **Page background**: subtle dot-grid texture over the brand kit's background token
+- **Sidebar**: solid Royal Blue from the brand kit — the "soul" of the platform
+- **Cards/panels**: surface token from the brand kit, navy-tinted shadows from the brand kit's shadow scale
+- **Hero**: `bg-hero-mesh` (defined in `app/globals.css`) — dark radial mesh that bleeds to the sidebar
 
-### Typography — Tools Platform Spec
-- **Headers (h1–h6)**: **Inter** Bold — `letter-spacing: -0.02em`, `line-height: 1.2`
-- **Body / content**: **DM Sans** Regular (400 only — never 500+, bleeds into Inter territory)
-- **Small UI labels / table headers**: **Inter** Medium 500 — `font-size: 0.75rem`, `letter-spacing: 0.03em`
-- Note: brand guidelines specify Space Grotesk + Inter, but tools platform uses Inter + DM Sans due to existing system investment
-- Scale principle: meaningful jumps between levels (skip steps, not increments)
+### Typography
+The brand kit specifies Inter (display) + DM Sans (body); this project follows the brand kit. Loaded via `next/font/google` in `app/layout.tsx`, exposed as `--font-inter` / `--font-dm-sans`, mapped to Tailwind's `font-display` / `font-sans` in `tailwind.config.ts`.
 
-### Color System
-- `#040B4D` — Royal Blue (primary surface, deepest brand)
-- `#2605EF` — Electric Blue (primary action, active states, accent)
-- `#EEF2FB` — Background (light, blue-tinted — not pure white)
-- `#D5D4FF` — Brand 100 (soft highlight, selection states)
-- Per-tool accent colors: hashed from tool name → 10-color palette (blue, violet, emerald, amber, rose, sky, orange, teal, pink, indigo)
-- Functional: emerald (active), amber (pending), red (error/rejected), slate (archived)
-- **All shadows**: navy-tinted `rgba(4,11,77,x)` — never pure black
+Project-specific notes:
+- **Body weight**: never 500+ in DM Sans — it bleeds into Inter's visual territory. Stick to 400.
+- **Scale principle**: meaningful jumps between levels (skip steps, not increments)
 
-### Shape Language
-- `rounded-xl` for cards, panels, modals
+### Color
+All color tokens live in the brand kit and are exposed as Tailwind classes via `tailwind.config.ts` (`cp-*`, `brand-*`).
+
+Project-specific color rules:
+- **Per-tool accent**: hashed from tool name → 10-color palette (blue, violet, emerald, amber, rose, sky, orange, teal, pink, indigo). This is a product decision, not a brand decision.
+- **Functional state mapping**: ACTIVE = emerald, PENDING = amber, REJECTED = red, ARCHIVED = neutral grey. Functional borders use Tailwind's `emerald-*`/`amber-*` ramps; primaries use the brand kit's functional hex values.
+
+### Shape Language (product convention)
+- `rounded-2xl` for cards, panels, modals (16px in this project's Tailwind config — matches brand kit "Standard Card" radius)
 - `rounded-lg` for buttons, nav items, small containers
-- `rounded` for badges and chips
-- `rounded-full` only for avatars and dot indicators
+- `rounded-md` for badges and chips
+- `rounded-full` only for avatars, dot indicators, and pills
 
 ---
 
 ## Motion & Interaction
 
-The system should feel alive, but controlled.
+The system should feel alive, but controlled. Transition durations and easings come from the brand kit's transition scale; the table below documents *which behavior* applies *where* in this product.
 
 | Trigger | Response |
 |---------|----------|
-| Hover card | Subtle lift (`-translate-y-1`) + shadow deepens |
+| Hover card | Subtle lift (`-translate-y-1`) + shadow deepens (`shadow-card` → `shadow-card-hover`) |
 | Hover list row | Background tint + accent bar intensifies to 100% |
 | Active nav item | `bg-white/[0.15]` + left accent pill |
-| Page load | `fade-up` (0.35s ease) with staggered delays |
+| Page load | `fade-up` keyframe (defined in `tailwind.config.ts`) with staggered delays |
 | Bubble animation | `bubble-rise` — translateY -96vh, 8–16s cycle, ease-in-out |
 | Mouse in sidebar | Radial spotlight follows cursor |
 | Filter toggle | Collapsible row — no layout shift |
@@ -172,8 +188,7 @@ The system should feel alive, but controlled.
 
 ## Suggested Next Steps
 
-- `/color` — Formalize the full color system (functional + semantic tokens)
-- `/fonts` — Audit Space Grotesk + Inter sizing scale across all components
+- `/cleverfy` — Re-run brand verification any time `tailwind.config.ts` or the brand kit is updated
 - `/animate` — Formalize the motion system and add missing interaction states
 - `/overdrive` — Explore the bubble metaphor as a visual tool map (Insights page)
 - `/onboard` — Design the Register Tool flow to match zero-friction principle

@@ -25,13 +25,13 @@ function formatChartDate(iso: string): string {
 function TrendBadge({ curr, prev }: { curr: number; prev: number }) {
   if (prev === 0 && curr === 0) return null
   if (prev === 0) return (
-    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-600 bg-emerald-50 rounded-full px-1.5 py-0.5">
+    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-[#065F46] bg-[rgba(16,185,129,0.10)] rounded-full px-1.5 py-0.5">
       New
     </span>
   )
   const pct = Math.round(((curr - prev) / prev) * 100)
   if (pct === 0) return (
-    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-slate-400 bg-slate-100 rounded-full px-1.5 py-0.5">
+    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-[rgba(15,0,56,0.40)] bg-[#E7E7E7] rounded-full px-1.5 py-0.5">
       <Minus className="h-2.5 w-2.5" />
       0%
     </span>
@@ -40,7 +40,7 @@ function TrendBadge({ curr, prev }: { curr: number; prev: number }) {
   return (
     <span className={cn(
       'inline-flex items-center gap-0.5 text-[10px] font-semibold rounded-full px-1.5 py-0.5',
-      up ? 'text-emerald-600 bg-emerald-50' : 'text-red-500 bg-red-50',
+      up ? 'text-[#065F46] bg-[rgba(16,185,129,0.10)]' : 'text-[#EF4444] bg-[rgba(239,68,68,0.10)]',
     )}>
       {up ? <ArrowUpRight className="h-2.5 w-2.5" /> : <ArrowDownRight className="h-2.5 w-2.5" />}
       {up ? '+' : ''}{pct}%
@@ -139,72 +139,72 @@ export default async function AnalyticsPage() {
 
       {/* ── KPI cards ───────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Hits (30d)</p>
-            <div className="h-8 w-8 rounded-lg bg-[#eeeeff] flex items-center justify-center">
+            <p className="text-xs font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-widest">Hits (30d)</p>
+            <div className="h-8 w-8 rounded-lg bg-[rgba(38,5,239,0.10)] flex items-center justify-center">
               <BarChart2 className="h-4 w-4 text-[#2605EF]" aria-hidden />
             </div>
           </div>
           <div className="flex items-end gap-2">
-            <p className="text-3xl font-bold text-slate-900 tabular-nums">{totalHits30d.toLocaleString()}</p>
+            <p className="text-3xl font-bold text-[#0F0038] tracking-[-0.02em] tabular-nums">{totalHits30d.toLocaleString()}</p>
             <div className="mb-1">
               <TrendBadge curr={totalHits30d} prev={totalPrev30d} />
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-1">vs prior 30 days</p>
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1">vs prior 30 days</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">All-time</p>
-            <div className="h-8 w-8 rounded-lg bg-slate-50 flex items-center justify-center">
-              <Zap className="h-4 w-4 text-slate-500" aria-hidden />
+            <p className="text-xs font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-widest">All-time</p>
+            <div className="h-8 w-8 rounded-lg bg-[#FAFAFA] flex items-center justify-center">
+              <Zap className="h-4 w-4 text-[rgba(15,0,56,0.55)]" aria-hidden />
             </div>
           </div>
-          <p className="text-3xl font-bold text-slate-900 tabular-nums">{totalHitsAll.toLocaleString()}</p>
-          <p className="text-xs text-slate-400 mt-1">total requests</p>
+          <p className="text-3xl font-bold text-[#0F0038] tracking-[-0.02em] tabular-nums">{totalHitsAll.toLocaleString()}</p>
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1">total requests</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Active Tools</p>
-            <div className="h-8 w-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-              <TrendingUp className="h-4 w-4 text-emerald-500" aria-hidden />
+            <p className="text-xs font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-widest">Active Tools</p>
+            <div className="h-8 w-8 rounded-lg bg-[rgba(16,185,129,0.10)] flex items-center justify-center">
+              <TrendingUp className="h-4 w-4 text-[#10B981]" aria-hidden />
             </div>
           </div>
           <div className="flex items-end gap-2">
-            <p className="text-3xl font-bold text-slate-900 tabular-nums">{activeTools}</p>
+            <p className="text-3xl font-bold text-[#0F0038] tracking-[-0.02em] tabular-nums">{activeTools}</p>
             <div className="mb-1">
               <TrendBadge curr={activeTools} prev={prevActive} />
             </div>
           </div>
-          <p className="text-xs text-slate-400 mt-1">used in last 30 days</p>
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1">used in last 30 days</p>
         </div>
       </div>
 
       {/* ── Top tool insight ────────────────────────────────────────── */}
       {topTool && topTool.hits30d > 0 && (
-        <div className="flex items-center gap-3 bg-[#0F0038]/[0.03] border border-[#0F0038]/[0.08] rounded-xl px-4 py-3 mb-8">
+        <div className="flex items-center gap-3 bg-[rgba(15,0,56,0.03)] border border-[rgba(15,0,56,0.08)] rounded-xl px-4 py-3 mb-8">
           <div className="h-7 w-7 rounded-lg bg-[#2605EF] flex items-center justify-center flex-shrink-0">
             <TrendingUp className="h-3.5 w-3.5 text-white" aria-hidden />
           </div>
-          <p className="text-sm text-slate-600">
-            <span className="text-slate-400">Most used in last 30 days — </span>
+          <p className="text-sm text-[rgba(15,0,56,0.65)]">
+            <span className="text-[rgba(15,0,56,0.40)]">Most used in last 30 days — </span>
             <Link href={`/tools/${topTool.slug}`} className="font-semibold text-[#0F0038] hover:text-[#2605EF] transition-colors">
               {topTool.name}
             </Link>
-            <span className="text-slate-400"> with </span>
-            <span className="font-semibold text-slate-700">{topTool.hits30d.toLocaleString()} requests</span>
+            <span className="text-[rgba(15,0,56,0.40)]"> with </span>
+            <span className="font-semibold text-[#0F0038]">{topTool.hits30d.toLocaleString()} requests</span>
           </p>
         </div>
       )}
 
       {/* ── 30-day chart ────────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6 mb-6">
+      <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6 mb-6">
         <h2 className="text-sm font-semibold text-[#0F0038] mb-5">Requests — last 30 days</h2>
         {totalHits30d === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-8">No requests recorded yet.</p>
+          <p className="text-sm text-[rgba(15,0,56,0.40)] text-center py-8">No requests recorded yet.</p>
         ) : (
           <div className="flex items-end gap-[3px] h-36">
             {days.map(({ day, count }) => (
@@ -217,59 +217,59 @@ export default async function AnalyticsPage() {
             ))}
           </div>
         )}
-        <div className="flex justify-between mt-2 text-[10px] text-slate-300 font-medium">
+        <div className="flex justify-between mt-2 text-[10px] text-[rgba(15,0,56,0.32)] font-medium">
           <span>{formatChartDate(days[0]?.day ?? '')}</span>
           <span>{formatChartDate(days[days.length - 1]?.day ?? '')}</span>
         </div>
       </div>
 
       {/* ── Per-tool table ──────────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] overflow-hidden">
-        <div className="px-6 py-4 bg-[#f4f3f3] rounded-t-2xl">
+      <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card overflow-hidden">
+        <div className="px-6 py-4 bg-[#FAFAFA] rounded-t-2xl">
           <h2 className="text-sm font-semibold text-[#0F0038]">Tool breakdown</h2>
-          <p className="text-xs text-slate-400 mt-0.5">Sorted by 30-day activity</p>
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mt-0.5">Sorted by 30-day activity</p>
         </div>
 
         {toolStats.length === 0 ? (
-          <p className="text-sm text-slate-400 text-center py-12">No tools registered.</p>
+          <p className="text-sm text-[rgba(15,0,56,0.40)] text-center py-12">No tools registered.</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#f9f9f9]">
-                <th className="text-left px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Tool</th>
-                <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">30d activity</th>
-                <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">All-time</th>
-                <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Avg latency</th>
+              <tr className="bg-[#FAFAFA]">
+                <th className="text-left px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[rgba(15,0,56,0.40)]">Tool</th>
+                <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[rgba(15,0,56,0.40)]">30d activity</th>
+                <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[rgba(15,0,56,0.40)]">All-time</th>
+                <th className="text-right px-6 py-3 text-[10px] font-semibold uppercase tracking-wider text-[rgba(15,0,56,0.40)]">Avg latency</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f4f3f3]">
+            <tbody className="divide-y divide-[#FAFAFA]">
               {toolStats.map((t) => (
-                <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
+                <tr key={t.id} className="hover:bg-[#FAFAFA] transition-colors group">
                   <td className="px-6 py-3.5">
                     <Link href={`/tools/${t.slug}`} className="font-semibold text-[#0F0038] hover:text-[#2605EF] transition-colors">
                       {t.name}
                     </Link>
-                    <span className="ml-2 text-xs font-mono text-slate-300">/{t.slug}</span>
+                    <span className="ml-2 text-xs font-mono text-[rgba(15,0,56,0.32)]">/{t.slug}</span>
                   </td>
                   <td className="px-6 py-3.5">
                     <div className="flex items-center justify-end gap-3">
                       {t.hits30d > 0 && (
-                        <div className="w-16 h-1.5 rounded-full bg-slate-100 overflow-hidden hidden sm:block">
+                        <div className="w-16 h-1.5 rounded-full bg-[#E7E7E7] overflow-hidden hidden sm:block">
                           <div
                             className="h-full rounded-full bg-[#2605EF]"
                             style={{ width: `${(t.hits30d / maxHits30d) * 100}%` }}
                           />
                         </div>
                       )}
-                      <span className="tabular-nums font-semibold text-slate-700 w-12 text-right">
-                        {t.hits30d > 0 ? t.hits30d.toLocaleString() : <span className="text-slate-300 font-normal">—</span>}
+                      <span className="tabular-nums font-semibold text-[#0F0038] w-12 text-right">
+                        {t.hits30d > 0 ? t.hits30d.toLocaleString() : <span className="text-[rgba(15,0,56,0.32)] font-normal">—</span>}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-3.5 text-right tabular-nums text-slate-400">
-                    {t.hitsAllTime > 0 ? t.hitsAllTime.toLocaleString() : <span className="text-slate-300">—</span>}
+                  <td className="px-6 py-3.5 text-right tabular-nums text-[rgba(15,0,56,0.40)]">
+                    {t.hitsAllTime > 0 ? t.hitsAllTime.toLocaleString() : <span className="text-[rgba(15,0,56,0.32)]">—</span>}
                   </td>
-                  <td className="px-6 py-3.5 text-right text-slate-400">
+                  <td className="px-6 py-3.5 text-right text-[rgba(15,0,56,0.40)]">
                     {formatDuration(t.avgDurationMs)}
                   </td>
                 </tr>

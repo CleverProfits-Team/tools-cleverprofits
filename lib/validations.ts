@@ -36,6 +36,47 @@ function isBlockedUrl(url: string): boolean {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Reserved subdomains
+//
+// Block subdomain registrations that would shadow platform infrastructure,
+// DNS records, or conventional service routes. Comparison is case-insensitive.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const RESERVED_SUBDOMAINS: ReadonlySet<string> = new Set([
+  // Platform / app
+  'admin', 'app', 'auth', 'dashboard', 'login', 'signup', 'register',
+  // API + docs + ops
+  'api', 'docs', 'status', 'health', 'support', 'help',
+  // Common DNS / infra
+  'www', 'mail', 'mx', 'ns', 'ns1', 'ns2', 'cdn', 'static', 'assets',
+  // Railway verification prefix
+  '_railway-verify',
+  // Brand / future routes
+  'blog', 'home', 'cleverprofits',
+])
+
+export function isReservedSubdomain(value: string): boolean {
+  return RESERVED_SUBDOMAINS.has(value.toLowerCase())
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Subdomain
+//
+// Same shape as a slug but stricter: must be DNS-label safe.
+// Used as <subdomain>.cleverprofits.app.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const subdomainSchema = z
+  .string()
+  .min(2, 'Subdomain must be at least 2 characters')
+  .max(40, 'Subdomain must be 40 characters or fewer')
+  .regex(
+    /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/,
+    'Only lowercase letters, numbers, and hyphens. Cannot start or end with a hyphen.',
+  )
+  .refine((v) => !isReservedSubdomain(v), 'This subdomain is reserved')
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Slug
 // ─────────────────────────────────────────────────────────────────────────────
 

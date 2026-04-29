@@ -27,7 +27,7 @@ const FILTER_OPTIONS: { value: Filter; label: string }[] = [
 function draftContinueUrl(draft: SerializedTool): string {
   if (draft.analysisStatus === 'PENDING_ANALYSIS') return `/dashboard/register/ownership/${draft.id}`
   if (draft.analysisStatus === 'ANALYZING')        return `/dashboard/register/analyzing/${draft.id}`
-  return `/dashboard/register/review/${draft.id}` // ANALYSIS_COMPLETE | ANALYSIS_FAILED
+  return `/dashboard/register/review/${draft.id}`
 }
 
 function draftStepLabel(status: AnalysisStatus): string {
@@ -74,11 +74,11 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
 
   if (!hasAnything) {
     return (
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-12 text-center shadow-card">
-        <p className="text-slate-500 text-sm mb-3">You haven&apos;t registered any tools yet.</p>
+      <div className="rounded-2xl border border-[#E7E7E7] bg-white p-12 text-center shadow-card">
+        <p className="text-[rgba(15,0,56,0.55)] text-sm mb-3">You haven&apos;t registered any tools yet.</p>
         <Link
           href="/dashboard/register"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2605EF] px-4 py-2 text-sm font-medium text-white hover:bg-[#1e04cc] transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-[#2605EF] px-4 py-2 text-sm font-bold text-white hover:bg-[#1E04C7] transition-colors"
         >
           Register your first tool
         </Link>
@@ -93,25 +93,25 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
       {drafts.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <FilePen className="h-4 w-4 text-slate-400" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-600">In progress ({drafts.length})</h2>
+            <FilePen className="h-4 w-4 text-[rgba(15,0,56,0.55)]" aria-hidden />
+            <h2 className="text-sm font-bold text-[#0F0038]">In progress ({drafts.length})</h2>
           </div>
           <div className="space-y-2">
             {drafts.map((draft) => (
               <div
                 key={draft.id}
-                className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-4 flex items-center gap-4"
+                className="rounded-2xl border border-dashed border-[#D6D6D6] bg-[#FAFAFA] p-4 flex items-center gap-4"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-800 truncate">{draft.name}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="font-bold text-[#0F0038] truncate">{draft.name}</p>
+                  <p className="text-xs text-[rgba(15,0,56,0.55)] mt-0.5">
                     {draftStepLabel(draft.analysisStatus as AnalysisStatus)} · Started {formatDate(draft.createdAt)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Link
                     href={draftContinueUrl(draft)}
-                    className="inline-flex items-center gap-1 rounded-lg bg-[#0F0038] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0d1870] transition-colors"
+                    className="inline-flex items-center gap-1 rounded-lg bg-[#0F0038] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#050D61] transition-colors whitespace-nowrap"
                   >
                     Continue
                     <ChevronRight className="h-3 w-3" aria-hidden />
@@ -119,7 +119,7 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                   <button
                     onClick={() => discardDraft(draft.id)}
                     disabled={discarding === draft.id}
-                    className="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-slate-400 hover:text-red-500 hover:border-red-200 disabled:opacity-50 transition-colors min-w-[36px]"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#E7E7E7] bg-white px-2.5 py-2 text-[rgba(15,0,56,0.55)] hover:text-[#DC2626] hover:border-[#FCA5A5] disabled:opacity-50 transition-colors min-w-[36px]"
                     title="Discard draft"
                     aria-label="Discard draft"
                   >
@@ -135,23 +135,22 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
       {/* ── Submitted tools section ──────────────────────────────────────── */}
       {tools.length > 0 && (
         <div>
-          {/* Filter tabs */}
           <div className="flex gap-1 flex-wrap mb-5">
             {FILTER_OPTIONS.filter(o => (counts[o.value] ?? 0) > 0 || o.value === 'ALL').map(({ value, label }) => (
               <button
                 key={value}
                 onClick={() => setFilter(value)}
                 className={cn(
-                  'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
+                  'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
                   filter === value
-                    ? 'bg-[#2605EF] text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
+                    ? 'bg-[#0F0038] text-white'
+                    : 'bg-[#E7E7E7] text-[rgba(15,0,56,0.65)] hover:bg-[#D6D6D6]',
                 )}
               >
                 {label}
                 <span className={cn(
-                  'inline-flex items-center justify-center rounded-full min-w-[1.1rem] h-4 px-1 text-xs',
-                  filter === value ? 'bg-[#1e04cc] text-white' : 'bg-slate-200 text-slate-600',
+                  'inline-flex items-center justify-center rounded-full min-w-[1.1rem] h-4 px-1 text-xs font-bold',
+                  filter === value ? 'bg-white/20 text-white' : 'bg-white text-[rgba(15,0,56,0.65)]',
                 )}>
                   {counts[value] ?? 0}
                 </span>
@@ -159,67 +158,64 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
             ))}
           </div>
 
-          {/* List */}
           <div className="space-y-3">
             {filtered.length === 0 && (
-              <p className="text-sm text-slate-500 py-8 text-center">No {filter.toLowerCase()} tools.</p>
+              <p className="text-sm text-[rgba(15,0,56,0.55)] py-8 text-center">No {filter.toLowerCase()} tools.</p>
             )}
             {filtered.map((tool) => (
               <div
                 key={tool.id}
                 className={cn(
                   'rounded-2xl border bg-white p-5 shadow-card transition-colors',
-                  tool.status === 'REJECTED' ? 'border-red-200' : 'border-slate-200/80',
+                  tool.status === 'REJECTED' ? 'border-[#FCA5A5]' : 'border-[#E7E7E7]',
                 )}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-semibold text-slate-900">{tool.name}</h3>
+                      <h3 className="font-bold text-[#0F0038]">{tool.name}</h3>
                       <StatusBadge status={tool.status} />
                     </div>
-                    <p className="text-xs font-mono text-slate-400 mt-0.5">{tool.slug}</p>
+                    <p className="text-xs font-mono text-[rgba(15,0,56,0.40)] mt-0.5">{tool.slug}</p>
                     {tool.description && (
-                      <p className="text-sm text-slate-500 mt-2 line-clamp-2">{tool.description}</p>
+                      <p className="text-sm text-[rgba(15,0,56,0.65)] mt-2 line-clamp-2">{tool.description}</p>
                     )}
                   </div>
-                  <div className="flex-shrink-0 text-xs text-slate-400 whitespace-nowrap">
+                  <div className="flex-shrink-0 text-xs text-[rgba(15,0,56,0.40)] whitespace-nowrap">
                     {formatDate(tool.createdAt)}
                   </div>
                 </div>
 
-                {/* Rejection feedback + action */}
                 {tool.status === 'REJECTED' && (
-                  <div className="mt-3 rounded-lg border border-red-100 bg-red-50 px-3 py-2.5">
+                  <div className="mt-3 rounded-lg border-l-[3px] border-[#EF4444] bg-[rgba(239,68,68,0.06)] px-3 py-2.5">
                     {tool.rejectionReason ? (
                       <>
-                        <p className="text-xs font-semibold text-red-700 mb-0.5">Feedback from reviewer</p>
-                        <p className="text-xs text-red-700 leading-relaxed">{tool.rejectionReason}</p>
+                        <p className="text-xs font-bold text-[#991B1B] mb-0.5">Feedback from reviewer</p>
+                        <p className="text-xs text-[#991B1B] leading-relaxed">{tool.rejectionReason}</p>
                       </>
                     ) : (
-                      <p className="text-xs text-red-700">This tool was rejected. Edit it to address any issues.</p>
+                      <p className="text-xs text-[#991B1B]">This tool was rejected. Edit it to address any issues.</p>
                     )}
                     <Link
                       href={`/dashboard/tools/${tool.id}/edit`}
-                      className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700 transition-colors"
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-[#DC2626] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#991B1B] transition-colors whitespace-nowrap"
                     >
                       Fix &amp; resubmit
                     </Link>
                   </div>
                 )}
 
-                {/* Footer */}
                 <div className="mt-3 flex items-center gap-3">
                   <Link
                     href={`/tools/${tool.slug}`}
-                    className="text-xs font-medium text-[#2605EF] hover:text-[#1803b3] hover:underline"
+                    className="text-xs font-semibold text-[#2605EF] hover:text-[#1E04C7] hover:underline whitespace-nowrap"
                   >
                     View details →
                   </Link>
                   {tool.status === 'PENDING' && (
                     <Link
                       href={`/dashboard/tools/${tool.id}/edit`}
-                      className="text-xs font-medium text-slate-500 hover:text-slate-700 hover:underline"
+                      className="text-xs font-semibold text-[rgba(15,0,56,0.55)] hover:text-[#0F0038] hover:underline whitespace-nowrap"
                     >
                       Edit →
                     </Link>
@@ -227,7 +223,7 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                   {tool.status === 'ACTIVE' && (
                     <a
                       href={`/${tool.slug}`}
-                      className="text-xs font-medium text-emerald-600 hover:text-emerald-800 hover:underline"
+                      className="text-xs font-semibold text-[#065F46] hover:text-[#10B981] hover:underline whitespace-nowrap"
                     >
                       Launch →
                     </a>
@@ -239,13 +235,12 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
         </div>
       )}
 
-      {/* Edge case: only drafts, no submitted tools */}
       {tools.length === 0 && drafts.length > 0 && (
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 text-center">
-          <p className="text-slate-500 text-sm mb-3">No submitted tools yet. Finish a draft to submit.</p>
+        <div className="rounded-2xl border border-[#E7E7E7] bg-white p-6 text-center">
+          <p className="text-[rgba(15,0,56,0.55)] text-sm mb-3">No submitted tools yet. Finish a draft to submit.</p>
           <Link
             href="/dashboard/register"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-[#2605EF] px-4 py-2 text-sm font-medium text-white hover:bg-[#1e04cc] transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-[#2605EF] px-4 py-2 text-sm font-bold text-white hover:bg-[#1E04C7] transition-colors"
           >
             Register a new tool
           </Link>

@@ -34,10 +34,10 @@ export default async function EditToolPage({ params }: { params: { id: string } 
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#EEF2FB]">
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <h1 className="font-display font-bold text-2xl text-[#0F0038] tracking-tight mb-8">Edit Tool</h1>
-        <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
+        <h1 className="font-display font-bold text-2xl text-[#0F0038] tracking-[-0.02em] mb-8">Edit Tool</h1>
+        <div className="rounded-2xl border border-[#E7E7E7] bg-white shadow-card p-6 sm:p-8">
           <EditToolForm tool={serialized} isAdmin={isAdmin} />
         </div>
       </div>

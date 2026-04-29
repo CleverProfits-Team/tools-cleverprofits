@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-medium select-none',
+    'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-semibold select-none whitespace-nowrap',
     'ring-offset-white transition-all duration-150',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
@@ -15,21 +15,26 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-[#2605EF] text-white shadow-xs hover:bg-[#1e04cc] active:bg-[#1803b3]',
+          'bg-[#2605EF] text-white shadow-md hover:bg-[#1E04C7] hover:-translate-y-px',
+        navy:
+          'bg-[#0F0038] text-white shadow-md hover:bg-[#050D61] hover:-translate-y-px',
         secondary:
-          'bg-white text-slate-700 border border-slate-200 shadow-xs hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100',
+          'bg-white text-[#0F0038] border border-[#E7E7E7] shadow-xs hover:border-[#D6D6D6] hover:bg-[#FAFAFA]',
+        outline:
+          'bg-transparent text-[#2605EF] border-[1.5px] border-[#2605EF] hover:bg-[rgba(38,5,239,0.06)]',
         ghost:
-          'text-slate-600 hover:bg-slate-100 hover:text-slate-900 active:bg-slate-200',
+          'text-[#0F0038] hover:bg-[rgba(15,0,56,0.06)]',
         destructive:
-          'bg-red-600 text-white shadow-xs hover:bg-red-700 active:bg-red-800',
+          'bg-[#DC2626] text-white shadow-xs hover:bg-[#991B1B]',
         link:
           'text-[#2605EF] underline-offset-4 hover:underline h-auto p-0',
       },
       size: {
-        sm:   'h-8  px-3   text-xs',
-        md:   'h-9  px-4',
-        lg:   'h-10 px-5',
-        icon: 'h-9  w-9',
+        sm:   'h-8  px-4   text-[11px]',
+        md:   'h-10 px-6   text-sm',
+        lg:   'h-12 px-8',
+        xl:   'h-14 px-10  text-[18px]',
+        icon: 'h-10 w-10',
       },
     },
     defaultVariants: {
@@ -42,7 +47,6 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  /** Render as a child element (e.g. <Link>) via Radix Slot */
   asChild?: boolean
 }
 

@@ -108,15 +108,15 @@ function SummaryCard({
   color: string
 }) {
   return (
-    <div className="bg-white rounded-xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,0,56,0.08)] group">
+    <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover group">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{label}</p>
+        <p className="text-xs font-semibold text-[rgba(15,0,56,0.40)] uppercase tracking-widest">{label}</p>
         <div className={`h-8 w-8 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-110 ${color}`}>
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <p className="font-display text-3xl font-bold text-[#0F0038] tabular-nums">{value}</p>
-      <p className="text-xs text-slate-400 mt-1">{description}</p>
+      <p className="font-display text-3xl font-bold text-[#0F0038] tracking-[-0.02em] tabular-nums">{value}</p>
+      <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1">{description}</p>
     </div>
   )
 }
@@ -129,20 +129,20 @@ function DistributionBar({
   colorClass: string
 }) {
   if (rows.length === 0) {
-    return <p className="text-sm text-slate-400 py-4 text-center">No data yet</p>
+    return <p className="text-sm text-[rgba(15,0,56,0.40)] py-4 text-center">No data yet</p>
   }
   return (
     <div className="space-y-2.5">
       {rows.map(({ name, count }) => (
         <div key={name} className="flex items-center gap-3">
-          <span className="text-sm text-slate-700 capitalize w-36 flex-shrink-0 truncate">{name}</span>
-          <div className="flex-1 bg-slate-100 rounded-full h-2">
+          <span className="text-sm text-[#0F0038] capitalize w-36 flex-shrink-0 truncate">{name}</span>
+          <div className="flex-1 bg-[#E7E7E7] rounded-full h-2">
             <div
               className={`h-2 rounded-full ${colorClass}`}
               style={{ width: `${Math.round((count / maxCount) * 100)}%` }}
             />
           </div>
-          <span className="text-xs text-slate-400 w-6 text-right tabular-nums">{count}</span>
+          <span className="text-xs text-[rgba(15,0,56,0.40)] w-6 text-right tabular-nums">{count}</span>
         </div>
       ))}
     </div>
@@ -177,15 +177,15 @@ export default async function InsightsPage() {
 
       {/* Tool ecosystem map */}
       {allActiveTools.length > 0 && (
-        <div className="bg-white rounded-xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-5">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-sm font-semibold text-[#0F0038]">Tool Ecosystem</h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[rgba(15,0,56,0.40)] mt-0.5">
                 {activeHitIds.length} of {allActiveTools.length} tools active in the last 30 days
               </p>
             </div>
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-300">Live map</span>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-[rgba(15,0,56,0.32)]">Live map</span>
           </div>
           <BubbleMap
             tools={bubbleTools}
@@ -201,82 +201,82 @@ export default async function InsightsPage() {
           value={abandonedTools.length}
           description="active, 0 hits in 30d"
           icon={TrendingDown}
-          color="bg-amber-50 text-amber-500"
+          color="bg-[rgba(245,158,11,0.10)] text-[#F59E0B]"
         />
         <SummaryCard
           label="Ownerless"
           value={ownerlessTools.length}
           description="no team assigned"
           icon={Users}
-          color="bg-orange-50 text-orange-500"
+          color="bg-[rgba(245,158,11,0.10)] text-[#F59E0B]"
         />
         <SummaryCard
           label="Overlap Clusters"
           value={overlapClusters.length}
           description="AI-flagged duplicates"
           icon={Layers}
-          color="bg-violet-50 text-violet-500"
+          color="bg-[rgba(38,5,239,0.10)] text-[#2605EF]"
         />
         <SummaryCard
           label="Frameworks"
           value={frameworkRows.length}
           description="distinct tech detected"
           icon={Cpu}
-          color="bg-blue-50 text-blue-500"
+          color="bg-[rgba(38,5,239,0.10)] text-[#2605EF]"
         />
       </div>
 
       {/* Category + Framework distributions */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <GitBranch className="h-4 w-4 text-slate-400" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-900">Tool Categories</h2>
+            <GitBranch className="h-4 w-4 text-[rgba(15,0,56,0.40)]" aria-hidden />
+            <h2 className="text-sm font-semibold text-[#0F0038]">Tool Categories</h2>
           </div>
           <DistributionBar rows={categoryRows} maxCount={maxCategoryCount} colorClass="bg-[#2605EF]" />
         </div>
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6">
           <div className="flex items-center gap-2 mb-5">
-            <Cpu className="h-4 w-4 text-slate-400" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-900">Frameworks & Tech</h2>
+            <Cpu className="h-4 w-4 text-[rgba(15,0,56,0.40)]" aria-hidden />
+            <h2 className="text-sm font-semibold text-[#0F0038]">Frameworks & Tech</h2>
           </div>
-          <DistributionBar rows={frameworkRows} maxCount={maxFrameworkCount} colorClass="bg-violet-500" />
+          <DistributionBar rows={frameworkRows} maxCount={maxFrameworkCount} colorClass="bg-[#2605EF]" />
         </div>
       </div>
 
       {/* Abandoned tools */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+      <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6">
         <div className="flex items-center gap-2 mb-1">
-          <TrendingDown className="h-4 w-4 text-amber-500" aria-hidden />
-          <h2 className="text-sm font-semibold text-slate-900">Abandoned Tools</h2>
+          <TrendingDown className="h-4 w-4 text-[#F59E0B]" aria-hidden />
+          <h2 className="text-sm font-semibold text-[#0F0038]">Abandoned Tools</h2>
           {abandonedTools.length > 0 && (
-            <span className="ml-auto text-xs text-amber-600 font-medium bg-amber-50 rounded-full px-2 py-0.5">
+            <span className="ml-auto text-xs text-[#92400E] font-medium bg-[rgba(245,158,11,0.10)] rounded-full px-2 py-0.5">
               {abandonedTools.length} tools
             </span>
           )}
         </div>
-        <p className="text-xs text-slate-400 mb-4">Active tools with no proxy hits in the last 30 days</p>
+        <p className="text-xs text-[rgba(15,0,56,0.40)] mb-4">Active tools with no proxy hits in the last 30 days</p>
 
         {abandonedTools.length === 0 ? (
-          <p className="text-sm text-slate-400 py-4 text-center">All active tools have recent activity.</p>
+          <p className="text-sm text-[rgba(15,0,56,0.40)] py-4 text-center">All active tools have recent activity.</p>
         ) : (
-          <div className="divide-y divide-[#f4f3f3]">
+          <div className="divide-y divide-[#FAFAFA]">
             {abandonedTools.map((tool) => (
               <div key={tool.id} className="py-3 flex items-center gap-4">
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/dashboard/admin/tools/${tool.id}`}
-                    className="text-sm font-medium text-slate-800 hover:text-[#2605EF] hover:underline"
+                    className="text-sm font-medium text-[#0F0038] hover:text-[#2605EF] hover:underline"
                   >
                     {tool.name}
                   </Link>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-[rgba(15,0,56,0.40)] mt-0.5">
                     {tool.team ? `Team: ${tool.team}` : 'No team'} · {tool.createdByName} · since {formatDate(tool.createdAt)}
                   </p>
                 </div>
                 <Link
                   href={`/dashboard/admin/tools/${tool.id}`}
-                  className="text-xs font-medium text-slate-400 hover:text-[#2605EF] flex-shrink-0"
+                  className="text-xs font-medium text-[rgba(15,0,56,0.40)] hover:text-[#2605EF] flex-shrink-0"
                 >
                   Review →
                 </Link>
@@ -287,39 +287,39 @@ export default async function InsightsPage() {
       </div>
 
       {/* Ownerless tools */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card p-6">
+      <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6">
         <div className="flex items-center gap-2 mb-1">
-          <Users className="h-4 w-4 text-orange-500" aria-hidden />
-          <h2 className="text-sm font-semibold text-slate-900">Ownerless Tools</h2>
+          <Users className="h-4 w-4 text-[#F59E0B]" aria-hidden />
+          <h2 className="text-sm font-semibold text-[#0F0038]">Ownerless Tools</h2>
           {ownerlessTools.length > 0 && (
-            <span className="ml-auto text-xs text-orange-600 font-medium bg-orange-50 rounded-full px-2 py-0.5">
+            <span className="ml-auto text-xs text-[#92400E] font-medium bg-[rgba(245,158,11,0.10)] rounded-full px-2 py-0.5">
               {ownerlessTools.length} tools
             </span>
           )}
         </div>
-        <p className="text-xs text-slate-400 mb-4">Active or pending tools with no team assigned</p>
+        <p className="text-xs text-[rgba(15,0,56,0.40)] mb-4">Active or pending tools with no team assigned</p>
 
         {ownerlessTools.length === 0 ? (
-          <p className="text-sm text-slate-400 py-4 text-center">All tools have a team assigned.</p>
+          <p className="text-sm text-[rgba(15,0,56,0.40)] py-4 text-center">All tools have a team assigned.</p>
         ) : (
-          <div className="divide-y divide-[#f4f3f3]">
+          <div className="divide-y divide-[#FAFAFA]">
             {ownerlessTools.map((tool) => (
               <div key={tool.id} className="py-3 flex items-center gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/dashboard/admin/tools/${tool.id}`}
-                      className="text-sm font-medium text-slate-800 hover:text-[#2605EF] hover:underline"
+                      className="text-sm font-medium text-[#0F0038] hover:text-[#2605EF] hover:underline"
                     >
                       {tool.name}
                     </Link>
-                    <span className={`text-xs rounded-full px-1.5 py-0.5 font-medium ${
-                      tool.status === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                    <span className={`text-[11px] rounded-full px-1.5 py-0.5 font-semibold uppercase tracking-[0.04em] whitespace-nowrap ${
+                      tool.status === 'ACTIVE' ? 'bg-[rgba(16,185,129,0.10)] text-[#065F46]' : 'bg-[rgba(245,158,11,0.10)] text-[#92400E]'
                     }`}>
                       {tool.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-[rgba(15,0,56,0.40)] mt-0.5">
                     {tool.createdByName} ({tool.createdByEmail})
                   </p>
                 </div>
@@ -337,30 +337,30 @@ export default async function InsightsPage() {
 
       {/* Overlap clusters */}
       {overlapClusters.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-[0_20px_40px_rgba(15,0,56,0.06)] p-6">
+        <div className="bg-white rounded-2xl border border-[#E7E7E7] shadow-card p-6">
           <div className="flex items-center gap-2 mb-1">
-            <AlertTriangle className="h-4 w-4 text-violet-500" aria-hidden />
-            <h2 className="text-sm font-semibold text-slate-900">Potential Overlap Clusters</h2>
-            <span className="ml-auto text-xs text-violet-600 font-medium bg-violet-50 rounded-full px-2 py-0.5">
+            <AlertTriangle className="h-4 w-4 text-[#2605EF]" aria-hidden />
+            <h2 className="text-sm font-semibold text-[#0F0038]">Potential Overlap Clusters</h2>
+            <span className="ml-auto text-xs text-[#2605EF] font-medium bg-[rgba(38,5,239,0.10)] rounded-full px-2 py-0.5">
               {overlapClusters.length} tools
             </span>
           </div>
-          <p className="text-xs text-slate-400 mb-4">Tools that AI flagged as potentially duplicating existing tools</p>
-          <div className="divide-y divide-[#f4f3f3]">
+          <p className="text-xs text-[rgba(15,0,56,0.40)] mb-4">Tools that AI flagged as potentially duplicating existing tools</p>
+          <div className="divide-y divide-[#FAFAFA]">
             {overlapClusters.map((tool) => (
               <div key={tool.id} className="py-3">
                 <div className="flex items-center gap-3 mb-1">
                   <Link
                     href={`/dashboard/admin/tools/${tool.id}`}
-                    className="text-sm font-medium text-slate-800 hover:text-[#2605EF] hover:underline"
+                    className="text-sm font-medium text-[#0F0038] hover:text-[#2605EF] hover:underline"
                   >
                     {tool.name}
                   </Link>
-                  <span className="text-xs text-slate-400">may overlap with:</span>
+                  <span className="text-xs text-[rgba(15,0,56,0.40)]">may overlap with:</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {tool.overlaps.map((name, i) => (
-                    <span key={i} className="text-xs bg-violet-50 text-violet-700 rounded-md px-2 py-0.5 font-medium">
+                    <span key={i} className="text-xs bg-[rgba(38,5,239,0.10)] text-[#2605EF] rounded-md px-2 py-0.5 font-medium">
                       {name}
                     </span>
                   ))}

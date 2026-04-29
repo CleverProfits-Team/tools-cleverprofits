@@ -34,12 +34,12 @@ function SectionDivider({ label, icon: Icon }: { label: string; icon: React.Elem
   return (
     <div className="flex items-center gap-3 pt-1">
       <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="h-5 w-5 rounded-md bg-slate-100 flex items-center justify-center">
-          <Icon className="h-3 w-3 text-slate-500" aria-hidden />
+        <div className="h-5 w-5 rounded-md bg-[#E7E7E7] flex items-center justify-center">
+          <Icon className="h-3 w-3 text-[rgba(15,0,56,0.55)]" aria-hidden />
         </div>
-        <span className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.12em]">{label}</span>
+        <span className="text-[11px] font-bold text-[rgba(15,0,56,0.40)] uppercase tracking-[0.12em]">{label}</span>
       </div>
-      <div className="flex-1 h-px bg-slate-100" />
+      <div className="flex-1 h-px bg-[#FAFAFA]" />
     </div>
   )
 }
@@ -141,19 +141,19 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
       subtitle="Who owns this tool, who maintains it, and who should be able to use it?"
     >
       {loadErr && (
-        <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700 mb-6">
+        <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B] mb-6">
           <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
           {loadErr}
         </div>
       )}
 
       {draft && (
-        <div className="flex items-center gap-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 mb-6">
+        <div className="flex items-center gap-3 rounded-xl bg-[#FAFAFA] border border-[#E7E7E7] px-4 py-3 mb-6">
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[#0F0038] truncate">{draft.name}</p>
-            <p className="text-xs text-slate-400 font-mono truncate">{draft.externalUrl}</p>
+            <p className="text-xs text-[rgba(15,0,56,0.40)] font-mono truncate">{draft.externalUrl}</p>
           </div>
-          <ExternalLink className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" aria-hidden />
+          <ExternalLink className="h-3.5 w-3.5 text-[rgba(15,0,56,0.40)] flex-shrink-0" aria-hidden />
         </div>
       )}
 
@@ -162,7 +162,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
         {/* ── Product owner ──────────────────────────────────────────── */}
         <div className="space-y-4">
           <SectionDivider label="Product owner" icon={User} />
-          <p className="text-xs text-slate-400 -mt-1">
+          <p className="text-xs text-[rgba(15,0,56,0.40)] -mt-1">
             The person responsible for this tool's direction and purpose. Pre-filled with your account — edit if someone else owns it.
           </p>
           <div className="grid grid-cols-2 gap-4">
@@ -187,7 +187,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
                 autoComplete="off"
               />
               {errors.ownerEmail && (
-                <p className="text-xs text-red-500 mt-1.5">{errors.ownerEmail}</p>
+                <p className="text-xs text-[#EF4444] mt-1.5">{errors.ownerEmail}</p>
               )}
             </div>
           </div>
@@ -196,15 +196,15 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
         {/* ── Maintainer ─────────────────────────────────────────────── */}
         <div className="space-y-4">
           <SectionDivider label="Maintainer" icon={Wrench} />
-          <p className="text-xs text-slate-400 -mt-1">
+          <p className="text-xs text-[rgba(15,0,56,0.40)] -mt-1">
             The person responsible for keeping this tool running and up to date.{' '}
-            <span className="text-slate-300">Optional — leave blank if the owner maintains it.</span>
+            <span className="text-[rgba(15,0,56,0.32)]">Optional — leave blank if the owner maintains it.</span>
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="maintainerName">
                 Name{' '}
-                <span className="font-normal text-slate-400">(optional)</span>
+                <span className="font-normal text-[rgba(15,0,56,0.40)]">(optional)</span>
               </Label>
               <Input
                 id="maintainerName"
@@ -217,7 +217,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
             <div>
               <Label htmlFor="maintainerEmail">
                 Email{' '}
-                <span className="font-normal text-slate-400">(optional)</span>
+                <span className="font-normal text-[rgba(15,0,56,0.40)]">(optional)</span>
               </Label>
               <Input
                 id="maintainerEmail"
@@ -228,7 +228,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
                 autoComplete="off"
               />
               {errors.maintainerEmail && (
-                <p className="text-xs text-red-500 mt-1.5">{errors.maintainerEmail}</p>
+                <p className="text-xs text-[#EF4444] mt-1.5">{errors.maintainerEmail}</p>
               )}
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="accessLevel">
-                Access level <span className="text-red-500">*</span>
+                Access level <span className="text-[#EF4444]">*</span>
               </Label>
               <Select
                 id="accessLevel"
@@ -250,13 +250,13 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
                 error={errors.accessLevel}
               />
               {errors.accessLevel && (
-                <p className="text-xs text-red-500 mt-1.5">{errors.accessLevel}</p>
+                <p className="text-xs text-[#EF4444] mt-1.5">{errors.accessLevel}</p>
               )}
             </div>
             <div>
               <Label htmlFor="team">
                 Team{' '}
-                <span className="font-normal text-slate-400">(optional)</span>
+                <span className="font-normal text-[rgba(15,0,56,0.40)]">(optional)</span>
               </Label>
               <Input
                 id="team"
@@ -273,33 +273,33 @@ export default function OwnershipPage({ params }: { params: { draftId: string } 
         <label className={cn(
           'flex items-start gap-3 rounded-xl border p-4 cursor-pointer transition-all duration-150',
           isExp
-            ? 'border-amber-300 bg-amber-50'
-            : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50',
+            ? 'border-amber-300 bg-[rgba(245,158,11,0.10)]'
+            : 'border-[#E7E7E7] bg-white hover:border-[#D6D6D6] hover:bg-[#FAFAFA]',
         )}>
           <input
             type="checkbox"
             checked={isExp}
             onChange={(e) => setIsExp(e.target.checked)}
-            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#2605EF] focus:ring-[#2605EF]/25 cursor-pointer"
+            className="mt-0.5 h-4 w-4 rounded border-[#D6D6D6] text-[#2605EF] focus:ring-[#2605EF]/25 cursor-pointer"
           />
           <div>
-            <p className={cn('text-sm font-semibold', isExp ? 'text-amber-700' : 'text-slate-700')}>
+            <p className={cn('text-sm font-semibold', isExp ? 'text-[#92400E]' : 'text-[#0F0038]')}>
               Mark as experimental
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-[rgba(15,0,56,0.55)] mt-0.5">
               Experimental tools are clearly labeled. Use this for prototypes or tools still in development.
             </p>
           </div>
         </label>
 
         {serverErr && (
-          <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
+          <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B]">
             <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
             {serverErr}
           </div>
         )}
 
-        <div className="flex items-center gap-3 pt-1 border-t border-slate-100">
+        <div className="flex items-center gap-3 pt-1 border-t border-[#FAFAFA]">
           <Button type="submit" disabled={loading}>
             {loading && <Loader2 className="h-3.5 w-3.5 animate-spin mr-1.5" aria-hidden />}
             {loading ? 'Saving…' : 'Continue to analysis'}

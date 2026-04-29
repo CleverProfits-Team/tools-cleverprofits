@@ -6,17 +6,18 @@ import { StatusBadge, AccessBadge, Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { SerializedTool } from '@/types'
 
+// Brand-aligned per-tool accent palette — drawn from the brand scale + functional colors
 const PALETTE = [
-  { bg: 'bg-blue-500',    hex: '#3b82f6' },
-  { bg: 'bg-violet-500',  hex: '#8b5cf6' },
-  { bg: 'bg-emerald-500', hex: '#10b981' },
-  { bg: 'bg-amber-500',   hex: '#f59e0b' },
-  { bg: 'bg-rose-500',    hex: '#f43f5e' },
-  { bg: 'bg-sky-500',     hex: '#0ea5e9' },
-  { bg: 'bg-orange-500',  hex: '#f97316' },
-  { bg: 'bg-teal-500',    hex: '#14b8a6' },
-  { bg: 'bg-pink-500',    hex: '#ec4899' },
-  { bg: 'bg-indigo-500',  hex: '#6366f1' },
+  { hex: '#2605EF' }, // Electric Blue
+  { hex: '#1508AC' }, // Navy
+  { hex: '#18197D' }, // Dark Navy
+  { hex: '#0F0038' }, // Royal Blue
+  { hex: '#6560F5' }, // Brand 400
+  { hex: '#1E04CC' }, // Brand 700
+  { hex: '#10B981' }, // Success
+  { hex: '#F59E0B' }, // Warning
+  { hex: '#1803B3' }, // Brand 800
+  { hex: '#8A85FF' }, // Brand 300
 ]
 
 function getAccent(name: string) {
@@ -39,17 +40,17 @@ export function ToolCard({ tool }: ToolCardProps) {
   return (
     <article
       className={cn(
-        'group relative flex flex-col bg-white rounded-xl overflow-hidden',
+        'group relative flex flex-col bg-white rounded-2xl overflow-hidden',
         'border-l-4 border-t-0 border-r-0 border-b-0',
-        'shadow-[0_20px_40px_rgba(15,0,56,0.06)]',
+        'shadow-card',
         'transition-all duration-200 ease-out',
         'hover:-translate-y-1',
-        'hover:shadow-[0_16px_40px_rgba(15,0,56,0.10),0_4px_12px_rgba(15,0,56,0.06)]',
+        'hover:shadow-card-hover',
         !isActive && 'opacity-80',
       )}
       style={{ borderLeftColor: accent.hex }}
     >
-      {/* Per-tool atmospheric glow — each card has its own light source */}
+      {/* Per-tool atmospheric glow */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity duration-300"
         style={{
@@ -58,7 +59,6 @@ export function ToolCard({ tool }: ToolCardProps) {
         aria-hidden
       />
 
-      {/* Body */}
       <div className="relative flex flex-col flex-1 p-5 pt-4">
 
         {/* Icon + status */}
@@ -69,8 +69,8 @@ export function ToolCard({ tool }: ToolCardProps) {
               'text-white text-[15px] font-bold select-none',
               'shadow-[0_2px_10px_rgba(15,0,56,0.22)]',
               'transition-transform duration-200 group-hover:scale-[1.06]',
-              accent.bg,
             )}
+            style={{ backgroundColor: accent.hex }}
             aria-hidden
           >
             {initial}
@@ -81,21 +81,21 @@ export function ToolCard({ tool }: ToolCardProps) {
         {/* Name */}
         <Link
           href={`/tools/${tool.slug}`}
-          className="font-display font-bold text-[15.5px] leading-snug text-[#0F0038] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-ring rounded"
+          className="font-display font-bold text-[15.5px] leading-snug text-[#0F0038] hover:text-[#2605EF] transition-colors mb-1 line-clamp-2 focus-ring rounded tracking-[-0.01em]"
         >
           {tool.name}
         </Link>
 
         {/* Slug */}
-        <p className="text-[11px] font-mono text-slate-300 mb-3 tracking-wide">
+        <p className="text-[11px] font-mono text-[rgba(15,0,56,0.32)] mb-3 tracking-wide">
           /{tool.slug}
         </p>
 
         {/* Description */}
         <p
           className={cn(
-            'text-[11px] leading-relaxed line-clamp-2 mb-4 flex-1',
-            tool.description ? 'text-slate-400' : 'text-slate-300 italic',
+            'text-[12px] leading-relaxed line-clamp-2 mb-4 flex-1',
+            tool.description ? 'text-[rgba(15,0,56,0.55)]' : 'text-[rgba(15,0,56,0.32)] italic',
           )}
         >
           {tool.description ?? 'No description provided'}
@@ -108,16 +108,16 @@ export function ToolCard({ tool }: ToolCardProps) {
           {(tool.tags ?? []).map((tag) => (
             <span
               key={tag.id}
-              className="inline-flex items-center rounded bg-[#f4f3f3] px-2 py-0.5 text-[10.5px] font-medium text-slate-400"
+              className="inline-flex items-center rounded-full bg-[#FAFAFA] px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[0.04em] text-[rgba(15,0,56,0.55)]"
             >
               {tag.name}
             </span>
           ))}
         </div>
 
-        {/* Footer — tonal divider: background shift instead of line */}
-        <div className="mt-auto pt-3.5 border-t border-[#f4f3f3] flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-300 min-w-0">
+        {/* Footer */}
+        <div className="mt-auto pt-3.5 border-t border-[#FAFAFA] flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 text-[11px] text-[rgba(15,0,56,0.55)] min-w-0">
             <User className="h-3 w-3 flex-shrink-0" aria-hidden />
             <span className="truncate">{tool.createdByName}</span>
           </div>
@@ -127,7 +127,7 @@ export function ToolCard({ tool }: ToolCardProps) {
               href={`/${tool.slug}`}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 flex-shrink-0',
-                'bg-[#0F0038] hover:bg-[#2605EF] text-white text-[11px] font-semibold',
+                'bg-[#0F0038] hover:bg-[#2605EF] text-white text-[11px] font-bold whitespace-nowrap',
                 'shadow-xs transition-all duration-150 active:scale-95',
                 'group-hover:shadow-[0_0_0_3px_rgba(38,5,239,0.12)]',
               )}
@@ -139,7 +139,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           ) : (
             <Link
               href={`/tools/${tool.slug}`}
-              className="text-[11px] text-slate-400 hover:text-[#2605EF] transition-colors flex-shrink-0 font-medium"
+              className="text-[11px] text-[rgba(15,0,56,0.55)] hover:text-[#2605EF] transition-colors flex-shrink-0 font-semibold whitespace-nowrap"
             >
               View →
             </Link>

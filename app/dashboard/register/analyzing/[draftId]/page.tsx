@@ -135,39 +135,39 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
           return (
             <div key={i} className={cn(
               'flex items-center gap-4 rounded-xl border px-4 py-3 transition-all duration-300',
-              status === 'done'    && 'border-emerald-200 bg-emerald-50',
+              status === 'done'    && 'border-emerald-200 bg-[rgba(16,185,129,0.10)]',
               status === 'active'  && 'border-[#2605EF]/25 bg-[#2605EF]/[0.04]',
-              status === 'error'   && 'border-red-200 bg-red-50',
-              status === 'pending' && 'border-slate-100 bg-white',
+              status === 'error'   && 'border-[#FCA5A5] bg-[rgba(239,68,68,0.10)]',
+              status === 'pending' && 'border-[#FAFAFA] bg-white',
             )}>
               {/* Icon */}
               <div className={cn(
                 'h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all',
-                status === 'done'    && 'bg-emerald-100',
+                status === 'done'    && 'bg-[rgba(16,185,129,0.10)]',
                 status === 'active'  && 'bg-[#2605EF]/10',
-                status === 'error'   && 'bg-red-100',
-                status === 'pending' && 'bg-slate-100',
+                status === 'error'   && 'bg-[rgba(239,68,68,0.10)]',
+                status === 'pending' && 'bg-[#E7E7E7]',
               )}>
-                {status === 'done'    && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                {status === 'done'    && <Check className="h-3.5 w-3.5 text-[#065F46]" />}
                 {status === 'active'  && <Loader2 className="h-3.5 w-3.5 text-[#2605EF] animate-spin" />}
-                {status === 'error'   && <AlertCircle className="h-3.5 w-3.5 text-red-500" />}
-                {status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-slate-300" />}
+                {status === 'error'   && <AlertCircle className="h-3.5 w-3.5 text-[#EF4444]" />}
+                {status === 'pending' && <span className="h-1.5 w-1.5 rounded-full bg-[rgba(15,0,56,0.32)]" />}
               </div>
 
               {/* Text */}
               <div className="flex-1">
                 <p className={cn(
                   'text-sm font-semibold leading-none mb-0.5',
-                  status === 'done'    && 'text-emerald-700',
+                  status === 'done'    && 'text-[#065F46]',
                   status === 'active'  && 'text-[#0F0038]',
-                  status === 'error'   && 'text-red-700',
-                  status === 'pending' && 'text-slate-400',
+                  status === 'error'   && 'text-[#991B1B]',
+                  status === 'pending' && 'text-[rgba(15,0,56,0.40)]',
                 )}>
                   {step.label}
                 </p>
                 <p className={cn(
                   'text-xs',
-                  status === 'pending' ? 'text-slate-300' : 'text-slate-500',
+                  status === 'pending' ? 'text-[rgba(15,0,56,0.32)]' : 'text-[rgba(15,0,56,0.55)]',
                 )}>
                   {step.detail}
                 </p>
@@ -181,7 +181,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
       {failed && (
         <div className="space-y-4">
           {errMsg && (
-            <div className="flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3.5 py-3 text-sm text-red-700">
+            <div className="flex items-start gap-2 rounded-lg bg-[rgba(239,68,68,0.10)] border border-[#FCA5A5] px-3.5 py-3 text-sm text-[#991B1B]">
               <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" aria-hidden />
               <span>{errMsg}</span>
             </div>
@@ -199,7 +199,7 @@ export default function AnalyzingPage({ params }: { params: { draftId: string } 
               Continue without AI
             </Button>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[rgba(15,0,56,0.40)]">
             You can fill in the details manually on the next step.
           </p>
         </div>

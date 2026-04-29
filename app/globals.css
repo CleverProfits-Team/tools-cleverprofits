@@ -2,40 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Semantic color tokens ────────────────────────────────────────────────── */
+/* ── CleverProfits brand kit — canonical CSS variables ──────────────────── */
 :root {
   /* Brand */
-  --cp-brand:      #2605EF;
-  --cp-deep:       #0F0038;
-  --cp-mid:        #18197D;
-  --cp-navy:       #1508AC;
-  --cp-navy-black: #0F0038;
+  --cp-royal-blue:        #0F0038;
+  --cp-royal-blue-hover:  #050D61;
+  --cp-electric-blue:     #2605EF;
+  --cp-electric-hover:    #1E04C7;
+  --cp-dark-navy:         #18197D;
+  --cp-navy:              #1508AC;
 
   /* Surfaces */
-  --cp-bg:          #f9f9f9;
-  --cp-surface:     #FFFFFF;
-  --cp-surface-sub: #f4f3f3;
+  --cp-bg:                #EEF2FB;
+  --cp-surface:           #FFFFFF;
+  --cp-surface-subtle:    #FAFAFA;
+  --cp-surface-raised:    #F0F0F8;
+  --cp-input-bg:          #F4F4F4;
 
   /* Borders */
-  --cp-border:        #e2e8f0;
-  --cp-border-subtle: #f1f5f9;
+  --cp-border:            #E7E7E7;
+  --cp-border-subtle:     #FAFAFA;
+  --cp-border-strong:     #D6D6D6;
 
-  /* Text */
-  --cp-text:          #0F0038;
-  --cp-text-secondary:#64748b;
-  --cp-text-muted:    #94a3b8;
+  /* Text — navy at opacity */
+  --cp-text:              #0F0038;
+  --cp-text-secondary:    rgba(15,0,56,0.55);
+  --cp-text-muted:        rgba(15,0,56,0.40);
+  --cp-text-disabled:     rgba(15,0,56,0.28);
 
-  /* Status */
-  --cp-active:   #10b981;
-  --cp-pending:  #f59e0b;
-  --cp-error:    #ef4444;
-  --cp-archived: #94a3b8;
+  /* Functional */
+  --cp-success:           #059669;
+  --cp-success-text:      #065F46;
+  --cp-warning:           #B45309;
+  --cp-warning-text:      #92400E;
+  --cp-error:             #DC2626;
+  --cp-error-text:        #991B1B;
+  --cp-archived:          rgba(15,0,56,0.40);
 
-  /* Shadows (navy-tinted) */
+  /* Shadows — navy-tinted */
   --cp-shadow-xs:  0 1px 2px 0 rgba(15,0,56,0.05);
-  --cp-shadow-sm:  0 1px 4px 0 rgba(15,0,56,0.06), 0 1px 2px -1px rgba(15,0,56,0.04);
-  --cp-shadow-md:  0 4px 16px -2px rgba(15,0,56,0.10), 0 2px 6px -2px rgba(15,0,56,0.06);
-  --cp-shadow-lg:  0 12px 32px -8px rgba(15,0,56,0.14), 0 4px 10px -4px rgba(15,0,56,0.06);
+  --cp-shadow-sm:  0 1px 3px rgba(15,0,56,0.08), 0 1px 2px rgba(15,0,56,0.04);
+  --cp-shadow-md:  0 4px 12px rgba(15,0,56,0.12), 0 2px 6px rgba(15,0,56,0.06);
+  --cp-shadow-lg:  0 12px 32px rgba(15,0,56,0.16), 0 4px 12px rgba(15,0,56,0.08);
+  --cp-shadow-xl:  0 24px 64px rgba(15,0,56,0.20), 0 8px 24px rgba(15,0,56,0.10);
 }
 
 @layer base {
@@ -54,55 +63,59 @@
 
   body {
     height: 100%;
-    @apply bg-[#f9f9f9] text-[#1a1c1c];
+    background-color: var(--cp-bg);
+    color: var(--cp-text);
   }
 
-  /* ── Typography system ────────────────────────────────────────────────────
-     Headers: Inter — tight tracking at display sizes
-     Body:    DM Sans — regular weight only, never 500+ (bleeds into Inter)
-     Labels:  Inter — holds up better than DM Sans at 11-12px */
+  /* Headers — Inter, tight tracking */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-inter), ui-sans-serif, sans-serif;
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.2;
+    color: var(--cp-royal-blue);
   }
 
+  /* Labels — Inter, holds up at small sizes */
   label, th, .ui-label {
     font-family: var(--font-inter), ui-sans-serif, sans-serif;
     font-weight: 500;
     font-size: 0.75rem;
     letter-spacing: 0.03em;
+    color: var(--cp-text);
   }
 
-  /* Smooth focus outlines everywhere */
+  /* Focus — brand kit pattern */
   :focus-visible {
-    @apply outline-none ring-2 ring-[#2605EF] ring-offset-2;
+    @apply outline-none;
+    outline: 2px solid var(--cp-electric-blue);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(38,5,239,0.15);
   }
 
-  /* Better text selection */
+  /* Selection — brand-100 highlight */
   ::selection {
-    background: #d5d4ff;
-    color: #0F0038;
+    background: #D5D4FF;
+    color: var(--cp-royal-blue);
   }
 
-  /* Slim custom scrollbar */
+  /* Scrollbar — navy-tinted */
   ::-webkit-scrollbar        { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track  { background: transparent; }
-  ::-webkit-scrollbar-thumb  { background: #cbd5e1; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  ::-webkit-scrollbar-thumb  { background: #D6D6D6; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #18197D; }
 }
 
-/* ── Pulsing dot (status indicator) ──────────────────────────────────────── */
+/* ── Pulsing dot (active status indicator) ──────────────────────────────── */
 @keyframes pulse-dot {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55); opacity: 1; }
-  50%       { box-shadow: 0 0 0 5px rgba(52, 211, 153, 0);  opacity: 0.8; }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.55); opacity: 1; }
+  50%      { box-shadow: 0 0 0 5px rgba(5, 150, 105, 0);  opacity: 0.8; }
 }
 .pulse-dot {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* ── Bubble rise animation ────────────────────────────────────────────────── */
+/* ── Bubble rise animation — sidebar ambient life ───────────────────────── */
 @keyframes bubble-rise {
   0%   { transform: translateY(0)     translateX(0px)  scale(1);    opacity: 0;    }
   8%   { opacity: 1; }
@@ -113,55 +126,45 @@
 }
 
 @layer components {
-  /* Reusable focus ring utility */
   .focus-ring {
     @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2605EF] focus-visible:ring-offset-2;
   }
 
-  /* Page container */
   .page-container {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
-  /* ── Dot-grid texture ─────────────────────────────────────────────────────
-     Slightly blue-tinted so it harmonises with the dark sidebar. */
+  /* ── Dot-grid texture — subtle, blue-tinted ───────────────────────────── */
   .bg-dot-grid {
-    background-color: #f9f9f9;
-    background-image: radial-gradient(circle, rgb(99 110 176 / 0.22) 1px, transparent 1px);
+    background-color: var(--cp-bg);
+    background-image: radial-gradient(circle, rgba(15,0,56,0.10) 1px, transparent 1px);
     background-size: 22px 22px;
   }
 
-  /* ── Kinetic gradient (signature brand gradient) ──────────────────────────
-     135° from primary #1800b0 → primary-container #2605ef */
+  /* ── Brand gradient — 135° navy → electric ──────────────────────────── */
   .kinetic-gradient {
-    background: linear-gradient(135deg, #1800b0 0%, #2605ef 100%);
+    background: linear-gradient(135deg, #1800B0 0%, #2605EF 100%);
   }
 
-  /* ── Glass panel (frosted floating element) ───────────────────────────── */
   .glass-panel {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  /* ── Dark hero mesh ───────────────────────────────────────────────────────
-     Deep navy with electric-blue radial glow. Used for full-bleed headers. */
+  /* ── Hero mesh — Royal Blue with electric radial glow ─────────────────── */
   .bg-hero-mesh {
     background:
-      radial-gradient(ellipse 80% 55% at 60% -10%, rgb(38 5 239 / 0.28) 0%, transparent 65%),
-      radial-gradient(ellipse 40% 30% at 100% 0%, rgb(24 25 125 / 0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 55% at 60% -10%, rgba(38,5,239,0.28) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 30% at 100% 0%, rgba(24,25,125,0.5) 0%, transparent 60%),
       linear-gradient(160deg, #0F0038 0%, #030828 100%);
   }
 
-  /* ── Kinetic hero section ─────────────────────────────────────────────────
-     Gradient hero block used on main dashboard — rounded corners, full bleed. */
   .kinetic-hero {
-    background: linear-gradient(135deg, #1800b0 0%, #2605ef 100%);
+    background: linear-gradient(135deg, #1800B0 0%, #2605EF 100%);
   }
 
-  /* ── Seamless edge — left bleed from sidebar into content ─────────────────
-     Adds a very subtle navy tint at the left edge of the content area that
-     fades to transparent, bridging the hard sidebar/content boundary. */
+  /* ── Seamless sidebar→content edge ────────────────────────────────────── */
   .content-seamless {
     position: relative;
   }
@@ -171,25 +174,23 @@
     inset: 0;
     right: auto;
     width: 200px;
-    background: linear-gradient(to right, rgba(4, 11, 77, 0.085), transparent);
+    background: linear-gradient(to right, rgba(15,0,56,0.08), transparent);
     pointer-events: none;
     z-index: 0;
   }
 
-  /* ── Animate-in for page content ─────────────────────────────────────────
-     Apply to page wrappers for a gentle fade-up on load. */
   .animate-in {
-    animation: fade-up 0.35s ease both;
+    animation: fade-up 0.35s ease-out both;
   }
 
-  /* ── Interactive row ─────────────────────────────────────────────────────
-     For admin table rows and list items that are clickable. */
+  /* Interactive row — admin tables, list items */
   .row-interactive {
-    @apply transition-colors duration-100 cursor-pointer hover:bg-slate-50/80;
+    @apply transition-colors duration-100 cursor-pointer;
+  }
+  .row-interactive:hover {
+    background: rgba(15,0,56,0.03);
   }
 
-  /* ── Hide scrollbar but keep scroll functionality ───────────────────────
-     Used on overflow-x-auto containers like the admin sub-nav. */
   .scrollbar-none {
     scrollbar-width: none;
   }
@@ -203,7 +204,12 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Reduce motion — respect OS accessibility preference ─────────────────── */
+@keyframes skeleton-wave {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Reduced motion — respect OS preference ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration:        0.01ms !important;
