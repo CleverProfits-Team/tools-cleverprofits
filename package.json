@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf .next && prisma generate && next build",
+    "build": "find .next -mindepth 1 -maxdepth 1 ! -name cache -exec rm -rf {} + 2>/dev/null; find .next/cache -mindepth 1 -delete 2>/dev/null; prisma generate && next build",
     "start": "prisma migrate deploy && node prisma/seed.js && next start",
     "lint": "next lint",
     "db:push": "prisma db push",
