@@ -29,6 +29,7 @@ export default function IdentifyPage() {
   const [slugState,   setSlugState]   = useState<SlugState>('idle')
   const [slugReason,  setSlugReason]  = useState<string>()
   const [url,         setUrl]         = useState('')
+  const [railwayId,   setRailwayId]   = useState('')
   const [github,      setGithub]      = useState('')
   const [description, setDescription] = useState('')
   const [errors,      setErrors]      = useState<Record<string, string>>({})
@@ -96,11 +97,12 @@ export default function IdentifyPage() {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name:          name.trim(),
-          slug:          slug.trim(),
-          externalUrl:   url.trim(),
-          githubRepoUrl: github.trim(),
-          description:   description.trim(),
+          name:             name.trim(),
+          slug:             slug.trim(),
+          externalUrl:      url.trim(),
+          railwayServiceId: railwayId.trim() || undefined,
+          githubRepoUrl:    github.trim(),
+          description:      description.trim(),
         }),
       })
       const data = await res.json()
@@ -155,9 +157,6 @@ export default function IdentifyPage() {
             <SlugStatus state={slugState} reason={slugReason} />
           </div>
           <div className="flex items-center">
-            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-r-0 border-[#E7E7E7] rounded-l-md bg-[#FAFAFA] text-[rgba(15,0,56,0.40)] text-sm font-mono select-none">
-              cleverprofits.app/
-            </span>
             <Input
               id="slug"
               placeholder="kpis-dashboard"
@@ -165,13 +164,16 @@ export default function IdentifyPage() {
               onChange={(e) => { setSlug(e.target.value); setSlugEdited(true); setErrors((p) => ({ ...p, slug: '' })) }}
               error={errors.slug}
               className={cn(
-                'rounded-l-none font-mono',
+                'rounded-r-none font-mono',
                 slugState === 'available' && 'border-emerald-300 focus-visible:ring-emerald-300',
                 (slugState === 'taken' || slugState === 'invalid') && 'border-[#FCA5A5] focus-visible:ring-[#FCA5A5]',
               )}
               autoComplete="off"
               spellCheck={false}
             />
+            <span className="flex-shrink-0 h-9 px-3 flex items-center border border-l-0 border-[#E7E7E7] rounded-r-md bg-[#FAFAFA] text-[rgba(15,0,56,0.40)] text-sm font-mono select-none">
+              .cleverprofits.app
+            </span>
           </div>
           {errors.slug
             ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.slug}</p>
@@ -194,7 +196,26 @@ export default function IdentifyPage() {
           />
           {errors.url
             ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.url}</p>
-            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">The Railway (or any HTTPS) URL. Never exposed to end users.</p>
+            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">The Railway origin URL — kept for reference; never exposed to end users.</p>
+          }
+        </div>
+
+        {/* Railway Service ID — enables auto-provisioning of <slug>.cleverprofits.app */}
+        <div>
+          <Label htmlFor="railwayId">Railway Service ID</Label>
+          <Input
+            id="railwayId"
+            placeholder="c3fd1c5a-b06e-445c-9ff9-8d097623f257"
+            value={railwayId}
+            onChange={(e) => { setRailwayId(e.target.value); setErrors((p) => ({ ...p, railwayId: '' })) }}
+            error={errors.railwayId}
+            autoComplete="off"
+            spellCheck={false}
+            className="font-mono"
+          />
+          {errors.railwayId
+            ? <p className="text-xs text-[#EF4444] mt-1.5">{errors.railwayId}</p>
+            : <p className="text-xs text-[rgba(15,0,56,0.40)] mt-1.5">Railway → service → Settings → copy Service ID. Leave blank for non-Railway tools (DNS will be manual).</p>
           }
         </div>
 

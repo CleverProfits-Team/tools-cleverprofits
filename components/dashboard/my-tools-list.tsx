@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { FilePen, Trash2, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { StatusBadge } from '@/components/ui/badge'
+import { toolUrl, toolDisplayUrl } from '@/lib/tool-url'
 import type { SerializedTool } from '@/types'
 import type { AnalysisStatus, ToolStatus } from '@prisma/client'
 
@@ -176,7 +177,7 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                       <h3 className="font-bold text-[#0F0038]">{tool.name}</h3>
                       <StatusBadge status={tool.status} />
                     </div>
-                    <p className="text-xs font-mono text-[rgba(15,0,56,0.40)] mt-0.5">{tool.slug}</p>
+                    <p className="text-xs font-mono text-[rgba(15,0,56,0.40)] mt-0.5">{toolDisplayUrl(tool.slug)}</p>
                     {tool.description && (
                       <p className="text-sm text-[rgba(15,0,56,0.65)] mt-2 line-clamp-2">{tool.description}</p>
                     )}
@@ -222,7 +223,7 @@ export function MyToolsList({ tools, drafts: initialDrafts }: Props) {
                   )}
                   {tool.status === 'ACTIVE' && (
                     <a
-                      href={`/${tool.slug}`}
+                      href={toolUrl(tool.slug)}
                       className="text-xs font-semibold text-[#065F46] hover:text-[#10B981] hover:underline whitespace-nowrap"
                     >
                       Launch →

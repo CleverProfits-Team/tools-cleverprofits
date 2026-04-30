@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { toolUrl, toolDisplayUrl } from '@/lib/tool-url'
 import type { SerializedTool } from '@/types'
 
 // Brand-aligned per-tool accent palette — mirrors tool-card.tsx
@@ -72,8 +73,8 @@ export function ToolRow({ tool }: ToolRowProps) {
           >
             {tool.name}
           </Link>
-          <span className="hidden sm:inline text-[10.5px] font-mono text-[rgba(15,0,56,0.32)] leading-tight">
-            /{tool.slug}
+          <span className="hidden sm:inline text-[10.5px] font-mono text-[rgba(15,0,56,0.32)] leading-tight truncate">
+            {toolDisplayUrl(tool.slug)}
           </span>
         </div>
         {tool.description && (
@@ -106,7 +107,7 @@ export function ToolRow({ tool }: ToolRowProps) {
       <div className="flex-shrink-0 w-[72px] flex justify-end">
         {isActive ? (
           <a
-            href={`/${tool.slug}`}
+            href={toolUrl(tool.slug)}
             className={cn(
               'inline-flex items-center gap-1 rounded-lg px-3 py-1.5 whitespace-nowrap',
               'bg-[#0F0038] hover:bg-[#2605EF] text-white text-[11px] font-bold shadow-xs',

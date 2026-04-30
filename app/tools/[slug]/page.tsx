@@ -6,6 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { StatusBadge, AccessBadge } from '@/components/ui/badge'
 import { ExternalLink, ArrowLeft, Clock, Users, Pencil, History } from 'lucide-react'
+import { toolUrl, toolDisplayUrl } from '@/lib/tool-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -121,7 +122,7 @@ export default async function ToolInfoPage({
             <div className="flex items-start justify-between gap-4 mb-6">
               <div>
                 <h1 className="font-display font-bold text-2xl text-[#0F0038] tracking-[-0.02em]">{tool.name}</h1>
-                <p className="text-sm font-mono text-[rgba(15,0,56,0.40)] mt-0.5">/{tool.slug}</p>
+                <p className="text-sm font-mono text-[rgba(15,0,56,0.40)] mt-0.5 truncate">{toolDisplayUrl(tool.slug)}</p>
               </div>
               <StatusBadge status={tool.status} />
             </div>
@@ -172,7 +173,7 @@ export default async function ToolInfoPage({
             {/* Launch button */}
             {tool.status === 'ACTIVE' && (
               <a
-                href={`/${tool.slug}`}
+                href={toolUrl(tool.slug)}
                 className="inline-flex items-center gap-2 rounded-lg bg-[#2605EF] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#1E04C7] shadow-md transition-colors whitespace-nowrap"
               >
                 Launch Tool

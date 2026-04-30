@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowUpRight, User } from 'lucide-react'
 import { StatusBadge, AccessBadge, Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { toolUrl, toolDisplayUrl } from '@/lib/tool-url'
 import type { SerializedTool } from '@/types'
 
 // Brand-aligned per-tool accent palette — drawn from the brand scale + functional colors
@@ -86,9 +87,9 @@ export function ToolCard({ tool }: ToolCardProps) {
           {tool.name}
         </Link>
 
-        {/* Slug */}
-        <p className="text-[11px] font-mono text-[rgba(15,0,56,0.32)] mb-3 tracking-wide">
-          /{tool.slug}
+        {/* Subdomain */}
+        <p className="text-[11px] font-mono text-[rgba(15,0,56,0.32)] mb-3 tracking-wide truncate">
+          {toolDisplayUrl(tool.slug)}
         </p>
 
         {/* Description */}
@@ -124,7 +125,7 @@ export function ToolCard({ tool }: ToolCardProps) {
 
           {isActive ? (
             <a
-              href={`/${tool.slug}`}
+              href={toolUrl(tool.slug)}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 flex-shrink-0',
                 'bg-[#0F0038] hover:bg-[#2605EF] text-white text-[11px] font-bold whitespace-nowrap',
