@@ -238,6 +238,14 @@ export const createDraftSchema = z.object({
     .string()
     .min(1, 'Brief description is required')
     .max(500, 'Description must be 500 characters or fewer'),
+
+  // Optional Railway service id — when present, lib/provisioning.ts can
+  // auto-attach <slug>.cleverprofits.app to that service on approval.
+  railwayServiceId: z
+    .string()
+    .uuid('Railway Service ID must be a valid UUID')
+    .optional()
+    .or(z.literal('')),
 })
 
 /**

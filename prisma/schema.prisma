@@ -34,10 +34,20 @@ model Tool {
 
   // Identity
   name        String
-  slug        String      @unique  // URL key: tools.cleverprofits.com/[slug]
-  externalUrl String                // Actual upstream URL (e.g. Railway)
+  slug        String      @unique  // Subdomain label: <slug>.cleverprofits.app
+  externalUrl String                // Railway-generated origin URL (e.g. *.up.railway.app) — kept for reference
   description String?
   notes       String?
+
+  // ── Provisioning (per-tool direct DNS) ─────────────────────────────────────
+  // Captured at draft creation when the user supplies a Railway service ID.
+  // railwayDomainId + cloudflareRecordIds are populated after the tool is
+  // approved and lib/provisioning.ts has run successfully.
+  railwayServiceId     String?
+  railwayProjectId     String?
+  railwayEnvironmentId String?
+  railwayDomainId      String?
+  cloudflareRecordIds  String[]  @default([])
 
   // Ownership & classification
   team             String?

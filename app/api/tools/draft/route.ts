@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { createDraftSchema, nameToSlug } from '@/lib/validations'
+import { findServiceById } from '@/lib/railway'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Reserved slugs (kept in sync with /api/tools)
@@ -89,12 +90,31 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { externalUrl, name, slug: providedSlug, githubRepoUrl, description } = parsed.data
+  const { externalUrl, name, slug: providedSlug, githubRepoUrl, description, railwayServiceId } = parsed.data
 
   const toolName = name.trim()
   const slug     = providedSlug?.trim()
     ? providedSlug.trim()
     : await generateUniqueSlug(toolName)
+
+  // If the user supplied a Railway service id, resolve project + env now so
+  // approval can call provisionTool() without further input. We swallow lookup
+  // errors so a typo doesn't block draft creation — the admin can fix it on
+  // the review step.
+  let railwayProjectId:     string | null = null
+  let railwayEnvironmentId: string | null = null
+  let railwayServiceIdSafe: string | null = null
+  if (railwayServiceId) {
+    try {
+      const lookup = await findServiceById(railwayServiceId)
+      railwayServiceIdSafe = lookup.serviceId
+      railwayProjectId     = lookup.projectId
+      railwayEnvironmentId = lookup.environmentId
+    } catch (err) {
+      console.warn('[draft] Railway service lookup failed:', err)
+      // Proceed without provisioning context; admin can re-supply later.
+    }
+  }
 
   let tool
   try {
@@ -106,6 +126,9 @@ export async function POST(request: NextRequest) {
         githubRepoUrl: githubRepoUrl || null,
         description:   description   || null,
         status:        'DRAFT',
+        railwayServiceId:     railwayServiceIdSafe,
+        railwayProjectId,
+        railwayEnvironmentId,
         // analysisStatus defaults to PENDING_ANALYSIS via schema default
         createdByName:  session.user.name  ?? '',
         createdByEmail: session.user.email,

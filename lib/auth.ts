@@ -168,6 +168,12 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
 
+  // NextAuth cookies are intentionally host-only (no Domain attribute) so the
+  // platform session never bleeds onto tool subdomains. Each tool subdomain
+  // (calendar.cleverprofits.app, kpis.cleverprofits.app, etc.) is a separate
+  // Railway service with its own auth rules — they MUST NOT inherit the
+  // platform session cookie.
+
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development',
 }

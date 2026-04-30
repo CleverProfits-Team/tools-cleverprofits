@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { updateToolSchema } from '@/lib/validations'
 import { writeAuditLog } from '@/lib/audit'
+import { provisionTool, deprovisionTool } from '@/lib/provisioning'
 
 type RouteContext = { params: { id: string } }
 
@@ -68,6 +69,8 @@ export async function PUT(
       id: true, slug: true, name: true, status: true, createdByEmail: true,
       externalUrl: true, description: true, team: true, notes: true,
       accessLevel: true, rejectionReason: true,
+      railwayServiceId: true, railwayProjectId: true, railwayEnvironmentId: true,
+      railwayDomainId: true, cloudflareRecordIds: true,
       tags: { select: { id: true, name: true } },
     },
   })
@@ -234,6 +237,63 @@ export async function PUT(
       }
     }
 
+    // ── DNS provisioning on status transitions ─────────────────────────────
+    // PENDING/REJECTED → ACTIVE: create Railway custom domain + Cloudflare records
+    // ANY → ARCHIVED: tear them down
+    //
+    // Both branches are best-effort — provisioning failure does NOT roll back the
+    // status change (admins can retry via a re-approval). We log + return the
+    // updated tool so the UI never blocks on infra mishaps.
+    const becomingActive = (
+      scalarData.status === 'ACTIVE' &&
+      existing.status !== 'ACTIVE' &&
+      existing.railwayServiceId &&
+      existing.railwayProjectId &&
+      existing.railwayEnvironmentId &&
+      !existing.railwayDomainId
+    )
+    if (becomingActive) {
+      try {
+        const result = await provisionTool({
+          slug:          tool.slug,
+          projectId:     existing.railwayProjectId!,
+          serviceId:     existing.railwayServiceId!,
+          environmentId: existing.railwayEnvironmentId!,
+        })
+        await prisma.tool.update({
+          where: { id: tool.id },
+          data: {
+            railwayDomainId:     result.railwayDomainId,
+            cloudflareRecordIds: result.cloudflareRecordIds,
+          },
+        })
+      } catch (err) {
+        console.error(`[provision] tool=${tool.id} slug=${tool.slug}:`, err)
+      }
+    }
+
+    const becomingArchived = (
+      scalarData.status === 'ARCHIVED' &&
+      existing.status !== 'ARCHIVED' &&
+      existing.railwayDomainId &&
+      existing.railwayProjectId
+    )
+    if (becomingArchived) {
+      try {
+        await deprovisionTool({
+          railwayDomainId:     existing.railwayDomainId!,
+          cloudflareRecordIds: existing.cloudflareRecordIds ?? [],
+          projectId:           existing.railwayProjectId!,
+        })
+        await prisma.tool.update({
+          where: { id: tool.id },
+          data:  { railwayDomainId: null, cloudflareRecordIds: [] },
+        })
+      } catch (err) {
+        console.error(`[deprovision] tool=${tool.id} slug=${tool.slug}:`, err)
+      }
+    }
+
     return NextResponse.json(tool)
   } catch (err) {
     console.error('[PUT /api/tools/[id]]', err)
@@ -266,7 +326,10 @@ export async function DELETE(
   // Fetch only the fields we need for the guard checks
   const existing = await prisma.tool.findUnique({
     where: { id: params.id },
-    select: { id: true, status: true, name: true },
+    select: {
+      id: true, status: true, name: true,
+      railwayDomainId: true, railwayProjectId: true, cloudflareRecordIds: true,
+    },
   })
 
   if (!existing) {
@@ -285,6 +348,23 @@ export async function DELETE(
       where: { id: params.id },
       data: { status: 'ARCHIVED' },
     })
+
+    // Best-effort DNS teardown — never block archival on infra cleanup failure.
+    if (existing.railwayDomainId && existing.railwayProjectId) {
+      try {
+        await deprovisionTool({
+          railwayDomainId:     existing.railwayDomainId,
+          cloudflareRecordIds: existing.cloudflareRecordIds ?? [],
+          projectId:           existing.railwayProjectId,
+        })
+        await prisma.tool.update({
+          where: { id: tool.id },
+          data:  { railwayDomainId: null, cloudflareRecordIds: [] },
+        })
+      } catch (err) {
+        console.error(`[deprovision] tool=${tool.id} slug=${tool.slug}:`, err)
+      }
+    }
 
     return NextResponse.json(tool)
   } catch (err) {

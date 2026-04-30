@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle2, Copy, Check, ExternalLink, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { toolUrl } from '@/lib/tool-url'
 
 interface ToolBrief {
   id:   string
@@ -28,9 +29,7 @@ export default function SuccessPage({ params }: { params: { draftId: string } })
       .catch(() => {})
   }, [draftId])
 
-  const platformUrl = tool
-    ? `${typeof window !== 'undefined' ? window.location.origin : 'https://cleverprofits.app'}/${tool.slug}`
-    : null
+  const platformUrl = tool ? toolUrl(tool.slug) : null
 
   async function copyUrl() {
     if (!platformUrl) return
